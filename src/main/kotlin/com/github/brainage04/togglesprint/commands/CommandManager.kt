@@ -1,9 +1,8 @@
 package com.github.brainage04.togglesprint.commands
 
-import com.github.brainage04.togglesprint.Main
+import com.github.brainage04.togglesprint.ToggleSprintMain
 import com.github.brainage04.togglesprint.commands.SimpleCommand.ProcessCommandRunnable
 import net.minecraft.command.ICommandSender
-import net.minecraft.util.BlockPos
 import net.minecraftforge.client.ClientCommandHandler
 
 class CommandManager {
@@ -11,7 +10,7 @@ class CommandManager {
     init {
         registerCommand("togglesprint") { args ->
             if (args.isEmpty()) {
-                Main.configManager.openConfigGui()
+                ToggleSprintMain.configManager.openConfigGui()
                 return@registerCommand
             }
 

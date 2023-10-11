@@ -3,16 +3,27 @@ package com.github.brainage04.togglesprint
 import com.github.brainage04.togglesprint.commands.CommandManager
 import com.github.brainage04.togglesprint.config.manager.ConfigManager
 import com.github.brainage04.togglesprint.config.ToggleSprintConfig
-import com.github.brainage04.togglesprint.features.ToggleMovementKeyHandler
+import com.github.brainage04.togglesprint.gui.core.RenderGuiData
+import com.github.brainage04.togglesprint.keybinds.ToggleSneakKeybind
+import com.github.brainage04.togglesprint.keybinds.ToggleSprintKeybind
+import net.minecraft.client.settings.KeyBinding
 import net.minecraftforge.common.MinecraftForge
+import net.minecraftforge.fml.client.registry.ClientRegistry
 import net.minecraftforge.fml.common.Loader
 import net.minecraftforge.fml.common.Mod
 import net.minecraftforge.fml.common.event.FMLInitializationEvent
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent
 import org.apache.logging.log4j.LogManager
+import org.apache.logging.log4j.Logger
 
-@Mod(modid = Main.MOD_ID, useMetadata = true)
-class Main {
+@Mod(modid = ToggleSprintMain.MOD_ID, useMetadata = true)
+class ToggleSprintMain {
+    private fun registerKeyBinds(vararg keybinds: KeyBinding?) {
+        for (keybind in keybinds) {
+            ClientRegistry.registerKeyBinding(keybind)
+        }
+    }
+
     private fun registerEvents(vararg events: Any?) {
         for (event in events) {
             MinecraftForge.EVENT_BUS.register(event)
@@ -23,8 +34,16 @@ class Main {
     fun preInit(event: FMLPreInitializationEvent) {
         CommandManager()
 
+        registerKeyBinds(
+            toggleSprintKeybind,
+            toggleSneakKeybind
+        )
+
         registerEvents(
-            ToggleMovementKeyHandler()
+            toggleSprintKeybind,
+            toggleSneakKeybind,
+
+            RenderGuiData()
         )
     }
 
@@ -39,7 +58,7 @@ class Main {
         const val MOD_ID = "togglesprint"
         const val MOD_NAME = "Toggle Sprint"
 
-        val LOGGER = LogManager.getLogger(MOD_ID)
+        val LOGGER: Logger = LogManager.getLogger(MOD_ID)
 
         @JvmStatic
         val version: String
@@ -47,5 +66,8 @@ class Main {
 
         val config: ToggleSprintConfig
             get() = configManager.config ?: error("config is null")
+
+        val toggleSprintKeybind: KeyBinding = ToggleSprintKeybind()
+        val toggleSneakKeybind: KeyBinding = ToggleSneakKeybind()
     }
 }
