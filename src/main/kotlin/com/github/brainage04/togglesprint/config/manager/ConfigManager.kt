@@ -1,6 +1,6 @@
-package com.github.brainage04.togglesprint.config
+package com.github.brainage04.togglesprint.config.manager
 
-import com.github.brainage04.togglesprint.config.categories.ExampleModConfig
+import com.github.brainage04.togglesprint.config.ToggleSprintConfig
 import com.github.brainage04.togglesprint.errors.ConfigError
 import com.google.gson.GsonBuilder
 import com.google.gson.TypeAdapter
@@ -50,10 +50,10 @@ class ConfigManager {
 
     private var configDirectory = File("config/togglesprint")
     private var configFile: File
-    var config: ExampleModConfig? = null
+    var config: ToggleSprintConfig? = null
     private var lastSaveTime = 0L
 
-    private lateinit var processor: MoulConfigProcessor<ExampleModConfig>
+    private lateinit var processor: MoulConfigProcessor<ToggleSprintConfig>
     private val editor by lazy { MoulConfigEditor(processor) }
 
     init {
@@ -67,7 +67,7 @@ class ConfigManager {
 
         if (config == null) {
             println("Creating a clean config.")
-            config = ExampleModConfig()
+            config = ToggleSprintConfig()
         }
 
         val config = config!!
@@ -99,7 +99,7 @@ class ConfigManager {
                 builder.append(line)
                 builder.append("\n")
             }
-            config = gson.fromJson(builder.toString(), ExampleModConfig::class.java)
+            config = gson.fromJson(builder.toString(), ToggleSprintConfig::class.java)
         } catch (e: Exception) {
             throw ConfigError("Could not load config", e)
         }

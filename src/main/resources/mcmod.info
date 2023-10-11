@@ -1,16 +1,16 @@
 [
   {
     "modid": "${modid}",
-    "name": "Example Mod",
-    "description": "A mod that is used as an example.",
+    "name": "Toggle Sprint",
+    "description": "A simple toggle sprint/sneak mod that is allowed on Hypixel. Made with MoulConfig.",
     "version": "${version}",
     "mcversion": "${mcversion}",
-    "url": "https://github.com/romangraef/Forge1.8.9Template/",
-    "updateUrl": "",
+    "url": "https://github.com/brainage/ToggleSprint/",
+    "updateUrl": "https://github.com/brainage/ToggleSprint/latest/releases",
     "authorList": [
-      "You"
+      "brainage04"
     ],
-    "credits": "",
+    "credits": "hannibal002, Moulberry, nea89",
     "logoFile": "",
     "screenshots": [],
     "dependencies": []
