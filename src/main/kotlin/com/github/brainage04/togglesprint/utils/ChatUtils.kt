@@ -1,6 +1,6 @@
 package com.github.brainage04.togglesprint.utils
 
-import com.github.brainage04.togglesprint.Main.Companion.MOD_NAME
+import com.github.brainage04.togglesprint.ToggleSprintMain.Companion.MOD_NAME
 import com.github.brainage04.togglesprint.utils.SoundUtils.playAlertSound
 import com.github.brainage04.togglesprint.utils.SoundUtils.playNotificationSound
 import net.minecraft.client.Minecraft

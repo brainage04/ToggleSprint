@@ -1,6 +1,6 @@
 package com.github.brainage04.togglesprint.gui
 
-import com.github.brainage04.togglesprint.Main
+import com.github.brainage04.togglesprint.ToggleSprintMain
 import com.github.brainage04.togglesprint.config.categories.GUIElements
 import com.github.brainage04.togglesprint.gui.core.RenderGuiData
 import com.github.brainage04.togglesprint.utils.MathUtils.round
@@ -8,7 +8,7 @@ import net.minecraft.client.Minecraft
 
 class PlayerPositionTracker {
     companion object {
-        private val config: GUIElements.GUIElement get() = Main.config.guiElements.playerPositionElement
+        private val config: GUIElements.GUIElement get() = ToggleSprintMain.config.guiElements.playerPositionElement
 
         fun playerPositionTracker() {
             if (!config.isEnabled) return

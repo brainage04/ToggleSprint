@@ -1,6 +1,6 @@
 package com.github.brainage04.togglesprint.utils
 
-import com.github.brainage04.togglesprint.Main.Companion.LOGGER
+import com.github.brainage04.togglesprint.ToggleSprintMain.Companion.LOGGER
 import net.minecraft.client.Minecraft
 import net.minecraft.client.audio.ISound
 import net.minecraft.client.audio.PositionedSound

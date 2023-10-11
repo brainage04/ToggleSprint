@@ -18,16 +18,16 @@ public class ToggleMovementKeys {
         @Expose
         @ConfigOption(name = "Toggle Sprint", desc = "Enables toggle sprint.")
         @ConfigEditorBoolean
-        public boolean toggleSprint = false;
+        public boolean toggleSprint = true;
 
         @Expose
-        @ConfigOption(name = "Toggle Sprint Keybind", desc = "The keybind used to enable toggle sprint during gameplay.")
-        @ConfigEditorKeybind(defaultKey = Keyboard.KEY_RCONTROL)
-        public KeyBinding toggleSprintKeybind;
+        @ConfigOption(name = "Unsprint When Disabling", desc = "Reverts to walking speed when player disables toggle sprint.")
+        @ConfigEditorBoolean
+        public boolean unsprintWhenDisabling = false;
     }
 
     @Expose
-    @ConfigOption(name = "Toggle Sprint", desc = "")
+    @ConfigOption(name = "Toggle Sneak", desc = "")
     @Accordion
     public ToggleSneakCategory toggleSneakCategory = new ToggleSneakCategory();
 
@@ -38,8 +38,8 @@ public class ToggleMovementKeys {
         public boolean toggleSneak = false;
 
         @Expose
-        @ConfigOption(name = "Toggle Sneak Keybind", desc = "The keybind used to enable toggle sneak during gameplay.")
-        @ConfigEditorKeybind(defaultKey = Keyboard.KEY_RSHIFT)
-        public KeyBinding toggleSneakKeybind;
+        @ConfigOption(name = "Unsneak When Disabling", desc = "Reverts to standing when player disables toggle sneak.")
+        @ConfigEditorBoolean
+        public boolean unsneakWhenDisabling = true;
     }
 }
