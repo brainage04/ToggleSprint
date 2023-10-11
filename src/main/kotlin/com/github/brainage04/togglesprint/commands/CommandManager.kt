@@ -1,8 +1,8 @@
-package com.example.commands
+package com.github.brainage04.togglesprint.commands
 
-import com.example.ExampleMod
-import com.example.commands.SimpleCommand.ProcessCommandRunnable
-import com.example.utils.ChatUtils
+import com.github.brainage04.togglesprint.ExampleMod
+import com.github.brainage04.togglesprint.commands.SimpleCommand.ProcessCommandRunnable
+import com.github.brainage04.togglesprint.utils.ChatUtils
 import net.minecraft.command.ICommandSender
 import net.minecraft.util.BlockPos
 import net.minecraftforge.client.ClientCommandHandler
