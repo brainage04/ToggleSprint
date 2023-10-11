@@ -1,4 +1,4 @@
-package com.example.mixin;
+package com.github.brainage04.togglesprint.mixin;
 
 import net.minecraft.client.gui.GuiMainMenu;
 import org.spongepowered.asm.mixin.Mixin;
