@@ -1,30 +1,27 @@
 package com.github.brainage04.togglesprint.gui
 
 import com.github.brainage04.togglesprint.ToggleSprintMain
-import com.github.brainage04.togglesprint.config.categories.GUIElements
 import com.github.brainage04.togglesprint.gui.core.RenderGuiData
 import com.github.brainage04.togglesprint.utils.MathUtils.round
 import net.minecraft.client.Minecraft
 
-class PlayerPositionTracker {
-    companion object {
-        private val config: GUIElements.GUIElement get() = ToggleSprintMain.config.guiElements.playerPositionElement
+object PlayerPositionTracker {
+    private val guiElements get() = ToggleSprintMain.config.guiElements
 
-        fun playerPositionTracker() {
-            if (!config.isEnabled) return
+    fun playerPositionTracker() {
+        if (!guiElements.playerPositionElement.isEnabled) return
 
-            val textArray = arrayOf(
-                "§fX: ${Minecraft.getMinecraft().thePlayer.posX.round(config.otherSettings.decimals)}",
-                "§fY: ${Minecraft.getMinecraft().thePlayer.posY.round(config.otherSettings.decimals)}",
-                "§fZ: ${Minecraft.getMinecraft().thePlayer.posZ.round(config.otherSettings.decimals)}",
-            )
+        val textArray = arrayOf(
+            "§fX: ${Minecraft.getMinecraft().thePlayer.posX.round(guiElements.playerPositionElement.otherSettings.decimals)}",
+            "§fY: ${Minecraft.getMinecraft().thePlayer.posY.round(guiElements.playerPositionElement.otherSettings.decimals)}",
+            "§fZ: ${Minecraft.getMinecraft().thePlayer.posZ.round(guiElements.playerPositionElement.otherSettings.decimals)}",
+        )
 
-            RenderGuiData.renderElement(
-                config.x,
-                config.y,
-                config.displayAnchor,
-                textArray
-            )
-        }
+        RenderGuiData.renderElement(
+            guiElements.playerPositionElement.x,
+            guiElements.playerPositionElement.y,
+            guiElements.playerPositionElement.displayAnchor,
+            textArray
+        )
     }
 }
