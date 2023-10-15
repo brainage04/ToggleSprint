@@ -11,18 +11,18 @@ object ToggleSprintTracker {
     private val toggleMovementKeys get() = ToggleSprintMain.config.toggleMovementKeys
 
     fun toggleSprintTracker() {
-        if (!guiElements.toggleSprintElement.isEnabled || (!toggleMovementKeys.toggleSprintCategory.toggleSprint && !toggleMovementKeys.toggleSneakCategory.toggleSneak)) return
+        if (!guiElements.toggleSprintElement.isEnabled || (!toggleMovementKeys.toggleSprint && !toggleMovementKeys.toggleSneak)) return
 
         val player = Minecraft.getMinecraft().thePlayer ?: return
 
-        val text: String = if (ToggleSprintKeybind.isToggled) "§f[Sprinting (Toggled)]"
-        else if (player.isSprinting) "§f[Sprinting (Vanilla)]"
-        else if (player.isSneaking) {
+        val text = if (player.isSneaking) {
             when (ToggleSneakKeybind.isToggled) {
                 true -> "§f[Sneaking (Toggled)]"
                 false -> "§f[Sneaking (Vanilla)]"
             }
-        } else "§f"
+        } else if (ToggleSprintKeybind.isToggled) "§f[Sprinting (Toggled)]"
+        else if (player.isSprinting) "§f[Sprinting (Vanilla)]"
+        else "§f"
 
         RenderGuiData.renderElement(
             guiElements.toggleSprintElement.x,

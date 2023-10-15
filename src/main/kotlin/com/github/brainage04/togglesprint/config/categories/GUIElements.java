@@ -2,9 +2,9 @@ package com.github.brainage04.togglesprint.config.categories;
 
 import com.google.gson.annotations.Expose;
 import io.github.moulberry.moulconfig.annotations.*;
-import io.github.moulberry.moulconfig.observer.Property;
 
 public class GUIElements {
+/*
     public enum AnchorCorner {
         TOPLEFT("Top Left"),
         TOPRIGHT("Top Right"),
@@ -22,31 +22,32 @@ public class GUIElements {
             return text;
         }
     }
+ */
 
     @Expose
     @ConfigOption(name = "Toggle Sprint/Sneak", desc = "")
     @Accordion
-    public GUIElement toggleSprintElement = new GUIElement(true, 10, 10, Property.of(AnchorCorner.BOTTOMLEFT), new OtherSettings(0));
+    public GUIElement toggleSprintElement = new GUIElement(true, 10, 10, 2, new OtherSettings(0));
 
     @Expose
     @ConfigOption(name = "Player Position Tracker", desc = "")
     @Accordion
-    public GUIElement playerPositionElement = new GUIElement(true, 10, 10, Property.of(AnchorCorner.TOPLEFT), new OtherSettings(1));
+    public GUIElement playerPositionElement = new GUIElement(true, 10, 10, 0, new OtherSettings(1));
 
     @Expose
     @ConfigOption(name = "Player Motion Tracker", desc = "")
     @Accordion
-    public GUIElement playerMotionElement = new GUIElement(true, 90, 10, Property.of(AnchorCorner.TOPLEFT), new OtherSettings(4));
+    public GUIElement playerMotionElement = new GUIElement(true, 90, 10, 0, new OtherSettings(4));
 
     @Expose
     @ConfigOption(name = "Player Rotation Tracker", desc = "")
     @Accordion
-    public GUIElement playerRotationElement = new GUIElement(true, 10, 90, Property.of(AnchorCorner.TOPLEFT), new OtherSettings(4));
+    public GUIElement playerRotationElement = new GUIElement(true, 10, 90, 0, new OtherSettings(4));
 
     @Expose
     @ConfigOption(name = "Display Size Tracker", desc = "")
     @Accordion
-    public GUIElement displaySizeElement = new GUIElement(true, 10, 10, Property.of(AnchorCorner.TOPRIGHT), new OtherSettings(0));
+    public GUIElement displaySizeElement = new GUIElement(true, 10, 10, 1, new OtherSettings(0));
 
     public static class GUIElement {
         @Expose
@@ -66,15 +67,15 @@ public class GUIElements {
 
         @Expose
         @ConfigOption(name = "Anchor Corner", desc = "Aligns text to a corner of the screen.")
-        @ConfigEditorDropdown
-        public Property<AnchorCorner> anchorCorner;
+        @ConfigEditorDropdown(values = {"Top Left", "Top Right", "Bottom Left", "Bottom Right"})
+        public int anchorCorner;
 
         @Expose
         @ConfigOption(name = "Other Settings", desc = "")
         @Accordion
         public OtherSettings otherSettings;
 
-        public GUIElement(boolean isEnabled, double x, double y, Property<AnchorCorner> anchorCorner, OtherSettings otherSettings) {
+        public GUIElement(boolean isEnabled, double x, double y, int anchorCorner, OtherSettings otherSettings) {
             this.isEnabled = isEnabled;
             this.x = x;
             this.y = y;

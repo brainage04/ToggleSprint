@@ -1,12 +1,9 @@
 package com.github.brainage04.togglesprint.gui.core
 
-import com.github.brainage04.togglesprint.config.categories.GUIElements
-import com.github.brainage04.togglesprint.gui.DisplaySizeTracker.displaySizeTracker
 import com.github.brainage04.togglesprint.gui.PlayerMotionTracker.playerMotionTracker
 import com.github.brainage04.togglesprint.gui.PlayerPositionTracker.playerPositionTracker
 import com.github.brainage04.togglesprint.gui.PlayerRotationTracker.playerRotationTracker
 import com.github.brainage04.togglesprint.gui.ToggleSprintTracker.toggleSprintTracker
-import io.github.moulberry.moulconfig.observer.Property
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.ScaledResolution
 import net.minecraft.client.renderer.GlStateManager
@@ -24,7 +21,6 @@ class RenderGuiData {
         playerPositionTracker()
         playerMotionTracker()
         playerRotationTracker()
-        displaySizeTracker()
 
         GlStateManager.popMatrix()
     }
@@ -32,21 +28,19 @@ class RenderGuiData {
     companion object {
         private var paddingInPixels = 2
 
-        fun renderElement(x: Double, y: Double, anchorCorner: Property<GUIElements.AnchorCorner>, text: String, lineWidth: Int = -1, lineHeight: Int = -1) {
+        fun renderElement(x: Double, y: Double, anchorCorner: Int, text: String) {
             val minecraft = Minecraft.getMinecraft() ?: return
             val renderer = minecraft.renderManager.fontRenderer ?: return
 
-            val widthInPixels = if (lineWidth == -1) renderer.getStringWidth(text) else 0
-            val heightInPixels = if (lineHeight == -1) renderer.FONT_HEIGHT else 0
-
             val scaledResolution = ScaledResolution(minecraft)
+            val widthInPixels = renderer.getStringWidth(text)
 
             val posX = when (anchorCorner) {
-                Property.of(GUIElements.AnchorCorner.TOPRIGHT), Property.of(GUIElements.AnchorCorner.BOTTOMRIGHT) -> scaledResolution.scaledWidth - x - widthInPixels
+                1, 3 -> scaledResolution.scaledWidth - x - widthInPixels
                 else -> x
             }
             val posY = when (anchorCorner) {
-                Property.of(GUIElements.AnchorCorner.BOTTOMLEFT), Property.of(GUIElements.AnchorCorner.BOTTOMRIGHT) -> scaledResolution.scaledHeight - y - heightInPixels
+                2, 3 -> scaledResolution.scaledHeight - y - renderer.FONT_HEIGHT
                 else -> y
             }
 
@@ -57,15 +51,14 @@ class RenderGuiData {
             GlStateManager.popMatrix()
         }
 
-        fun renderElement(x: Double, y: Double, anchorCorner: Property<GUIElements.AnchorCorner>, textArray: Array<String>) {
-            val minecraft = Minecraft.getMinecraft() ?: return
-            val renderer = minecraft.renderManager.fontRenderer ?: return
+        fun renderElement(x: Double, y: Double, anchorCorner: Int, textArray: Array<String>) {
+            val renderer = Minecraft.getMinecraft().renderManager.fontRenderer ?: return
 
-            for (i in textArray.indices) {
-                val widthInPixels = renderer.getStringWidth(textArray[i])
-                val heightInPixels = renderer.FONT_HEIGHT
+            val heightInPixels = (renderer.FONT_HEIGHT + paddingInPixels)
 
-                renderElement(x, y + ((heightInPixels + paddingInPixels) * i), anchorCorner, textArray[i], widthInPixels, heightInPixels)
+            when (anchorCorner) {
+                0, 1 -> for (i in textArray.indices) renderElement(x, y + (heightInPixels * i), anchorCorner, textArray[i])
+                2, 3 -> for (i in textArray.indices) renderElement(x, y + (heightInPixels * i), anchorCorner, textArray[textArray.indices.last - i])
             }
         }
     }
