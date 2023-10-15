@@ -24,10 +24,6 @@ public class GUIElements {
     @Accordion
     public RotationElement playerRotationElement = new RotationElement(new CoreSettings(true, 10, 50, 0), 2, false);
 
-    /*
-
-     */
-
     public static class GUIElement {
         @Expose
         @ConfigOption(name = "Core Settings", desc = "")

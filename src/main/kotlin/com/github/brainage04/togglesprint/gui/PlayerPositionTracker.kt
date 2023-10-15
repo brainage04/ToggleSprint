@@ -21,7 +21,7 @@ object PlayerPositionTracker {
             guiElements.playerPositionElement.coreSettings.x,
             guiElements.playerPositionElement.coreSettings.y,
             guiElements.playerPositionElement.coreSettings.anchorCorner,
-            textArray
+            textArray,
         )
     }
 }
