@@ -1,30 +1,47 @@
 package com.github.brainage04.togglesprint.config.categories;
 
-import com.github.brainage04.togglesprint.gui.core.RenderGuiData;
 import com.google.gson.annotations.Expose;
 import io.github.moulberry.moulconfig.annotations.*;
 import io.github.moulberry.moulconfig.observer.Property;
 
 public class GUIElements {
+    public enum AnchorCorner {
+        TOPLEFT("Top Left"),
+        TOPRIGHT("Top Right"),
+        BOTTOMLEFT("Bottom Left"),
+        BOTTOMRIGHT("Bottom Right");
+
+        private final String text;
+
+        AnchorCorner(String text) {
+            this.text = text;
+        }
+
+        @Override
+        public String toString() {
+            return text;
+        }
+    }
+
     @Expose
     @ConfigOption(name = "Toggle Sprint/Sneak", desc = "")
     @Accordion
-    public GUIElement toggleSprintElement = new GUIElement(true, 10, 10, Property.of(RenderGuiData.DisplayAnchor.BOTTOMLEFT), new OtherSettings(0));
+    public GUIElement toggleSprintElement = new GUIElement(true, 10, 10, Property.of(AnchorCorner.BOTTOMLEFT), new OtherSettings(0));
 
     @Expose
     @ConfigOption(name = "Player Position Tracker", desc = "")
     @Accordion
-    public GUIElement playerPositionElement = new GUIElement(true, 10, 10, Property.of(RenderGuiData.DisplayAnchor.TOPLEFT), new OtherSettings(1));
+    public GUIElement playerPositionElement = new GUIElement(true, 10, 10, Property.of(AnchorCorner.TOPLEFT), new OtherSettings(1));
 
     @Expose
     @ConfigOption(name = "Player Motion Tracker", desc = "")
     @Accordion
-    public GUIElement playerMotionElement = new GUIElement(true, 90, 10, Property.of(RenderGuiData.DisplayAnchor.TOPLEFT), new OtherSettings(4));
+    public GUIElement playerMotionElement = new GUIElement(true, 90, 10, Property.of(AnchorCorner.TOPLEFT), new OtherSettings(4));
 
     @Expose
     @ConfigOption(name = "Player Rotation Tracker", desc = "")
     @Accordion
-    public GUIElement playerRotationElement = new GUIElement(true, 10, 90, Property.of(RenderGuiData.DisplayAnchor.TOPLEFT), new OtherSettings(4));
+    public GUIElement playerRotationElement = new GUIElement(true, 10, 90, Property.of(AnchorCorner.TOPLEFT), new OtherSettings(4));
 
     public static class GUIElement {
         @Expose
@@ -43,16 +60,16 @@ public class GUIElements {
         public double y;
 
         @Expose
-        @ConfigOption(name = "Horizontal Alignment", desc = "Aligns text to a corner of the screen.")
-        @ConfigEditorDropdown()
-        public Property<RenderGuiData.DisplayAnchor> displayAnchor;
+        @ConfigOption(name = "Anchor Corner", desc = "Aligns text to a corner of the screen.")
+        @ConfigEditorDropdown
+        public Property<AnchorCorner> displayAnchor;
 
         @Expose
         @ConfigOption(name = "Other Settings", desc = "")
         @Accordion
         public OtherSettings otherSettings;
 
-        public GUIElement(boolean isEnabled, double x, double y, Property<RenderGuiData.DisplayAnchor> displayAnchor, OtherSettings otherSettings) {
+        public GUIElement(boolean isEnabled, double x, double y, Property<AnchorCorner> displayAnchor, OtherSettings otherSettings) {
             this.isEnabled = isEnabled;
             this.x = x;
             this.y = y;
