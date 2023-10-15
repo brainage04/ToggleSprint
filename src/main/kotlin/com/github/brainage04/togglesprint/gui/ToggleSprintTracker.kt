@@ -11,7 +11,7 @@ object ToggleSprintTracker {
     private val toggleMovementKeys get() = ToggleSprintMain.config.toggleMovementKeys
 
     fun toggleSprintTracker() {
-        if (!guiElements.toggleSprintElement.coreSettings.isEnabled || (!toggleMovementKeys.toggleSprint && !toggleMovementKeys.toggleSneak)) return
+        if (!guiElements.toggleSprintElement.isEnabled || (!toggleMovementKeys.toggleSprint && !toggleMovementKeys.toggleSneak)) return
 
         val player = Minecraft.getMinecraft().thePlayer ?: return
 
@@ -25,9 +25,9 @@ object ToggleSprintTracker {
         else "§f"
 
         RenderGuiData.renderElement(
-            guiElements.toggleSprintElement.coreSettings.x,
-            guiElements.toggleSprintElement.coreSettings.y,
-            guiElements.toggleSprintElement.coreSettings.anchorCorner,
+            guiElements.toggleSprintElement.x,
+            guiElements.toggleSprintElement.y,
+            guiElements.toggleSprintElement.anchorCorner,
             text,
         )
     }
