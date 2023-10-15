@@ -43,6 +43,11 @@ public class GUIElements {
     @Accordion
     public GUIElement playerRotationElement = new GUIElement(true, 10, 90, Property.of(AnchorCorner.TOPLEFT), new OtherSettings(4));
 
+    @Expose
+    @ConfigOption(name = "Display Size Tracker", desc = "")
+    @Accordion
+    public GUIElement displaySizeElement = new GUIElement(true, 10, 10, Property.of(AnchorCorner.TOPRIGHT), new OtherSettings(0));
+
     public static class GUIElement {
         @Expose
         @ConfigOption(name = "Is Enabled", desc = "Enables rendering for the element.")
