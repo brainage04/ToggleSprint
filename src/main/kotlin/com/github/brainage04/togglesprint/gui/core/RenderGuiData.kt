@@ -39,14 +39,14 @@ class RenderGuiData {
             val widthInPixels = if (lineWidth == -1) renderer.getStringWidth(text) else 0
             val heightInPixels = if (lineHeight == -1) renderer.FONT_HEIGHT else 0
 
-            val scaledResolution = ScaledResolution(Minecraft.getMinecraft())
+            val scaledResolution = ScaledResolution(minecraft)
 
             val posX = when (anchorCorner) {
-                Property.of(GUIElements.AnchorCorner.TOPRIGHT), Property.of(GUIElements.AnchorCorner.BOTTOMRIGHT) -> minecraft.displayWidth - x - widthInPixels
+                Property.of(GUIElements.AnchorCorner.TOPRIGHT), Property.of(GUIElements.AnchorCorner.BOTTOMRIGHT) -> scaledResolution.scaledWidth - x - widthInPixels
                 else -> x
             }
             val posY = when (anchorCorner) {
-                Property.of(GUIElements.AnchorCorner.BOTTOMLEFT), Property.of(GUIElements.AnchorCorner.BOTTOMRIGHT) -> minecraft.displayHeight - y - heightInPixels
+                Property.of(GUIElements.AnchorCorner.BOTTOMLEFT), Property.of(GUIElements.AnchorCorner.BOTTOMRIGHT) -> scaledResolution.scaledHeight - y - heightInPixels
                 else -> y
             }
 

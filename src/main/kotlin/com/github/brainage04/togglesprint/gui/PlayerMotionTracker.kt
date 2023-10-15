@@ -20,7 +20,7 @@ object PlayerMotionTracker {
         RenderGuiData.renderElement(
             guiElements.playerMotionElement.x,
             guiElements.playerMotionElement.y,
-            guiElements.playerMotionElement.displayAnchor,
+            guiElements.playerMotionElement.anchorCorner,
             textArray
         )
     }

@@ -56,29 +56,29 @@ public class GUIElements {
 
         @Expose
         @ConfigOption(name = "X Coordinate", desc = "The X coordinate of the GUI element.")
-        @ConfigEditorSlider(minValue = 0, maxValue = 1920 * 2, minStep = 1)
+        @ConfigEditorSlider(minValue = 0, maxValue = 1_920 * 2, minStep = 1)
         public double x;
 
         @Expose
         @ConfigOption(name = "Y Coordinate", desc = "The Y coordinate of the GUI element.")
-        @ConfigEditorSlider(minValue = 0, maxValue = 1080 * 2, minStep = 1)
+        @ConfigEditorSlider(minValue = 0, maxValue = 1_080 * 2, minStep = 1)
         public double y;
 
         @Expose
         @ConfigOption(name = "Anchor Corner", desc = "Aligns text to a corner of the screen.")
         @ConfigEditorDropdown
-        public Property<AnchorCorner> displayAnchor;
+        public Property<AnchorCorner> anchorCorner;
 
         @Expose
         @ConfigOption(name = "Other Settings", desc = "")
         @Accordion
         public OtherSettings otherSettings;
 
-        public GUIElement(boolean isEnabled, double x, double y, Property<AnchorCorner> displayAnchor, OtherSettings otherSettings) {
+        public GUIElement(boolean isEnabled, double x, double y, Property<AnchorCorner> anchorCorner, OtherSettings otherSettings) {
             this.isEnabled = isEnabled;
             this.x = x;
             this.y = y;
-            this.displayAnchor = displayAnchor;
+            this.anchorCorner = anchorCorner;
             this.otherSettings = otherSettings;
         }
     }

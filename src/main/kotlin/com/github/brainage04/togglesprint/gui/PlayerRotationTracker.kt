@@ -29,7 +29,7 @@ object PlayerRotationTracker {
         RenderGuiData.renderElement(
             guiElements.playerRotationElement.x,
             guiElements.playerRotationElement.y,
-            guiElements.playerRotationElement.displayAnchor,
+            guiElements.playerRotationElement.anchorCorner,
             textArray
         )
     }
