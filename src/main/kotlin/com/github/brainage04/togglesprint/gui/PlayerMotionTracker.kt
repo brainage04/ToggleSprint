@@ -9,7 +9,7 @@ object PlayerMotionTracker {
     private val guiElements get() = ToggleSprintMain.config.guiElements
 
     private fun formatMotion(motion: Double, axis: String): String {
-        var returnString = "§fMotion $axis: ${(motion * 20).round(guiElements.playerMotionElement.decimals)} m/s"
+        var returnString = "§fMotion $axis: ${(motion * 20 * 2).round(guiElements.playerMotionElement.decimals)} m/s" // for some reason this number is half as big as it should be???
 
         if (guiElements.playerMotionElement.showTrueMotion) {
             returnString += "(${motion.round(guiElements.playerMotionElement.decimals)} m/tick)"
