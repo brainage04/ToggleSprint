@@ -14,10 +14,17 @@ object PlayerRotationTracker {
         val yaw = Minecraft.getMinecraft().thePlayer.rotationYaw
         val pitch = Minecraft.getMinecraft().thePlayer.rotationPitch.round(guiElements.playerRotationElement.otherSettings.decimals)
 
-        val textArray = arrayOf(
-            "§fYaw: ${(((yaw + 180) % 360) - 180).round(guiElements.playerRotationElement.otherSettings.decimals)} (${yaw.round(guiElements.playerRotationElement.otherSettings.decimals)})",
-            "§fPitch: $pitch",
-        )
+        val textArray = if (yaw > 0) {
+            arrayOf(
+                "§fYaw: ${(((yaw + 180) % 360) - 180).round(guiElements.playerRotationElement.otherSettings.decimals)} (${yaw.round(guiElements.playerRotationElement.otherSettings.decimals)})",
+                "§fPitch: $pitch",
+            )
+        } else {
+            arrayOf(
+                "§fYaw: ${(((yaw - 180) % 360) + 180).round(guiElements.playerRotationElement.otherSettings.decimals)} (${yaw.round(guiElements.playerRotationElement.otherSettings.decimals)})",
+                "§fPitch: $pitch",
+            )
+        }
 
         RenderGuiData.renderElement(
             guiElements.playerRotationElement.x,

@@ -1,12 +1,14 @@
 package com.github.brainage04.togglesprint.gui.core
 
 import com.github.brainage04.togglesprint.config.categories.GUIElements
+import com.github.brainage04.togglesprint.gui.DisplaySizeTracker.displaySizeTracker
 import com.github.brainage04.togglesprint.gui.PlayerMotionTracker.playerMotionTracker
 import com.github.brainage04.togglesprint.gui.PlayerPositionTracker.playerPositionTracker
 import com.github.brainage04.togglesprint.gui.PlayerRotationTracker.playerRotationTracker
 import com.github.brainage04.togglesprint.gui.ToggleSprintTracker.toggleSprintTracker
 import io.github.moulberry.moulconfig.observer.Property
 import net.minecraft.client.Minecraft
+import net.minecraft.client.gui.ScaledResolution
 import net.minecraft.client.renderer.GlStateManager
 import net.minecraftforge.client.event.RenderGameOverlayEvent
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
@@ -22,6 +24,7 @@ class RenderGuiData {
         playerPositionTracker()
         playerMotionTracker()
         playerRotationTracker()
+        displaySizeTracker()
 
         GlStateManager.popMatrix()
     }
@@ -35,6 +38,8 @@ class RenderGuiData {
 
             val widthInPixels = if (lineWidth == -1) renderer.getStringWidth(text) else 0
             val heightInPixels = if (lineHeight == -1) renderer.FONT_HEIGHT else 0
+
+            val scaledResolution = ScaledResolution(Minecraft.getMinecraft())
 
             val posX = when (anchorCorner) {
                 Property.of(GUIElements.AnchorCorner.TOPRIGHT), Property.of(GUIElements.AnchorCorner.BOTTOMRIGHT) -> minecraft.displayWidth - x - widthInPixels
