@@ -20,7 +20,11 @@ class ToggleSprintKeybind : KeyBinding("Toggle Sprint", Keyboard.KEY_RCONTROL, T
 
             if (!toggleMovementKeys.toggleSprint) return
 
-            if (this.isPressed) isToggled = !isToggled
+            if (this.isPressed) {
+                isToggled = !isToggled
+
+                if (!isToggled) setKeyBindState(Minecraft.getMinecraft().gameSettings.keyBindSprint.keyCode, false)
+            }
 
             if (isToggled) setKeyBindState(Minecraft.getMinecraft().gameSettings.keyBindSprint.keyCode, true)
         }
