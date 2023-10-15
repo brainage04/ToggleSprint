@@ -3,7 +3,6 @@ package com.github.brainage04.togglesprint.keybinds
 import com.github.brainage04.togglesprint.ToggleSprintMain
 import com.github.brainage04.togglesprint.ToggleSprintMain.Companion.toggleSprintKeybind
 import com.github.brainage04.togglesprint.config.categories.ToggleMovementKeys
-import com.github.brainage04.togglesprint.utils.ChatUtils
 import net.minecraft.client.Minecraft
 import net.minecraft.client.settings.KeyBinding
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
@@ -11,9 +10,8 @@ import net.minecraftforge.fml.common.gameevent.TickEvent
 import org.lwjgl.input.Keyboard
 
 class ToggleSprintKeybind : KeyBinding("Toggle Sprint", Keyboard.KEY_RCONTROL, ToggleSprintMain.MOD_NAME) {
-    private var toggleSprint = true
-
     companion object {
+        var isToggled = true
         val sprint: ToggleMovementKeys.ToggleSprintCategory get() = ToggleSprintMain.config.toggleMovementKeys.toggleSprintCategory
     }
 
@@ -25,12 +23,12 @@ class ToggleSprintKeybind : KeyBinding("Toggle Sprint", Keyboard.KEY_RCONTROL, T
             if (!sprint.toggleSprint) return
 
             if (toggleSprintKeybind.isPressed) {
-                toggleSprint = !toggleSprint
+                isToggled = !isToggled
 
-                if (!toggleSprint) setKeyBindState(Minecraft.getMinecraft().gameSettings.keyBindSprint.keyCode, false)
+                if (!isToggled) setKeyBindState(Minecraft.getMinecraft().gameSettings.keyBindSprint.keyCode, false)
             }
 
-            if (toggleSprint) setKeyBindState(Minecraft.getMinecraft().gameSettings.keyBindSprint.keyCode, true)
+            if (isToggled) setKeyBindState(Minecraft.getMinecraft().gameSettings.keyBindSprint.keyCode, true)
         }
     }
 }

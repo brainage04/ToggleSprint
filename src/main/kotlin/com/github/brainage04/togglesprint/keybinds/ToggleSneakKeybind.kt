@@ -5,15 +5,13 @@ import com.github.brainage04.togglesprint.ToggleSprintMain.Companion.toggleSneak
 import com.github.brainage04.togglesprint.config.categories.ToggleMovementKeys
 import net.minecraft.client.Minecraft
 import net.minecraft.client.settings.KeyBinding
-import net.minecraftforge.client.event.GuiOpenEvent
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.fml.common.gameevent.TickEvent
 import org.lwjgl.input.Keyboard
 
 class ToggleSneakKeybind : KeyBinding("Toggle Sneak", Keyboard.KEY_RSHIFT, ToggleSprintMain.MOD_NAME) {
-    private var toggleSneak = false
-
     companion object {
+        var isToggled = false
         val sneak: ToggleMovementKeys.ToggleSneakCategory get() = ToggleSprintMain.config.toggleMovementKeys.toggleSneakCategory
     }
 
@@ -25,12 +23,12 @@ class ToggleSneakKeybind : KeyBinding("Toggle Sneak", Keyboard.KEY_RSHIFT, Toggl
             if (!sneak.toggleSneak) return
 
             if (toggleSneakKeybind.isPressed) {
-                toggleSneak = !toggleSneak
+                isToggled = !isToggled
 
-                if (!toggleSneak) setKeyBindState(Minecraft.getMinecraft().gameSettings.keyBindSneak.keyCode, false)
+                if (!isToggled) setKeyBindState(Minecraft.getMinecraft().gameSettings.keyBindSneak.keyCode, false)
             }
 
-            if (toggleSneak) setKeyBindState(Minecraft.getMinecraft().gameSettings.keyBindSneak.keyCode, true)
+            if (isToggled) setKeyBindState(Minecraft.getMinecraft().gameSettings.keyBindSneak.keyCode, true)
 
             if (Minecraft.getMinecraft().currentScreen != null) setKeyBindState(Minecraft.getMinecraft().gameSettings.keyBindSneak.keyCode, false) // disable toggle sneak in GUIs (sneaking in GUIs is illegal on most servers)
         }

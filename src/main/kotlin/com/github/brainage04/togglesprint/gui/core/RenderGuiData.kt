@@ -11,16 +11,11 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 
 class RenderGuiData {
-    enum class HorizontalAlignmentType {
-        LEFT,
-        CENTER,
-        RIGHT
-    }
-
-    enum class VerticalAlignmentType {
-        TOP,
-        CENTER,
-        BOTTOM
+    enum class DisplayAnchor {
+        TOPLEFT,
+        TOPRIGHT,
+        BOTTOMLEFT,
+        BOTTOMRIGHT,
     }
 
     @SubscribeEvent
@@ -40,48 +35,20 @@ class RenderGuiData {
     companion object {
         private var paddingInPixels = 2
 
-        fun renderElement(x: Double, y: Double, horizontalAlignment: Property<HorizontalAlignmentType>, verticalAlignment: Property<VerticalAlignmentType>, text: String, lineWidth: Int = -1, lineHeight: Int = -1) {
+        fun renderElement(x: Double, y: Double, displayAnchor: Property<DisplayAnchor>, text: String, lineWidth: Int = -1, lineHeight: Int = -1) {
             val minecraft = Minecraft.getMinecraft() ?: return
             val renderer = minecraft.renderManager.fontRenderer ?: return
 
-            var widthInPixels = lineWidth
-            if (widthInPixels == -1) {
-                widthInPixels = renderer.getStringWidth(text)
+            val widthInPixels = if (lineWidth == -1) renderer.getStringWidth(text) else 0
+            val heightInPixels = if (lineHeight == -1) renderer.FONT_HEIGHT else 0
+
+            val posX = when (displayAnchor) {
+                Property.of(DisplayAnchor.TOPRIGHT), Property.of(DisplayAnchor.BOTTOMRIGHT) -> minecraft.displayWidth - x - widthInPixels
+                else -> x
             }
-            var heightInPixels = lineHeight
-            if (heightInPixels == -1) {
-                heightInPixels = renderer.FONT_HEIGHT
-            }
-
-            var posX = x
-            var posY = y
-
-            when (horizontalAlignment) {
-                Property.of(HorizontalAlignmentType.LEFT) -> {
-
-                }
-
-                Property.of(HorizontalAlignmentType.CENTER) -> {
-                    posX += widthInPixels / 2
-                }
-
-                Property.of(HorizontalAlignmentType.RIGHT) -> {
-                    posX += widthInPixels
-                }
-            }
-
-            when (verticalAlignment) {
-                Property.of(VerticalAlignmentType.TOP) -> {
-
-                }
-
-                Property.of(VerticalAlignmentType.CENTER) -> {
-                    posY -= heightInPixels / 2
-                }
-
-                Property.of(VerticalAlignmentType.BOTTOM) -> {
-                    posY -= heightInPixels
-                }
+            val posY = when (displayAnchor) {
+                Property.of(DisplayAnchor.BOTTOMLEFT), Property.of(DisplayAnchor.BOTTOMRIGHT) -> minecraft.displayHeight - y - heightInPixels
+                else -> y
             }
 
             GlStateManager.pushMatrix()
@@ -91,7 +58,7 @@ class RenderGuiData {
             GlStateManager.popMatrix()
         }
 
-        fun renderElement(x: Double, y: Double, horizontalAlignment: Property<HorizontalAlignmentType>, verticalAlignment: Property<VerticalAlignmentType>, textArray: Array<String>) {
+        fun renderElement(x: Double, y: Double, displayAnchor: Property<DisplayAnchor>, textArray: Array<String>) {
             val minecraft = Minecraft.getMinecraft() ?: return
             val renderer = minecraft.renderManager.fontRenderer ?: return
 
@@ -99,7 +66,7 @@ class RenderGuiData {
                 val widthInPixels = renderer.getStringWidth(textArray[i])
                 val heightInPixels = renderer.FONT_HEIGHT
 
-                renderElement(x, y + ((heightInPixels + paddingInPixels) * i), horizontalAlignment, verticalAlignment, textArray[i], widthInPixels, heightInPixels)
+                renderElement(x, y + ((heightInPixels + paddingInPixels) * i), displayAnchor, textArray[i], widthInPixels, heightInPixels)
             }
         }
     }

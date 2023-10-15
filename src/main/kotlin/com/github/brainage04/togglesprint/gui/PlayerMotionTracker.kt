@@ -22,8 +22,7 @@ class PlayerMotionTracker {
             RenderGuiData.renderElement(
                 config.x,
                 config.y,
-                config.horizontalAlignment,
-                config.verticalAlignment,
+                config.displayAnchor,
                 textArray
             )
         }
