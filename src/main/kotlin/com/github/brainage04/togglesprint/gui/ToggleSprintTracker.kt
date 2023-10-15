@@ -28,7 +28,7 @@ object ToggleSprintTracker {
             guiElements.toggleSprintElement.coreSettings.x,
             guiElements.toggleSprintElement.coreSettings.y,
             guiElements.toggleSprintElement.coreSettings.anchorCorner,
-            text
+            text,
         )
     }
 }

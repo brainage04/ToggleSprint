@@ -34,7 +34,7 @@ object PlayerRotationTracker {
             guiElements.playerRotationElement.coreSettings.x,
             guiElements.playerRotationElement.coreSettings.y,
             guiElements.playerRotationElement.coreSettings.anchorCorner,
-            textArray
+            textArray,
         )
     }
 }
