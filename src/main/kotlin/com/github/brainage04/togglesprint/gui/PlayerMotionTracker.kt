@@ -12,14 +12,14 @@ object PlayerMotionTracker {
         var returnString = "§fMotion $axis: ${(motion * 20 * 2).round(guiElements.playerMotionElement.decimals)} m/s" // for some reason this number is half as big as it should be???
 
         if (guiElements.playerMotionElement.showTrueMotion) {
-            returnString += "(${motion.round(guiElements.playerMotionElement.decimals)} m/tick)"
+            returnString += " (${motion.round(guiElements.playerMotionElement.decimals)} m/tick)"
         }
 
         return returnString
     }
 
     fun playerMotionTracker() {
-        if (!guiElements.playerMotionElement.coreSettings.isEnabled) return
+        if (!guiElements.playerMotionElement.guiElement.isEnabled) return
 
         val textArray = arrayOf(
             formatMotion(Minecraft.getMinecraft().thePlayer.motionX, "X"),
@@ -28,9 +28,9 @@ object PlayerMotionTracker {
         )
 
         RenderGuiData.renderElement(
-            guiElements.playerMotionElement.coreSettings.x,
-            guiElements.playerMotionElement.coreSettings.y,
-            guiElements.playerMotionElement.coreSettings.anchorCorner,
+            guiElements.playerMotionElement.guiElement.x,
+            guiElements.playerMotionElement.guiElement.y,
+            guiElements.playerMotionElement.guiElement.anchorCorner,
             textArray,
         )
     }

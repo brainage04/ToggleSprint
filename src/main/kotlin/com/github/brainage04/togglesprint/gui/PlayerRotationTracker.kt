@@ -23,7 +23,7 @@ object PlayerRotationTracker {
     }
 
     fun playerRotationTracker() {
-        if (!guiElements.playerRotationElement.coreSettings.isEnabled) return
+        if (!guiElements.playerRotationElement.guiElement.isEnabled) return
 
         val textArray = arrayOf(
             formatYaw(Minecraft.getMinecraft().thePlayer.rotationYaw),
@@ -31,9 +31,9 @@ object PlayerRotationTracker {
         )
 
         RenderGuiData.renderElement(
-            guiElements.playerRotationElement.coreSettings.x,
-            guiElements.playerRotationElement.coreSettings.y,
-            guiElements.playerRotationElement.coreSettings.anchorCorner,
+            guiElements.playerRotationElement.guiElement.x,
+            guiElements.playerRotationElement.guiElement.y,
+            guiElements.playerRotationElement.guiElement.anchorCorner,
             textArray,
         )
     }
