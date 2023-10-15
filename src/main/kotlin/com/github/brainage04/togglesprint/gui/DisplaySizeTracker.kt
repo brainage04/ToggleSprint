@@ -23,7 +23,7 @@ object DisplaySizeTracker {
         RenderGuiData.renderElement(
             guiElements.displaySizeElement.x,
             guiElements.displaySizeElement.y,
-            guiElements.displaySizeElement.displayAnchor,
+            guiElements.displaySizeElement.anchorCorner,
             textArray,
         )
     }

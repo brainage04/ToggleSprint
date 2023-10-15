@@ -27,7 +27,7 @@ object ToggleSprintTracker {
         RenderGuiData.renderElement(
             guiElements.toggleSprintElement.x,
             guiElements.toggleSprintElement.y,
-            guiElements.toggleSprintElement.displayAnchor,
+            guiElements.toggleSprintElement.anchorCorner,
             text
         )
     }
