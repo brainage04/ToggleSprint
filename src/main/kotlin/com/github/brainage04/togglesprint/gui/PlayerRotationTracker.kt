@@ -12,7 +12,7 @@ object PlayerRotationTracker {
         var returnString: String = if (yaw > 0.0) {
             "§fYaw: ${(((yaw + 180) % 360) - 180).round(guiElements.playerRotationElement.decimals)}"
         } else {
-            "§fYaw: ${(((yaw - 180) % 360) + 180).round(guiElements.playerRotationElement.decimals)} (${yaw.round(guiElements.playerRotationElement.decimals)})"
+            "§fYaw: ${(((yaw - 180) % 360) + 180).round(guiElements.playerRotationElement.decimals)}"
         }
 
         if (guiElements.playerRotationElement.showTrueYaw) {
