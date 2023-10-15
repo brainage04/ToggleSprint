@@ -4,28 +4,27 @@ import com.github.brainage04.togglesprint.gui.core.RenderGuiData;
 import com.google.gson.annotations.Expose;
 import io.github.moulberry.moulconfig.annotations.*;
 import io.github.moulberry.moulconfig.observer.Property;
-import net.minecraft.client.Minecraft;
 
 public class GUIElements {
     @Expose
     @ConfigOption(name = "Toggle Sprint/Sneak", desc = "")
     @Accordion
-    public GUIElement toggleSprintElement = new GUIElement(true, 10, Minecraft.getMinecraft().displayHeight - 10, Property.of(RenderGuiData.HorizontalAlignmentType.LEFT), Property.of(RenderGuiData.VerticalAlignmentType.BOTTOM), new OtherSettings(0));
+    public GUIElement toggleSprintElement = new GUIElement(true, 10, 10, Property.of(RenderGuiData.DisplayAnchor.BOTTOMLEFT), new OtherSettings(0));
 
     @Expose
     @ConfigOption(name = "Player Position Tracker", desc = "")
     @Accordion
-    public GUIElement playerPositionElement = new GUIElement(true, 10, 10, Property.of(RenderGuiData.HorizontalAlignmentType.LEFT), Property.of(RenderGuiData.VerticalAlignmentType.TOP), new OtherSettings(1));
+    public GUIElement playerPositionElement = new GUIElement(true, 10, 10, Property.of(RenderGuiData.DisplayAnchor.TOPLEFT), new OtherSettings(1));
 
     @Expose
     @ConfigOption(name = "Player Motion Tracker", desc = "")
     @Accordion
-    public GUIElement playerMotionElement = new GUIElement(true, 90, 10, Property.of(RenderGuiData.HorizontalAlignmentType.LEFT), Property.of(RenderGuiData.VerticalAlignmentType.TOP), new OtherSettings(4));
+    public GUIElement playerMotionElement = new GUIElement(true, 90, 10, Property.of(RenderGuiData.DisplayAnchor.TOPLEFT), new OtherSettings(4));
 
     @Expose
     @ConfigOption(name = "Player Rotation Tracker", desc = "")
     @Accordion
-    public GUIElement playerRotationElement = new GUIElement(true, 10, 90, Property.of(RenderGuiData.HorizontalAlignmentType.LEFT), Property.of(RenderGuiData.VerticalAlignmentType.TOP), new OtherSettings(4));
+    public GUIElement playerRotationElement = new GUIElement(true, 10, 90, Property.of(RenderGuiData.DisplayAnchor.TOPLEFT), new OtherSettings(4));
 
     public static class GUIElement {
         @Expose
@@ -44,26 +43,20 @@ public class GUIElements {
         public double y;
 
         @Expose
-        @ConfigOption(name = "Horizontal Alignment", desc = "Aligns text to the left, center or right of the element.")
+        @ConfigOption(name = "Horizontal Alignment", desc = "Aligns text to a corner of the screen.")
         @ConfigEditorDropdown()
-        public Property<RenderGuiData.HorizontalAlignmentType> horizontalAlignment;
-
-        @Expose
-        @ConfigOption(name = "Vertical Alignment", desc = "Aligns text to the top, center or bottom of the element.")
-        @ConfigEditorDropdown()
-        public Property<RenderGuiData.VerticalAlignmentType> verticalAlignment;
+        public Property<RenderGuiData.DisplayAnchor> displayAnchor;
 
         @Expose
         @ConfigOption(name = "Other Settings", desc = "")
         @Accordion
         public OtherSettings otherSettings;
 
-        public GUIElement(boolean isEnabled, double x, double y, Property<RenderGuiData.HorizontalAlignmentType> horizontalAlignment, Property<RenderGuiData.VerticalAlignmentType> verticalAlignment, OtherSettings otherSettings) {
+        public GUIElement(boolean isEnabled, double x, double y, Property<RenderGuiData.DisplayAnchor> displayAnchor, OtherSettings otherSettings) {
             this.isEnabled = isEnabled;
             this.x = x;
             this.y = y;
-            this.horizontalAlignment = horizontalAlignment;
-            this.verticalAlignment = verticalAlignment;
+            this.displayAnchor = displayAnchor;
             this.otherSettings = otherSettings;
         }
     }
