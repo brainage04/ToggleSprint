@@ -7,22 +7,22 @@ public class GUIElements {
     @Expose
     @ConfigOption(name = "Toggle Sprint/Sneak", desc = "")
     @Accordion
-    public GUIElement toggleSprintElement = new GUIElement(new CoreSettings(true, 10, 10, 2));
+    public GUIElement toggleSprintElement = new GUIElement(new CoreSettings(true, 5, 3, 2));
 
     @Expose
     @ConfigOption(name = "Player Position Tracker", desc = "")
     @Accordion
-    public DecimalElement playerPositionElement = new DecimalElement(new CoreSettings(true, 10, 10, 0), 1);
+    public PositionElement playerPositionElement = new PositionElement(new CoreSettings(true, 10, 10, 0), 1);
 
     @Expose
     @ConfigOption(name = "Player Motion Tracker", desc = "")
     @Accordion
-    public DecimalElement playerMotionElement = new DecimalElement(new CoreSettings(true, 90, 10, 0), 4);
+    public MotionElement playerMotionElement = new MotionElement(new CoreSettings(true, 10, 10, 1), 4, false);
 
     @Expose
     @ConfigOption(name = "Player Rotation Tracker", desc = "")
     @Accordion
-    public RotationElement playerRotationElement = new RotationElement(new CoreSettings(true, 10, 90, 0), 2, false);
+    public RotationElement playerRotationElement = new RotationElement(new CoreSettings(true, 10, 50, 0), 2, false);
 
     /*
 
@@ -39,7 +39,7 @@ public class GUIElements {
         }
     }
 
-    public static class DecimalElement {
+    public static class PositionElement {
         @Expose
         @ConfigOption(name = "Core Settings", desc = "")
         @Accordion
@@ -50,9 +50,32 @@ public class GUIElements {
         @ConfigEditorSlider(minValue = 0, maxValue = 10, minStep = 1)
         public int decimals;
 
-        public DecimalElement(CoreSettings coreSettings, int decimals) {
+        public PositionElement(CoreSettings coreSettings, int decimals) {
             this.coreSettings = coreSettings;
             this.decimals = decimals;
+        }
+    }
+
+    public static class MotionElement {
+        @Expose
+        @ConfigOption(name = "Core Settings", desc = "")
+        @Accordion
+        public CoreSettings coreSettings;
+
+        @Expose
+        @ConfigOption(name = "Decimal Points", desc = "The number of decimal points displayed.")
+        @ConfigEditorSlider(minValue = 0, maxValue = 10, minStep = 1)
+        public int decimals;
+
+        @Expose
+        @ConfigOption(name = "Show True Motion", desc = "Also shows the player's motion in blocks (metres) per tick (useful for debugging purposes).")
+        @ConfigEditorBoolean
+        public boolean showTrueMotion;
+
+        public MotionElement(CoreSettings coreSettings, int decimals, boolean showTrueMotion) {
+            this.coreSettings = coreSettings;
+            this.decimals = decimals;
+            this.showTrueMotion = showTrueMotion;
         }
     }
 
