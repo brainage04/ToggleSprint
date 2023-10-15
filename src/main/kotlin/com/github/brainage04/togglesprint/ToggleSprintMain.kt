@@ -4,6 +4,7 @@ import com.github.brainage04.togglesprint.commands.CommandManager
 import com.github.brainage04.togglesprint.config.manager.ConfigManager
 import com.github.brainage04.togglesprint.config.ToggleSprintConfig
 import com.github.brainage04.togglesprint.gui.core.RenderGuiData
+import com.github.brainage04.togglesprint.keybinds.ConfigKeybind
 import com.github.brainage04.togglesprint.keybinds.StatsKeybind
 import com.github.brainage04.togglesprint.keybinds.ToggleSneakKeybind
 import com.github.brainage04.togglesprint.keybinds.ToggleSprintKeybind
@@ -39,12 +40,14 @@ class ToggleSprintMain {
             toggleSprintKeybind,
             toggleSneakKeybind,
             statsKeybind,
+            configKeybind,
         )
 
         registerEvents(
             toggleSprintKeybind,
             toggleSneakKeybind,
             statsKeybind,
+            configKeybind,
 
             RenderGuiData(),
         )
@@ -73,5 +76,6 @@ class ToggleSprintMain {
         val toggleSprintKeybind: KeyBinding = ToggleSprintKeybind()
         val toggleSneakKeybind: KeyBinding = ToggleSneakKeybind()
         val statsKeybind: KeyBinding = StatsKeybind()
+        val configKeybind: KeyBinding = ConfigKeybind()
     }
 }
