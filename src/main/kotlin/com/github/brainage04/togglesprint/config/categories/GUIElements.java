@@ -4,52 +4,82 @@ import com.google.gson.annotations.Expose;
 import io.github.moulberry.moulconfig.annotations.*;
 
 public class GUIElements {
-/*
-    public enum AnchorCorner {
-        TOPLEFT("Top Left"),
-        TOPRIGHT("Top Right"),
-        BOTTOMLEFT("Bottom Left"),
-        BOTTOMRIGHT("Bottom Right");
-
-        private final String text;
-
-        AnchorCorner(String text) {
-            this.text = text;
-        }
-
-        @Override
-        public String toString() {
-            return text;
-        }
-    }
- */
-
     @Expose
     @ConfigOption(name = "Toggle Sprint/Sneak", desc = "")
     @Accordion
-    public GUIElement toggleSprintElement = new GUIElement(true, 10, 10, 2, new OtherSettings(0));
+    public GUIElement toggleSprintElement = new GUIElement(new CoreSettings(true, 10, 10, 2));
 
     @Expose
     @ConfigOption(name = "Player Position Tracker", desc = "")
     @Accordion
-    public GUIElement playerPositionElement = new GUIElement(true, 10, 10, 0, new OtherSettings(1));
+    public DecimalElement playerPositionElement = new DecimalElement(new CoreSettings(true, 10, 10, 0), 1);
 
     @Expose
     @ConfigOption(name = "Player Motion Tracker", desc = "")
     @Accordion
-    public GUIElement playerMotionElement = new GUIElement(true, 90, 10, 0, new OtherSettings(4));
+    public DecimalElement playerMotionElement = new DecimalElement(new CoreSettings(true, 90, 10, 0), 4);
 
     @Expose
     @ConfigOption(name = "Player Rotation Tracker", desc = "")
     @Accordion
-    public GUIElement playerRotationElement = new GUIElement(true, 10, 90, 0, new OtherSettings(4));
+    public RotationElement playerRotationElement = new RotationElement(new CoreSettings(true, 10, 90, 0), 2, false);
 
-    @Expose
-    @ConfigOption(name = "Display Size Tracker", desc = "")
-    @Accordion
-    public GUIElement displaySizeElement = new GUIElement(true, 10, 10, 1, new OtherSettings(0));
+    /*
+
+     */
 
     public static class GUIElement {
+        @Expose
+        @ConfigOption(name = "Core Settings", desc = "")
+        @Accordion
+        public CoreSettings coreSettings;
+
+        public GUIElement(CoreSettings coreSettings) {
+            this.coreSettings = coreSettings;
+        }
+    }
+
+    public static class DecimalElement {
+        @Expose
+        @ConfigOption(name = "Core Settings", desc = "")
+        @Accordion
+        public CoreSettings coreSettings;
+
+        @Expose
+        @ConfigOption(name = "Decimal Points", desc = "The number of decimal points displayed.")
+        @ConfigEditorSlider(minValue = 0, maxValue = 10, minStep = 1)
+        public int decimals;
+
+        public DecimalElement(CoreSettings coreSettings, int decimals) {
+            this.coreSettings = coreSettings;
+            this.decimals = decimals;
+        }
+    }
+
+    public static class RotationElement {
+        @Expose
+        @ConfigOption(name = "Core Settings", desc = "")
+        @Accordion
+        public CoreSettings coreSettings;
+
+        @Expose
+        @ConfigOption(name = "Decimal Points", desc = "The number of decimal points displayed.")
+        @ConfigEditorSlider(minValue = 0, maxValue = 10, minStep = 1)
+        public int decimals;
+
+        @Expose
+        @ConfigOption(name = "Show True Yaw", desc = "Shows the player's true yaw value (useful for debugging purposes).")
+        @ConfigEditorBoolean
+        public boolean showTrueYaw;
+
+        public RotationElement(CoreSettings coreSettings, int decimals, boolean showTrueYaw) {
+            this.coreSettings = coreSettings;
+            this.decimals = decimals;
+            this.showTrueYaw = showTrueYaw;
+        }
+    }
+
+    public static class CoreSettings {
         @Expose
         @ConfigOption(name = "Is Enabled", desc = "Enables rendering for the element.")
         @ConfigEditorBoolean()
@@ -70,28 +100,11 @@ public class GUIElements {
         @ConfigEditorDropdown(values = {"Top Left", "Top Right", "Bottom Left", "Bottom Right"})
         public int anchorCorner;
 
-        @Expose
-        @ConfigOption(name = "Other Settings", desc = "")
-        @Accordion
-        public OtherSettings otherSettings;
-
-        public GUIElement(boolean isEnabled, double x, double y, int anchorCorner, OtherSettings otherSettings) {
+        public CoreSettings(boolean isEnabled, int x, int y, int anchorCorner) {
             this.isEnabled = isEnabled;
             this.x = x;
             this.y = y;
             this.anchorCorner = anchorCorner;
-            this.otherSettings = otherSettings;
-        }
-    }
-
-    public static class OtherSettings {
-        @Expose
-        @ConfigOption(name = "Decimal Points", desc = "The number of decimal points displayed (if applicable).")
-        @ConfigEditorSlider(minValue = 0, maxValue = 10, minStep = 1)
-        public int decimals;
-
-        OtherSettings(int decimals) {
-            this.decimals = decimals;
         }
     }
 }

@@ -8,28 +8,32 @@ import net.minecraft.client.Minecraft
 object PlayerRotationTracker {
     private val guiElements get() = ToggleSprintMain.config.guiElements
 
-    fun playerRotationTracker() {
-        if (!guiElements.playerRotationElement.isEnabled) return
-
-        val yaw = Minecraft.getMinecraft().thePlayer.rotationYaw
-        val pitch = Minecraft.getMinecraft().thePlayer.rotationPitch.round(guiElements.playerRotationElement.otherSettings.decimals)
-
-        val textArray = if (yaw > 0) {
-            arrayOf(
-                "§fYaw: ${(((yaw + 180) % 360) - 180).round(guiElements.playerRotationElement.otherSettings.decimals)} (${yaw.round(guiElements.playerRotationElement.otherSettings.decimals)})",
-                "§fPitch: $pitch",
-            )
+    private fun formatYaw(yaw: Float): String {
+        var returnString: String = if (yaw > 0.0) {
+            "§fYaw: ${(((yaw + 180) % 360) - 180).round(guiElements.playerRotationElement.decimals)}"
         } else {
-            arrayOf(
-                "§fYaw: ${(((yaw - 180) % 360) + 180).round(guiElements.playerRotationElement.otherSettings.decimals)} (${yaw.round(guiElements.playerRotationElement.otherSettings.decimals)})",
-                "§fPitch: $pitch",
-            )
+            "§fYaw: ${(((yaw - 180) % 360) + 180).round(guiElements.playerRotationElement.decimals)} (${yaw.round(guiElements.playerRotationElement.decimals)})"
         }
 
+        if (guiElements.playerRotationElement.showTrueYaw) {
+            returnString += " (${yaw.round(guiElements.playerRotationElement.decimals)})"
+        }
+
+        return returnString
+    }
+
+    fun playerRotationTracker() {
+        if (!guiElements.playerRotationElement.coreSettings.isEnabled) return
+
+        val textArray = arrayOf(
+            formatYaw(Minecraft.getMinecraft().thePlayer.rotationYaw),
+            "§fPitch: ${Minecraft.getMinecraft().thePlayer.rotationPitch.round(guiElements.playerRotationElement.decimals)}",
+        )
+
         RenderGuiData.renderElement(
-            guiElements.playerRotationElement.x,
-            guiElements.playerRotationElement.y,
-            guiElements.playerRotationElement.anchorCorner,
+            guiElements.playerRotationElement.coreSettings.x,
+            guiElements.playerRotationElement.coreSettings.y,
+            guiElements.playerRotationElement.coreSettings.anchorCorner,
             textArray
         )
     }
