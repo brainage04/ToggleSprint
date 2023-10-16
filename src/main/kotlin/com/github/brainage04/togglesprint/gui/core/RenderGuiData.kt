@@ -1,8 +1,12 @@
 package com.github.brainage04.togglesprint.gui.core
 
+import com.github.brainage04.togglesprint.gui.EntityTracker.entityTracker
+import com.github.brainage04.togglesprint.gui.PingTracker.pingTracker
 import com.github.brainage04.togglesprint.gui.PlayerMotionTracker.playerMotionTracker
 import com.github.brainage04.togglesprint.gui.PlayerPositionTracker.playerPositionTracker
 import com.github.brainage04.togglesprint.gui.PlayerRotationTracker.playerRotationTracker
+import com.github.brainage04.togglesprint.gui.RealTimeTracker.realTimeTracker
+import com.github.brainage04.togglesprint.gui.TPSTracker.tpsTracker
 import com.github.brainage04.togglesprint.gui.ToggleSprintTracker.toggleSprintTracker
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.ScaledResolution
@@ -21,6 +25,10 @@ class RenderGuiData {
         playerPositionTracker()
         playerMotionTracker()
         playerRotationTracker()
+        entityTracker()
+        realTimeTracker()
+        tpsTracker()
+        pingTracker()
 
         GlStateManager.popMatrix()
     }
@@ -51,7 +59,19 @@ class RenderGuiData {
             GlStateManager.popMatrix()
         }
 
+        // this should be removed in favour of ArrayList version (arrays have mutable elements but immutable size, arraylists have mutable elements AND size)
         fun renderElement(x: Double, y: Double, anchorCorner: Int, textArray: Array<String>) {
+            val renderer = Minecraft.getMinecraft().renderManager.fontRenderer ?: return
+
+            val heightInPixels = (renderer.FONT_HEIGHT + paddingInPixels)
+
+            when (anchorCorner) {
+                0, 1 -> for (i in textArray.indices) renderElement(x, y + (heightInPixels * i), anchorCorner, textArray[i])
+                2, 3 -> for (i in textArray.indices) renderElement(x, y + (heightInPixels * i), anchorCorner, textArray[textArray.indices.last - i])
+            }
+        }
+
+        fun renderElement(x: Double, y: Double, anchorCorner: Int, textArray: ArrayList<String>) {
             val renderer = Minecraft.getMinecraft().renderManager.fontRenderer ?: return
 
             val heightInPixels = (renderer.FONT_HEIGHT + paddingInPixels)

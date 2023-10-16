@@ -16,19 +16,21 @@ class ToggleSneakKeybind : KeyBinding("Toggle Sneak", Keyboard.KEY_RSHIFT, Toggl
     @SubscribeEvent
     fun tick(event: TickEvent.ClientTickEvent) {
         if (event.phase == TickEvent.Phase.START) {
-            if (Minecraft.getMinecraft().thePlayer == null) return
+            val minecraft = Minecraft.getMinecraft() ?: return
+            if (minecraft.thePlayer == null) return
 
             if (!toggleMovementKeys.toggleSneak) return
 
             if (this.isPressed) {
                 isToggled = !isToggled
 
-                if (!isToggled && !Minecraft.getMinecraft().gameSettings.keyBindSneak.isPressed) setKeyBindState(Minecraft.getMinecraft().gameSettings.keyBindSneak.keyCode, false)
+                //if (!isToggled && !minecraft.gameSettings.keyBindSneak.isPressed) setKeyBindState(minecraft.gameSettings.keyBindSneak.keyCode, false)
+                if (!isToggled) setKeyBindState(minecraft.gameSettings.keyBindSneak.keyCode, false)
             }
 
-            if (isToggled) setKeyBindState(Minecraft.getMinecraft().gameSettings.keyBindSneak.keyCode, true)
+            if (isToggled) setKeyBindState(minecraft.gameSettings.keyBindSneak.keyCode, true)
 
-            if (Minecraft.getMinecraft().currentScreen != null) setKeyBindState(Minecraft.getMinecraft().gameSettings.keyBindSneak.keyCode, false) // disable toggle sneak in GUIs (sneaking in GUIs is illegal on most servers)
+            if (minecraft.currentScreen != null) setKeyBindState(minecraft.gameSettings.keyBindSneak.keyCode, false) // disable toggle sneak in GUIs (sneaking in GUIs is illegal on most servers)
         }
     }
 }

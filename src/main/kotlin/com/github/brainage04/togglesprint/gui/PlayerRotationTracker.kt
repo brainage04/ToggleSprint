@@ -10,30 +10,30 @@ object PlayerRotationTracker {
 
     private fun formatYaw(yaw: Float): String {
         var returnString: String = if (yaw > 0.0) {
-            "§fYaw: ${(((yaw + 180) % 360) - 180).round(guiElements.playerRotationElement.decimals)}"
+            "§fYaw: ${(((yaw + 180) % 360) - 180).round(guiElements.rotationTracker.decimals)}"
         } else {
-            "§fYaw: ${(((yaw - 180) % 360) + 180).round(guiElements.playerRotationElement.decimals)}"
+            "§fYaw: ${(((yaw - 180) % 360) + 180).round(guiElements.rotationTracker.decimals)}"
         }
 
-        if (guiElements.playerRotationElement.showTrueYaw) {
-            returnString += " (${yaw.round(guiElements.playerRotationElement.decimals)})"
+        if (guiElements.rotationTracker.showTrueYaw) {
+            returnString += " (${yaw.round(guiElements.rotationTracker.decimals)})"
         }
 
         return returnString
     }
 
     fun playerRotationTracker() {
-        if (!guiElements.playerRotationElement.guiElement.isEnabled) return
+        if (!guiElements.rotationTracker.coreSettings.isEnabled) return
 
         val textArray = arrayOf(
             formatYaw(Minecraft.getMinecraft().thePlayer.rotationYaw),
-            "§fPitch: ${Minecraft.getMinecraft().thePlayer.rotationPitch.round(guiElements.playerRotationElement.decimals)}",
+            "§fPitch: ${Minecraft.getMinecraft().thePlayer.rotationPitch.round(guiElements.rotationTracker.decimals)}",
         )
 
         RenderGuiData.renderElement(
-            guiElements.playerRotationElement.guiElement.x,
-            guiElements.playerRotationElement.guiElement.y,
-            guiElements.playerRotationElement.guiElement.anchorCorner,
+            guiElements.rotationTracker.coreSettings.x,
+            guiElements.rotationTracker.coreSettings.y,
+            guiElements.rotationTracker.coreSettings.anchorCorner,
             textArray,
         )
     }

@@ -9,17 +9,17 @@ object PlayerMotionTracker {
     private val guiElements get() = ToggleSprintMain.config.guiElements
 
     private fun formatMotion(motion: Double, axis: String): String {
-        var returnString = "§fMotion $axis: ${(motion * 20 * 2).round(guiElements.playerMotionElement.decimals)} m/s" // for some reason this number is half as big as it should be???
+        var returnString = "§fMotion $axis: ${(motion * 20 * 2).round(guiElements.motionTracker.decimals)} m/s" // for some reason this number is half as big as it should be???
 
-        if (guiElements.playerMotionElement.showTrueMotion) {
-            returnString += " (${motion.round(guiElements.playerMotionElement.decimals)} m/tick)"
+        if (guiElements.motionTracker.showTrueMotion) {
+            returnString += " (${motion.round(guiElements.motionTracker.decimals)} m/tick)"
         }
 
         return returnString
     }
 
     fun playerMotionTracker() {
-        if (!guiElements.playerMotionElement.guiElement.isEnabled) return
+        if (!guiElements.motionTracker.coreSettings.isEnabled) return
 
         val textArray = arrayOf(
             formatMotion(Minecraft.getMinecraft().thePlayer.motionX, "X"),
@@ -28,9 +28,9 @@ object PlayerMotionTracker {
         )
 
         RenderGuiData.renderElement(
-            guiElements.playerMotionElement.guiElement.x,
-            guiElements.playerMotionElement.guiElement.y,
-            guiElements.playerMotionElement.guiElement.anchorCorner,
+            guiElements.motionTracker.coreSettings.x,
+            guiElements.motionTracker.coreSettings.y,
+            guiElements.motionTracker.coreSettings.anchorCorner,
             textArray,
         )
     }

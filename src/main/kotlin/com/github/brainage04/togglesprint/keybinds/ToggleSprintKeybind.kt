@@ -16,17 +16,18 @@ class ToggleSprintKeybind : KeyBinding("Toggle Sprint", Keyboard.KEY_RCONTROL, T
     @SubscribeEvent
     fun tick(event: TickEvent.ClientTickEvent) {
         if (event.phase == TickEvent.Phase.START) {
-            if (Minecraft.getMinecraft().thePlayer == null) return
+            val minecraft = Minecraft.getMinecraft() ?: return
+            if (minecraft.thePlayer == null) return
 
             if (!toggleMovementKeys.toggleSprint) return
+
+            if (isToggled) setKeyBindState(minecraft.gameSettings.keyBindSprint.keyCode, true)
 
             if (this.isPressed) {
                 isToggled = !isToggled
 
-                if (!isToggled) setKeyBindState(Minecraft.getMinecraft().gameSettings.keyBindSprint.keyCode, false)
+                if (!isToggled) setKeyBindState(minecraft.gameSettings.keyBindSprint.keyCode, false)
             }
-
-            if (isToggled) setKeyBindState(Minecraft.getMinecraft().gameSettings.keyBindSprint.keyCode, true)
         }
     }
 }
