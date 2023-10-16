@@ -9,18 +9,18 @@ object PlayerPositionTracker {
     private val guiElements get() = ToggleSprintMain.config.guiElements
 
     fun playerPositionTracker() {
-        if (!guiElements.playerPositionElement.guiElement.isEnabled) return
+        if (!guiElements.positionTracker.coreSettings.isEnabled) return
 
         val textArray = arrayOf(
-            "§fX: ${Minecraft.getMinecraft().thePlayer.posX.round(guiElements.playerPositionElement.decimals)}",
-            "§fY: ${Minecraft.getMinecraft().thePlayer.posY.round(guiElements.playerPositionElement.decimals)}",
-            "§fZ: ${Minecraft.getMinecraft().thePlayer.posZ.round(guiElements.playerPositionElement.decimals)}",
+            "§fX: ${Minecraft.getMinecraft().thePlayer.posX.round(guiElements.positionTracker.decimals)}",
+            "§fY: ${Minecraft.getMinecraft().thePlayer.posY.round(guiElements.positionTracker.decimals)}",
+            "§fZ: ${Minecraft.getMinecraft().thePlayer.posZ.round(guiElements.positionTracker.decimals)}",
         )
 
         RenderGuiData.renderElement(
-            guiElements.playerPositionElement.guiElement.x,
-            guiElements.playerPositionElement.guiElement.y,
-            guiElements.playerPositionElement.guiElement.anchorCorner,
+            guiElements.positionTracker.coreSettings.x,
+            guiElements.positionTracker.coreSettings.y,
+            guiElements.positionTracker.coreSettings.anchorCorner,
             textArray,
         )
     }

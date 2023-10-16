@@ -3,6 +3,7 @@ package com.github.brainage04.togglesprint
 import com.github.brainage04.togglesprint.commands.CommandManager
 import com.github.brainage04.togglesprint.config.manager.ConfigManager
 import com.github.brainage04.togglesprint.config.ToggleSprintConfig
+import com.github.brainage04.togglesprint.events.ServerTickEvent
 import com.github.brainage04.togglesprint.gui.core.RenderGuiData
 import com.github.brainage04.togglesprint.keybinds.ConfigKeybind
 import com.github.brainage04.togglesprint.keybinds.StatsKeybind
@@ -49,6 +50,7 @@ class ToggleSprintMain {
             statsKeybind,
             configKeybind,
 
+            ServerTickEvent(),
             RenderGuiData(),
         )
     }
