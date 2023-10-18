@@ -19,9 +19,9 @@ object EntityTracker {
 
         val players = theWorld.playerEntities
         if (guiElements.entityTracker.showPlayers) {
-            textArray.add("§f${players.size} Players:")
-            for (player in players) {
-                textArray.add("§f${player.name}")
+            textArray.add("§f${players.size} Players")
+            if (guiElements.entityTracker.showPlayerNames) {
+                for (player in players) textArray.add("§f${player.name}")
             }
         }
 
@@ -31,9 +31,7 @@ object EntityTracker {
             var creaturesCount = 0
 
             for (entity in entities) {
-                if (entity.isCreatureType(EnumCreatureType.CREATURE, false)) {
-                    creaturesCount++
-                }
+                if (entity.isCreatureType(EnumCreatureType.CREATURE, false)) creaturesCount++
             }
 
             textArray.add("§fCreatures: $creaturesCount")
@@ -43,9 +41,7 @@ object EntityTracker {
             var waterCreaturesCount = 0
 
             for (entity in entities) {
-                if (entity.isCreatureType(EnumCreatureType.WATER_CREATURE, false)) {
-                    waterCreaturesCount++
-                }
+                if (entity.isCreatureType(EnumCreatureType.WATER_CREATURE, false)) waterCreaturesCount++
             }
 
             textArray.add("§fWaterCreatures: $waterCreaturesCount")
@@ -55,9 +51,7 @@ object EntityTracker {
             var ambientsCount = 0
 
             for (entity in entities) {
-                if (entity.isCreatureType(EnumCreatureType.AMBIENT, false)) {
-                    ambientsCount++
-                }
+                if (entity.isCreatureType(EnumCreatureType.AMBIENT, false)) ambientsCount++
             }
 
             textArray.add("§fAmbients: $ambientsCount")
@@ -67,9 +61,7 @@ object EntityTracker {
             var monstersCount = 0
 
             for (entity in entities) {
-                if (entity.isCreatureType(EnumCreatureType.MONSTER, false)) {
-                    monstersCount++
-                }
+                if (entity.isCreatureType(EnumCreatureType.MONSTER, false)) monstersCount++
             }
 
             textArray.add("§fMonsters: $monstersCount")

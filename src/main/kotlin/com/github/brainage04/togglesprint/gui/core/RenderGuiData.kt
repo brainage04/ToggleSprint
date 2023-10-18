@@ -27,8 +27,8 @@ class RenderGuiData {
         playerRotationTracker()
         entityTracker()
         realTimeTracker()
-        tpsTracker()
         pingTracker()
+        tpsTracker()
 
         GlStateManager.popMatrix()
     }

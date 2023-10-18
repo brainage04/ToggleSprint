@@ -40,7 +40,7 @@ class InputEventTracker {
             if (toggleSneakKeybind.isPressed) {
                 isSneakToggled = !isSneakToggled
 
-                if (!isSneakToggled) KeyBinding.setKeyBindState(minecraft.gameSettings.keyBindSneak.keyCode, false) // release sneak when toggle sneak disabled
+                if (!isSneakToggled && !minecraft.gameSettings.keyBindSneak.isPressed) KeyBinding.setKeyBindState(minecraft.gameSettings.keyBindSneak.keyCode, false) // release sneak when toggle sneak disabled
             }
 
             if (isSneakToggled) KeyBinding.setKeyBindState(minecraft.gameSettings.keyBindSneak.keyCode, true)

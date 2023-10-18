@@ -16,7 +16,7 @@ object TPSTracker {
     private var ignoreFirstTicks = waitAfterWorldSwitch
     var hasPacketReceived = false
 
-    var display: String = ""
+    var display: String = "§fTPS: "
 
     private fun getColor(tps: Double): String {
         return when {
@@ -29,7 +29,7 @@ object TPSTracker {
     }
 
     init {
-        fixedRateTimer(name = "skyhanni-tps-counter-seconds", period = 1_000L) {
+        fixedRateTimer(name = "${MOD_ID}-tps-counter-seconds", period = 1_000L) {
             if (!guiElements.tpsTracker.coreSettings.isEnabled) return@fixedRateTimer
             if (packetsFromLastSecond == 0) return@fixedRateTimer
 
@@ -46,12 +46,16 @@ object TPSTracker {
             packetsFromLastSecond = 0
             if (tickTimes.size > 10) tickTimes = tickTimes.drop(1).toMutableList()
 
-            display = if (tickTimes.size < guiElements.tpsTracker.rangeInSeconds) "§fTPS: Waiting... (${guiElements.tpsTracker.rangeInSeconds - tickTimes.size}s)"
+            display = if (tickTimes.size < minDataAmount) "§fTPS: Waiting... (${minDataAmount - tickTimes.size}s)"
             else {
                 val sum = tickTimes.sum().toDouble()
                 val tps = (sum / tickTimes.size).round(1)
 
-                "§fTPS: ${(getColor(tps)) + tps}"
+                if (guiElements.tpsTracker.showColor) {
+                    "§fTPS: ${(getColor(tps)) + tps}"
+                } else {
+                    "§fTPS: $tps"
+                }
             }
         }
 
