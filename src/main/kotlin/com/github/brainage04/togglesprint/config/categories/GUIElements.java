@@ -37,7 +37,7 @@ public class GUIElements {
     @Expose
     @ConfigOption(name = "TPS Tracker", desc = "")
     @Accordion
-    public TPSTracker tpsTracker = new TPSTracker(new CoreSettings(true, 10, 90, 0), 100, true);
+    public TPSTracker tpsTracker = new TPSTracker(new CoreSettings(true, 10, 90, 0), 1, true);
 
     @Expose
     @ConfigOption(name = "Ping Tracker", desc = "")
@@ -75,18 +75,18 @@ public class GUIElements {
         public CoreSettings coreSettings;
 
         @Expose
-        @ConfigOption(name = "Tick Range", desc = "The number of ticks used to calculate the average TPS.")
-        @ConfigEditorSlider(minValue = 10, maxValue = 200, minStep = 1)
-        public int tickRange;
+        @ConfigOption(name = "Range (Seconds)", desc = "The number of seconds worth of ticks used to calculate the average TPS.")
+        @ConfigEditorSlider(minValue = 1, maxValue = 10, minStep = 1)
+        public int rangeInSeconds;
 
         @Expose
         @ConfigOption(name = "Show Difference", desc = "Show the difference in milliseconds for the specified tick range.")
         @ConfigEditorBoolean
         public boolean showDifference;
 
-        public TPSTracker(CoreSettings coreSettings, int tickRange, boolean showDifference) {
+        public TPSTracker(CoreSettings coreSettings, int rangeInSeconds, boolean showDifference) {
             this.coreSettings = coreSettings;
-            this.tickRange = tickRange;
+            this.rangeInSeconds = rangeInSeconds;
             this.showDifference = showDifference;
         }
     }
