@@ -7,6 +7,16 @@ import net.minecraft.client.Minecraft
 object PingTracker {
     private val guiElements get() = ToggleSprintMain.config.guiElements
 
+    private fun getColor(ping: Long): String {
+        return when {
+            ping < 50 -> "§2"
+            ping < 100 -> "§a"
+            ping < 200 -> "§6"
+            ping < 300 -> "§c"
+            else -> "§4"
+        }
+    }
+
     fun pingTracker() {
         if (!guiElements.pingTracker.coreSettings.isEnabled) return
 
@@ -16,15 +26,8 @@ object PingTracker {
 
         val ping = currentServer.pingToServer
 
-        val prefix = when {
-            ping < 50 -> "§2"
-            ping < 100 -> "§a"
-            ping < 150 -> "§6"
-            ping < 200 -> "§c"
-            else -> "§4"
-        }
-
-        val text = "§fTPS: ${prefix + ping}ms"
+        val text = if (guiElements.pingTracker.showColor) "§fPing: ${getColor(ping) + ping}ms"
+        else "§fPing: ${ping}ms"
 
         RenderGuiData.renderElement(
             guiElements.pingTracker.coreSettings.x,

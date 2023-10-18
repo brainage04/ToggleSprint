@@ -27,7 +27,7 @@ public class GUIElements {
     @Expose
     @ConfigOption(name = "Entity Tracker", desc = "")
     @Accordion
-    public EntityTracker entityTracker = new EntityTracker(new CoreSettings(true, 10, 10, 3), true, false, false, false, true);
+    public EntityTracker entityTracker = new EntityTracker(new CoreSettings(true, 10, 10, 3), true, false, false, false, false, true);
 
     @Expose
     @ConfigOption(name = "Real Time Tracker", desc = "")
@@ -37,12 +37,12 @@ public class GUIElements {
     @Expose
     @ConfigOption(name = "TPS Tracker", desc = "")
     @Accordion
-    public TPSTracker tpsTracker = new TPSTracker(new CoreSettings(true, 10, 90, 0), 1, true);
+    public LagTracker tpsTracker = new LagTracker(new CoreSettings(true, 10, 90, 0), true);
 
     @Expose
     @ConfigOption(name = "Ping Tracker", desc = "")
     @Accordion
-    public PingTracker pingTracker = new PingTracker(new CoreSettings(true, 10, 120, 0));
+    public LagTracker pingTracker = new LagTracker(new CoreSettings(true, 10, 120, 0), true);
 
 /*
     public static class ExampleElement {
@@ -57,37 +57,20 @@ public class GUIElements {
     }
  */
 
-    public static class PingTracker {
-        @Expose
-        @ConfigOption(name = "Core Settings", desc = "")
-        @Accordion
-        public CoreSettings coreSettings;
-
-        public PingTracker(CoreSettings coreSettings) {
-            this.coreSettings = coreSettings;
-        }
-    }
-
-    public static class TPSTracker {
+    public static class LagTracker {
         @Expose
         @ConfigOption(name = "Core Settings", desc = "")
         @Accordion
         public CoreSettings coreSettings;
 
         @Expose
-        @ConfigOption(name = "Range (Seconds)", desc = "The number of seconds worth of ticks used to calculate the average TPS.")
-        @ConfigEditorSlider(minValue = 1, maxValue = 10, minStep = 1)
-        public int rangeInSeconds;
-
-        @Expose
-        @ConfigOption(name = "Show Difference", desc = "Show the difference in milliseconds for the specified tick range.")
+        @ConfigOption(name = "Show Color", desc = "Color the number based on how high or low it is (green = low, red = high).")
         @ConfigEditorBoolean
-        public boolean showDifference;
+        public boolean showColor;
 
-        public TPSTracker(CoreSettings coreSettings, int rangeInSeconds, boolean showDifference) {
+        public LagTracker(CoreSettings coreSettings, boolean showColor) {
             this.coreSettings = coreSettings;
-            this.rangeInSeconds = rangeInSeconds;
-            this.showDifference = showDifference;
+            this.showColor = showColor;
         }
     }
 
@@ -132,6 +115,11 @@ public class GUIElements {
         public boolean showPlayers;
 
         @Expose
+        @ConfigOption(name = "Show Player Names", desc = "Show player names (definitely keep this disabled on games such as Hypixel Skyblock.")
+        @ConfigEditorBoolean
+        public boolean showPlayerNames;
+
+        @Expose
         @ConfigOption(name = "Show Creatures", desc = "Show non-hostile land mobs in the list of loaded entities.")
         @ConfigEditorBoolean
         public boolean showCreatures;
@@ -151,9 +139,10 @@ public class GUIElements {
         @ConfigEditorBoolean
         public boolean showMonsters;
 
-        public EntityTracker(CoreSettings coreSettings, boolean showPlayers, boolean showCreatures, boolean showWaterCreatures, boolean showAmbients, boolean showMonsters) {
+        public EntityTracker(CoreSettings coreSettings, boolean showPlayers, boolean showPlayerNames, boolean showCreatures, boolean showWaterCreatures, boolean showAmbients, boolean showMonsters) {
             this.coreSettings = coreSettings;
             this.showPlayers = showPlayers;
+            this.showPlayerNames = showPlayerNames;
             this.showCreatures = showCreatures;
             this.showWaterCreatures = showWaterCreatures;
             this.showAmbients = showAmbients;
