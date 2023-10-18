@@ -16,8 +16,8 @@ object RealTimeTracker {
         if (guiElements.realTimeTracker.includeDate) textArray.add("§f${SimpleDateFormat("E d M y").format(Date())}")
 
         when (guiElements.realTimeTracker.dateFormat) {
-            1 -> textArray.add("§f${SimpleDateFormat("HH:mm:ss").format(Date())}")
-            2 -> textArray.add("§f${SimpleDateFormat("hh:mm:ssa").format(Date())}")
+            1 -> textArray.add("§f${SimpleDateFormat("HH:mm:ssa").format(Date())}")
+            2 -> textArray.add("§f${SimpleDateFormat("h:mm:ss").format(Date())}")
             else -> {}
         }
 
