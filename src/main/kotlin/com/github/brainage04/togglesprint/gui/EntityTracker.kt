@@ -18,54 +18,29 @@ object EntityTracker {
         )
 
         val players = theWorld.playerEntities
-        if (guiElements.entityTracker.showPlayers) {
-            textArray.add("§f${players.size} Players")
-            if (guiElements.entityTracker.showPlayerNames) {
-                for (player in players) textArray.add("§f${player.name}")
-            }
-        }
-
         val entities = theWorld.loadedEntityList
 
-        if (guiElements.entityTracker.showCreatures) {
-            var creaturesCount = 0
+        var creaturesCount = 0
+        var waterCreaturesCount = 0
+        var ambientsCount = 0
+        var monstersCount = 0
 
-            for (entity in entities) {
-                if (entity.isCreatureType(EnumCreatureType.CREATURE, false)) creaturesCount++
-            }
-
-            textArray.add("§fCreatures: $creaturesCount")
+        for (entity in entities) {
+            if (entity.isCreatureType(EnumCreatureType.CREATURE, false)) creaturesCount++
+            if (entity.isCreatureType(EnumCreatureType.WATER_CREATURE, false)) waterCreaturesCount++
+            if (entity.isCreatureType(EnumCreatureType.AMBIENT, false)) ambientsCount++
+            if (entity.isCreatureType(EnumCreatureType.MONSTER, false)) monstersCount++
         }
 
-        if (guiElements.entityTracker.showWaterCreatures) {
-            var waterCreaturesCount = 0
+        val allCategoriesCount = players.size + creaturesCount + waterCreaturesCount + ambientsCount + monstersCount
 
-            for (entity in entities) {
-                if (entity.isCreatureType(EnumCreatureType.WATER_CREATURE, false)) waterCreaturesCount++
-            }
-
-            textArray.add("§fWaterCreatures: $waterCreaturesCount")
-        }
-
-        if (guiElements.entityTracker.showAmbients) {
-            var ambientsCount = 0
-
-            for (entity in entities) {
-                if (entity.isCreatureType(EnumCreatureType.AMBIENT, false)) ambientsCount++
-            }
-
-            textArray.add("§fAmbients: $ambientsCount")
-        }
-
-        if (guiElements.entityTracker.showMonsters) {
-            var monstersCount = 0
-
-            for (entity in entities) {
-                if (entity.isCreatureType(EnumCreatureType.MONSTER, false)) monstersCount++
-            }
-
-            textArray.add("§fMonsters: $monstersCount")
-        }
+        if (guiElements.entityTracker.showPlayers) textArray.add("§fPlayers: ${players.size}")
+        if (guiElements.entityTracker.showPlayerNames) for (player in players) textArray.add("§f${player.name}")
+        if (guiElements.entityTracker.showCreatures) textArray.add("§fCreatures: $creaturesCount")
+        if (guiElements.entityTracker.showWaterCreatures) textArray.add("§fWater Creatures: $waterCreaturesCount")
+        if (guiElements.entityTracker.showAmbients) textArray.add("§fAmbients: $ambientsCount")
+        if (guiElements.entityTracker.showMonsters) textArray.add("§fMonsters: $monstersCount")
+        if (guiElements.entityTracker.showOthers) textArray.add("§f§b${entities.size - allCategoriesCount} other entities loaded")
 
         RenderGuiData.renderElement(
             guiElements.entityTracker.coreSettings.x,

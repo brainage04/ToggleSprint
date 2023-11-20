@@ -27,7 +27,7 @@ public class GUIElements {
     @Expose
     @ConfigOption(name = "Entity Tracker", desc = "")
     @Accordion
-    public EntityTracker entityTracker = new EntityTracker(new CoreSettings(true, 10, 10, 3), true, false, false, false, false, true);
+    public EntityTracker entityTracker = new EntityTracker(new CoreSettings(true, 10, 10, 3), true, false, false, false, false, true, true);
 
     @Expose
     @ConfigOption(name = "Real Time Tracker", desc = "")
@@ -120,12 +120,12 @@ public class GUIElements {
         public boolean showPlayerNames;
 
         @Expose
-        @ConfigOption(name = "Show Creatures", desc = "Show non-hostile land mobs in the list of loaded entities.")
+        @ConfigOption(name = "Show Creatures", desc = "Show non-hostile land mobs (animals) in the list of loaded entities.")
         @ConfigEditorBoolean
         public boolean showCreatures;
 
         @Expose
-        @ConfigOption(name = "Show Water Creatures", desc = "Show non-hostile water mobs in the list of loaded entities.")
+        @ConfigOption(name = "Show Water Creatures", desc = "Show non-hostile water mobs (marine life) in the list of loaded entities.")
         @ConfigEditorBoolean
         public boolean showWaterCreatures;
 
@@ -135,11 +135,16 @@ public class GUIElements {
         public boolean showAmbients;
 
         @Expose
-        @ConfigOption(name = "Show Monsters", desc = "Show hostile mobs in the list of loaded entities.")
+        @ConfigOption(name = "Show Monsters", desc = "Show hostile mobs (monsters) in the list of loaded entities.")
         @ConfigEditorBoolean
         public boolean showMonsters;
 
-        public EntityTracker(CoreSettings coreSettings, boolean showPlayers, boolean showPlayerNames, boolean showCreatures, boolean showWaterCreatures, boolean showAmbients, boolean showMonsters) {
+        @Expose
+        @ConfigOption(name = "Show Others", desc = "Show the count of non-categorised mobs (armour stands) in the list of loaded entities.")
+        @ConfigEditorBoolean
+        public boolean showOthers;
+
+        public EntityTracker(CoreSettings coreSettings, boolean showPlayers, boolean showPlayerNames, boolean showCreatures, boolean showWaterCreatures, boolean showAmbients, boolean showMonsters, boolean showOthers) {
             this.coreSettings = coreSettings;
             this.showPlayers = showPlayers;
             this.showPlayerNames = showPlayerNames;
@@ -147,6 +152,7 @@ public class GUIElements {
             this.showWaterCreatures = showWaterCreatures;
             this.showAmbients = showAmbients;
             this.showMonsters = showMonsters;
+            this.showOthers = showOthers;
         }
     }
 

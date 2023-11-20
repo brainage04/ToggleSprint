@@ -12,7 +12,7 @@ object PlayerMotionTracker {
         var returnString = "§fMotion $axis: ${(motion * 20 * 2).round(guiElements.motionTracker.decimals)} m/s" // for some reason this number is half as big as it should be???
 
         if (guiElements.motionTracker.showTrueMotion) {
-            returnString += " (${motion.round(guiElements.motionTracker.decimals)} m/tick)"
+            returnString += " (${(motion * 2).round(guiElements.motionTracker.decimals)} m/tick)"
         }
 
         return returnString

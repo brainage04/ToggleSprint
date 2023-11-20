@@ -3,6 +3,8 @@ package com.github.brainage04.togglesprint.gui
 import com.github.brainage04.togglesprint.ToggleSprintMain
 import com.github.brainage04.togglesprint.gui.core.RenderGuiData
 import net.minecraft.client.Minecraft
+import net.minecraft.network.play.client.C16PacketClientStatus
+import kotlin.concurrent.fixedRateTimer
 
 object PingTracker {
     private val guiElements get() = ToggleSprintMain.config.guiElements
@@ -17,17 +19,17 @@ object PingTracker {
         }
     }
 
+    var lastPingAt = -1L
+    var pingCache = -1L
+
     fun pingTracker() {
         if (!guiElements.pingTracker.coreSettings.isEnabled) return
 
         val minecraft = Minecraft.getMinecraft() ?: return
         if (minecraft.thePlayer == null) return
-        val currentServer = minecraft.currentServerData ?: return
 
-        val ping = currentServer.pingToServer
-
-        val text = if (guiElements.pingTracker.showColor) "§fPing: ${getColor(ping) + ping}ms"
-        else "§fPing: ${ping}ms"
+        val text = if (guiElements.pingTracker.showColor) "§fPing: ${getColor(pingCache) + pingCache}ms"
+        else "§fPing: ${pingCache}ms"
 
         RenderGuiData.renderElement(
             guiElements.pingTracker.coreSettings.x,
@@ -35,5 +37,20 @@ object PingTracker {
             guiElements.pingTracker.coreSettings.anchorCorner,
             text,
         )
+    }
+
+    init {
+        fixedRateTimer(name = "${ToggleSprintMain.MOD_ID}-send-ping", period = 1_000L) {
+            val minecraft = Minecraft.getMinecraft() ?: return@fixedRateTimer
+            val player = minecraft.thePlayer ?: return@fixedRateTimer
+
+            if (lastPingAt > 0L) return@fixedRateTimer // waits until previous ping has completed
+
+            player.sendQueue.networkManager.sendPacket( // requests server stats
+                C16PacketClientStatus(C16PacketClientStatus.EnumState.REQUEST_STATS)
+            )
+
+            lastPingAt = System.nanoTime() // get timestamp of outgoing packet
+        }
     }
 }
