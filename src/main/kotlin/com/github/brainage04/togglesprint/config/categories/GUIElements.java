@@ -86,7 +86,7 @@ public class GUIElements {
         public int dateFormat;
 
         @Expose
-        @ConfigOption(name = "Include Date", desc = "Appends today's date to the end of the element.")
+        @ConfigOption(name = "Include Date", desc = "Appends today's date to the start of the element.")
         @ConfigEditorBoolean
         public boolean includeDate;
 
