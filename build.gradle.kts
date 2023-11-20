@@ -66,7 +66,7 @@ dependencies {
         exclude(group = "org.jetbrains.kotlin")
     }
 
-    // If you don't want mixins, remove these lines
+    // If you don't want mixin, remove these lines
     shadowImpl("org.spongepowered:mixin:0.7.11-SNAPSHOT") {
         isTransitive = false
     }
@@ -86,7 +86,7 @@ dependencies {
 loom {
     launchConfigs {
         "client" {
-            // If you don't want mixins, remove these lines
+            // If you don't want mixin, remove these lines
             property("mixin.debug", "true")
             property("asmhelper.verbose", "true")
             arg("--tweakClass", "org.spongepowered.asm.launch.MixinTweaker")
@@ -96,13 +96,13 @@ loom {
     }
     forge {
         pack200Provider.set(dev.architectury.pack200.java.Pack200Adapter())
-        // If you don't want mixins, remove this lines
-        mixinConfig("mixins.$modid.json")
+        // If you don't want mixin, remove this lines
+        mixinConfig("mixin.$modid.json")
     }
-    // If you don't want mixins, remove these lines
+    // If you don't want mixin, remove these lines
     @Suppress("UnstableApiUsage")
     mixin {
-        defaultRefmapName.set("mixins.$modid.refmap.json")
+        defaultRefmapName.set("mixin.$modid.refmap.json")
     }
 }
 
@@ -132,9 +132,9 @@ tasks.withType(Jar::class) {
         this["FMLCorePluginContainsFMLMod"] = "true"
         this["ForceLoadAsMod"] = "true"
 
-        // If you don't want mixins, remove these lines
+        // If you don't want mixin, remove these lines
         this["TweakClass"] = "org.spongepowered.asm.launch.MixinTweaker"
-        this["MixinConfigs"] = "mixins.$modid.json"
+        this["MixinConfigs"] = "mixin.$modid.json"
     }
 }
 
@@ -144,7 +144,7 @@ tasks.processResources {
     inputs.property("modid", modid)
     inputs.property("mixinGroup", mixinGroup)
 
-    filesMatching(listOf("mcmod.info", "mixins.$modid.json")) {
+    filesMatching(listOf("mcmod.info", "mixin.$modid.json")) {
         expand(inputs.properties)
     }
 

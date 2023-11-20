@@ -3,49 +3,42 @@ package com.github.brainage04.togglesprint.events
 import com.github.brainage04.togglesprint.ToggleSprintMain
 import com.github.brainage04.togglesprint.ToggleSprintMain.Companion.toggleSneakKeybind
 import com.github.brainage04.togglesprint.ToggleSprintMain.Companion.toggleSprintKeybind
+import com.github.brainage04.togglesprint.gui.ToggleSprintTracker.isSneakToggled
+import com.github.brainage04.togglesprint.gui.ToggleSprintTracker.isSprintToggled
 import net.minecraft.client.Minecraft
 import net.minecraft.client.settings.KeyBinding
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.fml.common.gameevent.InputEvent
+import org.lwjgl.input.Keyboard
 
 class InputEventTracker {
     private val toggleMovementKeys get() = ToggleSprintMain.config.toggleMovementKeys
-
-    companion object {
-        var isSprintToggled = true
-        var isSneakToggled = false
-    }
-
-    init {
-        isSprintToggled = toggleMovementKeys.toggleSprint.defaultState
-        isSneakToggled = toggleMovementKeys.toggleSneak.defaultState
-    }
 
     @SubscribeEvent
     fun onInputEvent(event: InputEvent) {
         val minecraft = Minecraft.getMinecraft() ?: return
         if (minecraft.thePlayer == null) return
 
-        if (toggleMovementKeys.toggleSprint.isEnabled) {
-            if (isSprintToggled) KeyBinding.setKeyBindState(minecraft.gameSettings.keyBindSprint.keyCode, true)
+        // sprint handling
+        if (toggleMovementKeys.toggleSprint.isEnabled && toggleSprintKeybind.isPressed) {
+            isSprintToggled = !isSprintToggled
 
-            if (toggleSprintKeybind.isPressed) {
-                isSprintToggled = !isSprintToggled
-
-                if (!isSprintToggled) KeyBinding.setKeyBindState(minecraft.gameSettings.keyBindSprint.keyCode, false)
+            if (!isSprintToggled) {
+                KeyBinding.setKeyBindState(minecraft.gameSettings.keyBindSprint.keyCode, Keyboard.isKeyDown(minecraft.gameSettings.keyBindSprint.keyCode))
             }
         }
 
-        if (toggleMovementKeys.toggleSneak.isEnabled) {
-            if (toggleSneakKeybind.isPressed) {
-                isSneakToggled = !isSneakToggled
+        if (isSprintToggled && !minecraft.gameSettings.keyBindSprint.isPressed && minecraft.currentScreen == null) KeyBinding.setKeyBindState(minecraft.gameSettings.keyBindSprint.keyCode, true)
 
-                if (!isSneakToggled && !minecraft.gameSettings.keyBindSneak.isPressed) KeyBinding.setKeyBindState(minecraft.gameSettings.keyBindSneak.keyCode, false) // release sneak when toggle sneak disabled
+        // sneak handling
+        if (toggleMovementKeys.toggleSneak.isEnabled && toggleSneakKeybind.isPressed) {
+            isSneakToggled = !isSneakToggled
+
+            if (!isSneakToggled) {
+                KeyBinding.setKeyBindState(minecraft.gameSettings.keyBindSneak.keyCode, Keyboard.isKeyDown(minecraft.gameSettings.keyBindSneak.keyCode))
             }
-
-            if (isSneakToggled) KeyBinding.setKeyBindState(minecraft.gameSettings.keyBindSneak.keyCode, true)
-
-            if (minecraft.currentScreen != null) KeyBinding.setKeyBindState(minecraft.gameSettings.keyBindSneak.keyCode, false) // disable toggle sneak in GUIs (sneaking in GUIs is illegal on most servers)
         }
+
+        if (isSneakToggled && !minecraft.gameSettings.keyBindSneak.isPressed && minecraft.currentScreen == null) KeyBinding.setKeyBindState(minecraft.gameSettings.keyBindSneak.keyCode, true)
     }
 }
