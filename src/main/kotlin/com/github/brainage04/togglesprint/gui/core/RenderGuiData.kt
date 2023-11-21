@@ -6,7 +6,7 @@ import com.github.brainage04.togglesprint.gui.PlayerMotionTracker.playerMotionTr
 import com.github.brainage04.togglesprint.gui.PlayerPositionTracker.playerPositionTracker
 import com.github.brainage04.togglesprint.gui.PlayerRotationTracker.playerRotationTracker
 import com.github.brainage04.togglesprint.gui.RealTimeTracker.realTimeTracker
-import com.github.brainage04.togglesprint.gui.TPSTracker.tpsTracker
+import com.github.brainage04.togglesprint.gui.TPSTracker.Companion.tpsTracker
 import com.github.brainage04.togglesprint.gui.ToggleSprintTracker.toggleSprintTracker
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.ScaledResolution
