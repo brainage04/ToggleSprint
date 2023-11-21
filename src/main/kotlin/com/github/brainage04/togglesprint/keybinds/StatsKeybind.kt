@@ -15,7 +15,7 @@ class StatsKeybind : KeyBinding("Stats Keybind", Keyboard.KEY_V, ToggleSprintMai
             if (Minecraft.getMinecraft().thePlayer == null) return
 
             if (this.isPressed) {
-                ChatUtils.messageToChat("testing", ChatUtils.PrefixType.GREEN, ChatUtils.SoundType.NOTIFICATION)
+                ChatUtils.messageToChat("testing", soundType = ChatUtils.SoundType.NOTIFICATION)
             }
         }
     }

@@ -2,31 +2,44 @@ package com.github.brainage04.togglesprint.gui
 
 import com.github.brainage04.togglesprint.ToggleSprintMain
 import com.github.brainage04.togglesprint.ToggleSprintMain.Companion.MOD_ID
+import com.github.brainage04.togglesprint.events.core.PacketEvent
 import com.github.brainage04.togglesprint.gui.core.RenderGuiData
+import com.github.brainage04.togglesprint.utils.ChatUtils
 import com.github.brainage04.togglesprint.utils.MathUtils.round
 import net.minecraft.client.Minecraft
+import net.minecraftforge.fml.common.eventhandler.Event
+import net.minecraftforge.fml.common.eventhandler.EventPriority
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import kotlin.concurrent.fixedRateTimer
 
-object TPSTracker {
-    private const val minDataAmount = 5
-    private const val waitAfterWorldSwitch = 5
+class TPSTracker {
+    private val guiElements get() = ToggleSprintMain.config.guiElements
 
-    private var packetsFromLastSecond = 0
-    private var tickTimes = mutableListOf<Int>()
-    private var ignoreFirstTicks = waitAfterWorldSwitch
-    var hasPacketReceived = false
+    companion object {
+        private val guiElements get() = ToggleSprintMain.config.guiElements
 
-    var display: String = "§fTPS: "
+        private const val minDataAmount = 5
+        private const val waitAfterWorldSwitch = 6
 
-    private fun getColor(tps: Double): String {
-        return when {
-            tps > 19 -> "§2"
-            tps > 18 -> "§a"
-            tps > 15 -> "§6"
-            tps > 10 -> "§c"
-            else -> "§4"
+        var display: String = "§fTPS: "
+
+        fun tpsTracker() {
+            if (!guiElements.tpsTracker.coreSettings.isEnabled) return
+            if (Minecraft.getMinecraft().thePlayer == null) return
+
+            RenderGuiData.renderElement(
+                guiElements.tpsTracker.coreSettings.x,
+                guiElements.tpsTracker.coreSettings.y,
+                guiElements.tpsTracker.coreSettings.anchorCorner,
+                display,
+            )
         }
     }
+
+    private var packetsFromLastSecond = 0
+    var tpsList = mutableListOf<Int>()
+    private var ignoreFirstTicks = waitAfterWorldSwitch
+    var hasPacketReceived = false
 
     init {
         fixedRateTimer(name = "${MOD_ID}-tps-counter-seconds", period = 1_000L) {
@@ -35,28 +48,30 @@ object TPSTracker {
 
             if (ignoreFirstTicks > 0) {
                 ignoreFirstTicks--
+                val current = ignoreFirstTicks + minDataAmount
+                display = "§eTPS: §f(${current}s)"
                 packetsFromLastSecond = 0
-
-                display = "§fTPS: Waiting... (${ignoreFirstTicks + minDataAmount}s)"
-
                 return@fixedRateTimer
             }
 
-            tickTimes.add(packetsFromLastSecond)
+            tpsList.add(packetsFromLastSecond)
             packetsFromLastSecond = 0
-            if (tickTimes.size > 10) tickTimes = tickTimes.drop(1).toMutableList()
-
-            display = if (tickTimes.size < minDataAmount) "§fTPS: Waiting... (${minDataAmount - tickTimes.size}s)"
-            else {
-                val sum = tickTimes.sum().toDouble()
-                val tps = (sum / tickTimes.size).round(1)
-
-                if (guiElements.tpsTracker.showColor) {
-                    "§fTPS: ${(getColor(tps)) + tps}"
-                } else {
-                    "§fTPS: $tps"
-                }
+            if (tpsList.size > 10) {
+                tpsList = tpsList.drop(1).toMutableList()
             }
+
+            display = if (tpsList.size < minDataAmount) {
+                val current = minDataAmount - tpsList.size
+                "§eTPS: §f(${current}s)"
+            } else {
+                val sum = tpsList.sum().toDouble()
+                var tps = (sum / tpsList.size).round(1)
+                if (tps > 20) tps = 20.0
+                val color = getColor(tps)
+                "§eTPS: $color$tps"
+            }
+
+            ChatUtils.messageToChat("TPS List: $tpsList", soundType = ChatUtils.SoundType.NOTIFICATION)
         }
 
         fixedRateTimer(name = "${MOD_ID}-tps-counter-ticks", period = 50L) {
@@ -69,17 +84,27 @@ object TPSTracker {
         }
     }
 
-    private val guiElements get() = ToggleSprintMain.config.guiElements
+    @SubscribeEvent
+    fun onWorldChange(event: Event) {
+        tpsList.clear()
+        packetsFromLastSecond = 0
+        ignoreFirstTicks = waitAfterWorldSwitch
+        display = ""
+    }
 
-    fun tpsTracker() {
+    @SubscribeEvent(priority = EventPriority.LOW, receiveCanceled = true)
+    fun onPacketEvent(event: PacketEvent.ReceiveEvent) {
         if (!guiElements.tpsTracker.coreSettings.isEnabled) return
-        if (Minecraft.getMinecraft().thePlayer == null) return
+        hasPacketReceived = true
+    }
 
-        RenderGuiData.renderElement(
-            guiElements.tpsTracker.coreSettings.x,
-            guiElements.tpsTracker.coreSettings.y,
-            guiElements.tpsTracker.coreSettings.anchorCorner,
-            display,
-        )
+    private fun getColor(tps: Double): String {
+        return when {
+            tps > 19 -> "§2"
+            tps > 18 -> "§a"
+            tps > 15 -> "§6"
+            tps > 10 -> "§c"
+            else -> "§4"
+        }
     }
 }
