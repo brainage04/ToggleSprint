@@ -22,7 +22,7 @@ public class GUIElements {
     @Expose
     @ConfigOption(name = "Rotation Tracker", desc = "")
     @Accordion
-    public RotationTracker rotationTracker = new RotationTracker(new CoreSettings(true, 10, 50, 0), 2, false);
+    public RotationTracker rotationTracker = new RotationTracker(new CoreSettings(true, 10, 50, 0), 2, false, false);
 
     @Expose
     @ConfigOption(name = "Entity Tracker", desc = "")
@@ -229,10 +229,16 @@ public class GUIElements {
         @ConfigEditorBoolean
         public boolean showTrueYaw;
 
-        public RotationTracker(CoreSettings coreSettings, int decimals, boolean showTrueYaw) {
+        @Expose
+        @ConfigOption(name = "Only Show with Farming Tool", desc = "Only shows when the player is holding a farming tool.")
+        @ConfigEditorBoolean
+        public boolean dependOnFarmingTool;
+
+        public RotationTracker(CoreSettings coreSettings, int decimals, boolean showTrueYaw,  boolean dependOnFarmingTool) {
             this.coreSettings = coreSettings;
             this.decimals = decimals;
             this.showTrueYaw = showTrueYaw;
+            this.dependOnFarmingTool = dependOnFarmingTool;
         }
     }
 
@@ -254,7 +260,7 @@ public class GUIElements {
 
         @Expose
         @ConfigOption(name = "Anchor Corner", desc = "Aligns text to a corner of the screen.")
-        @ConfigEditorDropdown(values = {"Top Left", "Top Right", "Bottom Left", "Bottom Right"})
+        @ConfigEditorDropdown(values = {"Top Left", "Top Right", "Bottom Left", "Bottom Right", "Center Left", "Center Right", "Center Top", "Center Bottom", "Center"})
         public int anchorCorner;
 
         public CoreSettings(boolean isEnabled, int x, int y, int anchorCorner) {

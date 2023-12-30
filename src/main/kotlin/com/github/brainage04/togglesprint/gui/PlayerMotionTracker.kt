@@ -21,7 +21,7 @@ object PlayerMotionTracker {
     fun playerMotionTracker() {
         if (!guiElements.motionTracker.coreSettings.isEnabled) return
 
-        val textArray = arrayOf(
+        val textArray = arrayListOf(
             formatMotion(Minecraft.getMinecraft().thePlayer.motionX, "X"),
             formatMotion(Minecraft.getMinecraft().thePlayer.motionY, "Y"),
             formatMotion(Minecraft.getMinecraft().thePlayer.motionZ, "Z"),

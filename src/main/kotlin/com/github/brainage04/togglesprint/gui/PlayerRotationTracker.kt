@@ -24,11 +24,39 @@ object PlayerRotationTracker {
 
     fun playerRotationTracker() {
         if (!guiElements.rotationTracker.coreSettings.isEnabled) return
+        val thePlayer = Minecraft.getMinecraft().thePlayer ?: return
 
-        val textArray = arrayOf(
+        val textArray = arrayListOf(
             formatYaw(Minecraft.getMinecraft().thePlayer.rotationYaw),
             "§fPitch: ${Minecraft.getMinecraft().thePlayer.rotationPitch.round(guiElements.rotationTracker.decimals)}",
         )
+
+        if (guiElements.rotationTracker.dependOnFarmingTool) {
+            val currentEquippedItem = thePlayer.getCurrentEquippedItem() ?: return
+
+            val itemName = currentEquippedItem.displayName
+
+            val strings = arrayListOf(
+                "Axe",
+                "Hoe",
+                "Chopper",
+                "Dicer",
+                "Cutter",
+                "Knife",
+            )
+
+            var holdingFarmingTool = false
+
+            // this covers all bases for the 10 main Skyblock tools + other garden axes and hoes
+            for (string in strings) {
+                if (itemName.contains(string, true)) {
+                    holdingFarmingTool = true
+                    break
+                }
+            }
+
+            if (!holdingFarmingTool) return
+        }
 
         RenderGuiData.renderElement(
             guiElements.rotationTracker.coreSettings.x,

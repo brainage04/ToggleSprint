@@ -11,7 +11,7 @@ object PlayerPositionTracker {
     fun playerPositionTracker() {
         if (!guiElements.positionTracker.coreSettings.isEnabled) return
 
-        val textArray = arrayOf(
+        val textArray = arrayListOf(
             "§fX: ${Minecraft.getMinecraft().thePlayer.posX.round(guiElements.positionTracker.decimals)}",
             "§fY: ${Minecraft.getMinecraft().thePlayer.posY.round(guiElements.positionTracker.decimals)}",
             "§fZ: ${Minecraft.getMinecraft().thePlayer.posZ.round(guiElements.positionTracker.decimals)}",
