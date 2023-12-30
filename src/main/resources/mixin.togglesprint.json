@@ -1,0 +1,9 @@
+{
+  "package": "${mixinGroup}",
+  "refmap": "mixin.${modid}.refmap.json",
+  "minVersion": "0.7",
+  "compatibilityLevel": "JAVA_8",
+  "client": [
+
+  ]
+}
