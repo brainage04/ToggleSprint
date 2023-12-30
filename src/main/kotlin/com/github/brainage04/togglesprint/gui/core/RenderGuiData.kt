@@ -36,6 +36,9 @@ class RenderGuiData {
     companion object {
         private var paddingInPixels = 2
 
+        // {"Top Left", "Top Right", "Bottom Left", "Bottom Right", "Center Left", "Center Right", "Center Top", "Center Bottom", "Center"}
+
+
         fun renderElement(x: Double, y: Double, anchorCorner: Int, text: String) {
             val minecraft = Minecraft.getMinecraft() ?: return
             val renderer = minecraft.renderManager.fontRenderer ?: return
@@ -44,11 +47,13 @@ class RenderGuiData {
             val widthInPixels = renderer.getStringWidth(text)
 
             val posX = when (anchorCorner) {
-                1, 3 -> scaledResolution.scaledWidth - x - widthInPixels
+                1, 3, 5 -> scaledResolution.scaledWidth - x - widthInPixels // top/bottom/center right
+                6, 7, 8 -> (scaledResolution.scaledWidth - x - widthInPixels) / 2 // center top/bottom, center
                 else -> x
             }
             val posY = when (anchorCorner) {
-                2, 3 -> scaledResolution.scaledHeight - y - renderer.FONT_HEIGHT
+                2, 3, 7 -> scaledResolution.scaledHeight - y - renderer.FONT_HEIGHT // bottom left/right/center
+                4, 5, 8 -> (scaledResolution.scaledHeight - y - renderer.FONT_HEIGHT) / 2 // center left/right, center
                 else -> y
             }
 
@@ -59,26 +64,15 @@ class RenderGuiData {
             GlStateManager.popMatrix()
         }
 
-        // this should be removed in favour of ArrayList version (arrays have mutable elements but immutable size, arraylists have mutable elements AND size)
-        fun renderElement(x: Double, y: Double, anchorCorner: Int, textArray: Array<String>) {
-            val renderer = Minecraft.getMinecraft().renderManager.fontRenderer ?: return
-
-            val heightInPixels = (renderer.FONT_HEIGHT + paddingInPixels)
-
-            when (anchorCorner) {
-                0, 1 -> for (i in textArray.indices) renderElement(x, y + (heightInPixels * i), anchorCorner, textArray[i])
-                2, 3 -> for (i in textArray.indices) renderElement(x, y + (heightInPixels * i), anchorCorner, textArray[textArray.indices.last - i])
-            }
-        }
-
         fun renderElement(x: Double, y: Double, anchorCorner: Int, textArray: ArrayList<String>) {
             val renderer = Minecraft.getMinecraft().renderManager.fontRenderer ?: return
 
             val heightInPixels = (renderer.FONT_HEIGHT + paddingInPixels)
 
             when (anchorCorner) {
-                0, 1 -> for (i in textArray.indices) renderElement(x, y + (heightInPixels * i), anchorCorner, textArray[i])
-                2, 3 -> for (i in textArray.indices) renderElement(x, y + (heightInPixels * i), anchorCorner, textArray[textArray.indices.last - i])
+                0, 1, 6 -> for (i in textArray.indices) renderElement(x, y + (heightInPixels * i), anchorCorner, textArray[i])
+                4, 5, 8 -> for (i in textArray.indices) renderElement(x, y + (heightInPixels * i * 2), anchorCorner, textArray[i])
+                2, 3, 7 -> for (i in textArray.indices) renderElement(x, y + (heightInPixels * i), anchorCorner, textArray[textArray.indices.last - i]) // bottom left/right/center
             }
         }
     }
