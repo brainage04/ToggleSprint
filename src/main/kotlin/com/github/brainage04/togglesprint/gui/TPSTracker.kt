@@ -1,7 +1,6 @@
 package com.github.brainage04.togglesprint.gui
 
 import com.github.brainage04.togglesprint.ToggleSprintMain
-import com.github.brainage04.togglesprint.ToggleSprintMain.Companion.MOD_ID
 import com.github.brainage04.togglesprint.events.core.PacketEvent
 import com.github.brainage04.togglesprint.gui.core.RenderGuiData
 import com.github.brainage04.togglesprint.utils.ChatUtils
