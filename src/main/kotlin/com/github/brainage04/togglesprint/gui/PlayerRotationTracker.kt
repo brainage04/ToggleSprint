@@ -9,13 +9,16 @@ object PlayerRotationTracker {
     private val guiElements get() = ToggleSprintMain.config.guiElements
 
     private fun formatYaw(yaw: Float): String {
+        val positiveYaw = (((yaw + 180) % 360) - 180).round(guiElements.rotationTracker.decimals)
+        val negativeYaw = (((yaw - 180) % 360) + 180).round(guiElements.rotationTracker.decimals)
+
         var returnString: String = if (yaw > 0.0) {
-            "§fYaw: ${(((yaw + 180) % 360) - 180).round(guiElements.rotationTracker.decimals)}"
+            "§fYaw: $positiveYaw"
         } else {
-            "§fYaw: ${(((yaw - 180) % 360) + 180).round(guiElements.rotationTracker.decimals)}"
+            "§fYaw: $negativeYaw"
         }
 
-        if (guiElements.rotationTracker.showTrueYaw) {
+        if (guiElements.rotationTracker.showTrueYaw && !(yaw == positiveYaw || yaw == negativeYaw)) {
             returnString += " (${yaw.round(guiElements.rotationTracker.decimals)})"
         }
 
