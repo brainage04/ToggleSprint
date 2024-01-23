@@ -3,6 +3,7 @@ package com.github.brainage04.togglesprint
 import com.github.brainage04.togglesprint.commands.CommandManager
 import com.github.brainage04.togglesprint.config.manager.ConfigManager
 import com.github.brainage04.togglesprint.config.ToggleSprintConfig
+import com.github.brainage04.togglesprint.events.ClientTickEventTracker
 import com.github.brainage04.togglesprint.events.InputEventTracker
 import com.github.brainage04.togglesprint.gui.TPSTracker
 import com.github.brainage04.togglesprint.gui.core.RenderGuiData
@@ -56,6 +57,7 @@ class ToggleSprintMain {
             configKeybind,
 
             InputEventTracker(),
+            ClientTickEventTracker(),
             RenderGuiData(),
             TPSTracker(),
         )

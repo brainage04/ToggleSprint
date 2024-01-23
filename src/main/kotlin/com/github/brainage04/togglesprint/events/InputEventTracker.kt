@@ -3,6 +3,7 @@ package com.github.brainage04.togglesprint.events
 import com.github.brainage04.togglesprint.ToggleSprintMain
 import com.github.brainage04.togglesprint.ToggleSprintMain.Companion.toggleSneakKeybind
 import com.github.brainage04.togglesprint.ToggleSprintMain.Companion.toggleSprintKeybind
+import com.github.brainage04.togglesprint.events.ClientTickEventTracker.Companion.updateToggleSprintSneakStates
 import com.github.brainage04.togglesprint.gui.ToggleSprintTracker.isSneakToggled
 import com.github.brainage04.togglesprint.gui.ToggleSprintTracker.isSprintToggled
 import net.minecraft.client.Minecraft
@@ -28,8 +29,6 @@ class InputEventTracker {
             }
         }
 
-        if (isSprintToggled && !minecraft.gameSettings.keyBindSprint.isPressed && minecraft.currentScreen == null) KeyBinding.setKeyBindState(minecraft.gameSettings.keyBindSprint.keyCode, true)
-
         // sneak handling
         if (toggleMovementKeys.toggleSneak.isEnabled && toggleSneakKeybind.isPressed) {
             isSneakToggled = !isSneakToggled
@@ -39,6 +38,6 @@ class InputEventTracker {
             }
         }
 
-        if (isSneakToggled && !minecraft.gameSettings.keyBindSneak.isPressed && minecraft.currentScreen == null) KeyBinding.setKeyBindState(minecraft.gameSettings.keyBindSneak.keyCode, true)
+        updateToggleSprintSneakStates(minecraft)
     }
 }
