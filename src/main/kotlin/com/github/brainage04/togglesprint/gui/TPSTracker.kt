@@ -21,7 +21,7 @@ class TPSTracker {
         private const val minDataAmount = 5
         private const val waitAfterWorldSwitch = 6
 
-        var display: String = "§fTPS: "
+        var display = "§fTPS: "
 
         fun tpsTracker() {
             if (!guiElements.tpsTracker.coreSettings.isEnabled) return
@@ -42,7 +42,7 @@ class TPSTracker {
     var hasPacketReceived = false
 
     init {
-        fixedRateTimer(name = "${MOD_ID}-tps-counter-seconds", period = 1_000L) {
+        fixedRateTimer(name = "brainage04-togglesprint-tps-counter-seconds", period = 1_000L) {
             if (!guiElements.tpsTracker.coreSettings.isEnabled) return@fixedRateTimer
             if (packetsFromLastSecond == 0) return@fixedRateTimer
 
@@ -74,7 +74,7 @@ class TPSTracker {
             ChatUtils.messageToChat("TPS List: $tpsList", soundType = ChatUtils.SoundType.NOTIFICATION)
         }
 
-        fixedRateTimer(name = "${MOD_ID}-tps-counter-ticks", period = 50L) {
+        fixedRateTimer(name = "brainage04-togglesprint-tps-counter-ticks", period = 50L) {
             if (!guiElements.tpsTracker.coreSettings.isEnabled) return@fixedRateTimer
 
             if (hasPacketReceived) {
