@@ -1,6 +1,7 @@
 package com.github.brainage04.togglesprint.gui.core
 
 import com.github.brainage04.togglesprint.gui.EntityTracker.entityTracker
+import com.github.brainage04.togglesprint.gui.EquipmentTracker.equipmentTracker
 import com.github.brainage04.togglesprint.gui.PingTracker.pingTracker
 import com.github.brainage04.togglesprint.gui.PlayerMotionTracker.playerMotionTracker
 import com.github.brainage04.togglesprint.gui.PlayerPositionTracker.playerPositionTracker
@@ -25,19 +26,17 @@ class RenderGuiData {
         playerPositionTracker()
         playerMotionTracker()
         playerRotationTracker()
-        entityTracker()
+        equipmentTracker()
         realTimeTracker()
         pingTracker()
         tpsTracker()
+        entityTracker()
 
         GlStateManager.popMatrix()
     }
 
     companion object {
         private var paddingInPixels = 2
-
-        // {"Top Left", "Top Right", "Bottom Left", "Bottom Right", "Center Left", "Center Right", "Center Top", "Center Bottom", "Center"}
-
 
         fun renderElement(x: Double, y: Double, anchorCorner: Int, text: String) {
             val minecraft = Minecraft.getMinecraft() ?: return
@@ -70,8 +69,8 @@ class RenderGuiData {
             val heightInPixels = (renderer.FONT_HEIGHT + paddingInPixels)
 
             when (anchorCorner) {
-                0, 1, 6 -> for (i in textArray.indices) renderElement(x, y + (heightInPixels * i), anchorCorner, textArray[i])
-                4, 5, 8 -> for (i in textArray.indices) renderElement(x, y + (heightInPixels * i * 2), anchorCorner, textArray[i])
+                0, 1, 6 -> for (i in textArray.indices) renderElement(x, y + (heightInPixels * i), anchorCorner, textArray[i]) // top left/right/center
+                4, 5, 8 -> for (i in textArray.indices) renderElement(x, y + (heightInPixels * (textArray.size - 1)) - (heightInPixels * i * 2), anchorCorner, textArray[i]) // center left/right/center
                 2, 3, 7 -> for (i in textArray.indices) renderElement(x, y + (heightInPixels * i), anchorCorner, textArray[textArray.indices.last - i]) // bottom left/right/center
             }
         }
