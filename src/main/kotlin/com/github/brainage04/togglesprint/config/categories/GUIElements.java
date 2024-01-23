@@ -15,34 +15,39 @@ public class GUIElements {
     public PositionTracker positionTracker = new PositionTracker(new CoreSettings(true, 10, 10, 0), 1);
 
     @Expose
-    @ConfigOption(name = "Motion Tracker", desc = "")
-    @Accordion
-    public MotionTracker motionTracker = new MotionTracker(new CoreSettings(true, 10, 10, 1), 4, false);
-
-    @Expose
     @ConfigOption(name = "Rotation Tracker", desc = "")
     @Accordion
     public RotationTracker rotationTracker = new RotationTracker(new CoreSettings(true, 10, 50, 0), 2, false, false);
 
     @Expose
-    @ConfigOption(name = "Entity Tracker", desc = "")
+    @ConfigOption(name = "Motion Tracker", desc = "")
     @Accordion
-    public EntityTracker entityTracker = new EntityTracker(new CoreSettings(true, 10, 10, 3), true, false, false, false, false, true, true);
+    public MotionTracker motionTracker = new MotionTracker(new CoreSettings(false, 10, 50, 1), 4, false);
+
+    @Expose
+    @ConfigOption(name = "Equipment Tracker", desc = "")
+    @Accordion
+    public EquipmentTracker equipmentTracker = new EquipmentTracker(new CoreSettings(true, 10, 10, 1), 0, 0, true);
 
     @Expose
     @ConfigOption(name = "Real Time Tracker", desc = "")
     @Accordion
-    public RealTimeTracker realTimeTracker = new RealTimeTracker(new CoreSettings(true, 10, 50, 1), 1, true, true);
-
-    @Expose
-    @ConfigOption(name = "TPS Tracker", desc = "")
-    @Accordion
-    public LagTracker tpsTracker = new LagTracker(new CoreSettings(true, 10, 90, 0), true);
+    public RealTimeTracker realTimeTracker = new RealTimeTracker(new CoreSettings(true, 10, 10, 1), 1, true, true);
 
     @Expose
     @ConfigOption(name = "Ping Tracker", desc = "")
     @Accordion
-    public LagTracker pingTracker = new LagTracker(new CoreSettings(true, 10, 120, 0), true);
+    public LagTracker pingTracker = new LagTracker(new CoreSettings(true, 10, 80, 0), true);
+
+    @Expose
+    @ConfigOption(name = "TPS Tracker", desc = "")
+    @Accordion
+    public LagTracker tpsTracker = new LagTracker(new CoreSettings(false, 10, 100, 0), true);
+
+    @Expose
+    @ConfigOption(name = "Entity Tracker", desc = "")
+    @Accordion
+    public EntityTracker entityTracker = new EntityTracker(new CoreSettings(false, 10, 10, 3), false, false, false, true, true);
 
 /*
     public static class ExampleElement {
@@ -57,20 +62,118 @@ public class GUIElements {
     }
  */
 
-    public static class LagTracker {
+    public static class ToggleSprintElement {
         @Expose
         @ConfigOption(name = "Core Settings", desc = "")
         @Accordion
         public CoreSettings coreSettings;
 
         @Expose
-        @ConfigOption(name = "Show Color", desc = "Color the number based on how high or low it is (green = low, red = high).")
+        @ConfigOption(name = "Show Internal Values", desc = "Show internal values used for toggle sprint/sneak (useful for debugging purposes).")
         @ConfigEditorBoolean
-        public boolean showColor;
+        public boolean showInternalValues;
 
-        public LagTracker(CoreSettings coreSettings, boolean showColor) {
+        public ToggleSprintElement(CoreSettings coreSettings, boolean showInternalValues) {
             this.coreSettings = coreSettings;
-            this.showColor = showColor;
+            this.showInternalValues = showInternalValues;
+        }
+    }
+
+    public static class PositionTracker {
+        @Expose
+        @ConfigOption(name = "Core Settings", desc = "")
+        @Accordion
+        public CoreSettings coreSettings;
+
+        @Expose
+        @ConfigOption(name = "Decimal Points", desc = "The number of decimal points displayed.")
+        @ConfigEditorSlider(minValue = 0, maxValue = 10, minStep = 1)
+        public int decimals;
+
+        public PositionTracker(CoreSettings coreSettings, int decimals) {
+            this.coreSettings = coreSettings;
+            this.decimals = decimals;
+        }
+    }
+
+    public static class RotationTracker {
+        @Expose
+        @ConfigOption(name = "Core Settings", desc = "")
+        @Accordion
+        public CoreSettings coreSettings;
+
+        @Expose
+        @ConfigOption(name = "Decimal Points", desc = "The number of decimal points displayed.")
+        @ConfigEditorSlider(minValue = 0, maxValue = 10, minStep = 1)
+        public int decimals;
+
+        @Expose
+        @ConfigOption(name = "Show True Yaw", desc = "Shows the player's true yaw value (If different from the clamped value. Useful for debugging purposes).")
+        @ConfigEditorBoolean
+        public boolean showTrueYaw;
+
+        @Expose
+        @ConfigOption(name = "Only Show with Farming Tool", desc = "Only shows when the player is holding a farming tool. Compatible with Hypixel Skyblock farming equipment.")
+        @ConfigEditorBoolean
+        public boolean dependOnFarmingTool;
+
+        public RotationTracker(CoreSettings coreSettings, int decimals, boolean showTrueYaw,  boolean dependOnFarmingTool) {
+            this.coreSettings = coreSettings;
+            this.decimals = decimals;
+            this.showTrueYaw = showTrueYaw;
+            this.dependOnFarmingTool = dependOnFarmingTool;
+        }
+    }
+
+    public static class MotionTracker {
+        @Expose
+        @ConfigOption(name = "Core Settings", desc = "")
+        @Accordion
+        public CoreSettings coreSettings;
+
+        @Expose
+        @ConfigOption(name = "Decimal Points", desc = "The number of decimal points displayed.")
+        @ConfigEditorSlider(minValue = 0, maxValue = 10, minStep = 1)
+        public int decimals;
+
+        @Expose
+        @ConfigOption(name = "Show True Motion", desc = "Also shows the player's motion in blocks (metres) per tick (useful for debugging purposes).")
+        @ConfigEditorBoolean
+        public boolean showTrueMotion;
+
+        public MotionTracker(CoreSettings coreSettings, int decimals, boolean showTrueMotion) {
+            this.coreSettings = coreSettings;
+            this.decimals = decimals;
+            this.showTrueMotion = showTrueMotion;
+        }
+    }
+
+    public static class EquipmentTracker {
+        @Expose
+        @ConfigOption(name = "Core Settings", desc = "")
+        @Accordion
+        public CoreSettings coreSettings;
+
+        @Expose
+        @ConfigOption(name = "Durability Format", desc = "Switch between displaying the durability as a percentage, fraction or number (fraction without the denominator).")
+        @ConfigEditorDropdown(values = {"Percentage", "Fraction", "Number"})
+        public int durabilityFormat;
+
+        @Expose
+        @ConfigOption(name = "Prefix Format", desc = "Switch between displaying the prefix")
+        @ConfigEditorDropdown(values = {"Icon", "Text", "Both"})
+        public int prefixFormat;
+
+        @Expose
+        @ConfigOption(name = "Display Durability Bar", desc = "Display the durability bar of the item if \"Prefix Format\" is set to \"Icon\".")
+        @ConfigEditorBoolean
+        public boolean displayDurabilityBar;
+
+        public EquipmentTracker(CoreSettings coreSettings, int durabilityFormat, int prefixFormat, boolean displayDurabilityBar) {
+            this.coreSettings = coreSettings;
+            this.durabilityFormat = durabilityFormat;
+            this.prefixFormat = prefixFormat;
+            this.displayDurabilityBar = displayDurabilityBar;
         }
     }
 
@@ -103,21 +206,28 @@ public class GUIElements {
         }
     }
 
-    public static class EntityTracker {
+    public static class LagTracker {
         @Expose
         @ConfigOption(name = "Core Settings", desc = "")
         @Accordion
         public CoreSettings coreSettings;
 
         @Expose
-        @ConfigOption(name = "Show Players", desc = "Show players (and their names) in the list of loaded entities.")
+        @ConfigOption(name = "Show Color", desc = "Color the number based on how high or low it is (green = low, red = high).")
         @ConfigEditorBoolean
-        public boolean showPlayers;
+        public boolean showColor;
 
+        public LagTracker(CoreSettings coreSettings, boolean showColor) {
+            this.coreSettings = coreSettings;
+            this.showColor = showColor;
+        }
+    }
+
+    public static class EntityTracker {
         @Expose
-        @ConfigOption(name = "Show Player Names", desc = "Show player names (definitely keep this disabled on games such as Hypixel Skyblock.")
-        @ConfigEditorBoolean
-        public boolean showPlayerNames;
+        @ConfigOption(name = "Core Settings", desc = "")
+        @Accordion
+        public CoreSettings coreSettings;
 
         @Expose
         @ConfigOption(name = "Show Creatures", desc = "Show non-hostile land mobs (animals) in the list of loaded entities.")
@@ -140,105 +250,17 @@ public class GUIElements {
         public boolean showMonsters;
 
         @Expose
-        @ConfigOption(name = "Show Others", desc = "Show the count of non-categorised mobs (armour stands) in the list of loaded entities.")
+        @ConfigOption(name = "Show Others", desc = "Show the count of non-categorised mobs (armour stands, items, etc.) in the list of loaded entities.")
         @ConfigEditorBoolean
         public boolean showOthers;
 
-        public EntityTracker(CoreSettings coreSettings, boolean showPlayers, boolean showPlayerNames, boolean showCreatures, boolean showWaterCreatures, boolean showAmbients, boolean showMonsters, boolean showOthers) {
+        public EntityTracker(CoreSettings coreSettings, boolean showCreatures, boolean showWaterCreatures, boolean showAmbients, boolean showMonsters, boolean showOthers) {
             this.coreSettings = coreSettings;
-            this.showPlayers = showPlayers;
-            this.showPlayerNames = showPlayerNames;
             this.showCreatures = showCreatures;
             this.showWaterCreatures = showWaterCreatures;
             this.showAmbients = showAmbients;
             this.showMonsters = showMonsters;
             this.showOthers = showOthers;
-        }
-    }
-
-    public static class ToggleSprintElement {
-        @Expose
-        @ConfigOption(name = "Core Settings", desc = "")
-        @Accordion
-        public CoreSettings coreSettings;
-
-        @Expose
-        @ConfigOption(name = "Show Internal Values", desc = "Show internal values for toggleSprint and toggleSneak (useful for debugging purposes).")
-        @ConfigEditorBoolean
-        public boolean showInternalValues;
-
-        public ToggleSprintElement(CoreSettings coreSettings, boolean showInternalValues) {
-            this.coreSettings = coreSettings;
-            this.showInternalValues = showInternalValues;
-        }
-    }
-
-    public static class PositionTracker {
-        @Expose
-        @ConfigOption(name = "Core Settings", desc = "")
-        @Accordion
-        public CoreSettings coreSettings;
-
-        @Expose
-        @ConfigOption(name = "Decimal Points", desc = "The number of decimal points displayed.")
-        @ConfigEditorSlider(minValue = 0, maxValue = 10, minStep = 1)
-        public int decimals;
-
-        public PositionTracker(CoreSettings coreSettings, int decimals) {
-            this.coreSettings = coreSettings;
-            this.decimals = decimals;
-        }
-    }
-
-    public static class MotionTracker {
-        @Expose
-        @ConfigOption(name = "Core Settings", desc = "")
-        @Accordion
-        public CoreSettings coreSettings;
-
-        @Expose
-        @ConfigOption(name = "Decimal Points", desc = "The number of decimal points displayed.")
-        @ConfigEditorSlider(minValue = 0, maxValue = 10, minStep = 1)
-        public int decimals;
-
-        @Expose
-        @ConfigOption(name = "Show True Motion", desc = "Also shows the player's motion in blocks (metres) per tick (useful for debugging purposes).")
-        @ConfigEditorBoolean
-        public boolean showTrueMotion;
-
-        public MotionTracker(CoreSettings coreSettings, int decimals, boolean showTrueMotion) {
-            this.coreSettings = coreSettings;
-            this.decimals = decimals;
-            this.showTrueMotion = showTrueMotion;
-        }
-    }
-
-    public static class RotationTracker {
-        @Expose
-        @ConfigOption(name = "Core Settings", desc = "")
-        @Accordion
-        public CoreSettings coreSettings;
-
-        @Expose
-        @ConfigOption(name = "Decimal Points", desc = "The number of decimal points displayed.")
-        @ConfigEditorSlider(minValue = 0, maxValue = 10, minStep = 1)
-        public int decimals;
-
-        @Expose
-        @ConfigOption(name = "Show True Yaw", desc = "Shows the player's true yaw value (useful for debugging purposes).")
-        @ConfigEditorBoolean
-        public boolean showTrueYaw;
-
-        @Expose
-        @ConfigOption(name = "Only Show with Farming Tool", desc = "Only shows when the player is holding a farming tool.")
-        @ConfigEditorBoolean
-        public boolean dependOnFarmingTool;
-
-        public RotationTracker(CoreSettings coreSettings, int decimals, boolean showTrueYaw,  boolean dependOnFarmingTool) {
-            this.coreSettings = coreSettings;
-            this.decimals = decimals;
-            this.showTrueYaw = showTrueYaw;
-            this.dependOnFarmingTool = dependOnFarmingTool;
         }
     }
 
