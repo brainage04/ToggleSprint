@@ -13,12 +13,11 @@ object EntityTracker {
 
         val theWorld = Minecraft.getMinecraft().theWorld ?: return
 
-        val textArray = arrayListOf(
-            "§f§b${theWorld.loadedEntityList.size} entities loaded"
-        )
-
-        val players = theWorld.playerEntities
         val entities = theWorld.loadedEntityList
+
+        val textArray = arrayListOf(
+            "§f§b${entities.size} entities loaded"
+        )
 
         var creaturesCount = 0
         var waterCreaturesCount = 0
@@ -32,15 +31,23 @@ object EntityTracker {
             if (entity.isCreatureType(EnumCreatureType.MONSTER, false)) monstersCount++
         }
 
-        val allCategoriesCount = players.size + creaturesCount + waterCreaturesCount + ambientsCount + monstersCount
+        val allCategoriesCount = creaturesCount + waterCreaturesCount + ambientsCount + monstersCount
 
-        if (guiElements.entityTracker.showPlayers) textArray.add("§fPlayers: ${players.size}")
-        if (guiElements.entityTracker.showPlayerNames) for (player in players) textArray.add("§f${player.name}")
-        if (guiElements.entityTracker.showCreatures) textArray.add("§fCreatures: $creaturesCount")
-        if (guiElements.entityTracker.showWaterCreatures) textArray.add("§fWater Creatures: $waterCreaturesCount")
-        if (guiElements.entityTracker.showAmbients) textArray.add("§fAmbients: $ambientsCount")
-        if (guiElements.entityTracker.showMonsters) textArray.add("§fMonsters: $monstersCount")
-        if (guiElements.entityTracker.showOthers) textArray.add("§f§b${entities.size - allCategoriesCount} other entities loaded")
+        var allEntitiesDescriptor = "§f§b$allCategoriesCount grouped"
+        if (guiElements.entityTracker.showOthers) allEntitiesDescriptor += ", ${entities.size - allCategoriesCount} non-grouped"
+
+        textArray.add(allEntitiesDescriptor)
+
+        if (guiElements.entityTracker.showCreatures
+            || guiElements.entityTracker.showWaterCreatures
+            || guiElements.entityTracker.showAmbients
+            || guiElements.entityTracker.showMonsters) {
+            textArray.add("§f§bEntity groups: ")
+        }
+        if (guiElements.entityTracker.showCreatures) textArray.add("§f  - Creatures: $creaturesCount")
+        if (guiElements.entityTracker.showWaterCreatures) textArray.add("§f  - Water Creatures: $waterCreaturesCount")
+        if (guiElements.entityTracker.showAmbients) textArray.add("§f  - Ambients: $ambientsCount")
+        if (guiElements.entityTracker.showMonsters) textArray.add("§f  - Monsters: $monstersCount")
 
         RenderGuiData.renderElement(
             guiElements.entityTracker.coreSettings.x,
