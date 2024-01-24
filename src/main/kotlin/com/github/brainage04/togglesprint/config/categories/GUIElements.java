@@ -12,7 +12,7 @@ public class GUIElements {
     @Expose
     @ConfigOption(name = "Position Tracker", desc = "")
     @Accordion
-    public PositionTracker positionTracker = new PositionTracker(new CoreSettings(true, 10, 10, 0), 1);
+    public PositionTracker positionTracker = new PositionTracker(new CoreSettings(true, 10, 10, 0), 1, true, true);
 
     @Expose
     @ConfigOption(name = "Rotation Tracker", desc = "")
@@ -100,9 +100,21 @@ public class GUIElements {
         @ConfigEditorSlider(minValue = 0, maxValue = 10, minStep = 1)
         public int decimals;
 
-        public PositionTracker(CoreSettings coreSettings, int decimals) {
+        @Expose
+        @ConfigOption(name = "C Counter", desc = "Shows the number of loaded cubic chunks (16x16x16) containing air blocks (excluding 0% and 100% air chunks) within the player's viewport.")
+        @ConfigEditorBoolean
+        public boolean showChunkCounter;
+
+        @Expose
+        @ConfigOption(name = "E Counter", desc = "Shows the number of rendered entities within the player's viewport (even through walls, unless you are culling them using a mod such as Patcher).")
+        @ConfigEditorBoolean
+        public boolean showEntityCounter;
+
+        public PositionTracker(CoreSettings coreSettings, int decimals, boolean showChunkCounter, boolean showEntityCounter) {
             this.coreSettings = coreSettings;
             this.decimals = decimals;
+            this.showChunkCounter = showChunkCounter;
+            this.showEntityCounter = showEntityCounter;
         }
     }
 
