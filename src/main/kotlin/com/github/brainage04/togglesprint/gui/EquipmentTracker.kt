@@ -2,6 +2,8 @@ package com.github.brainage04.togglesprint.gui
 
 import com.github.brainage04.togglesprint.ToggleSprintMain
 import com.github.brainage04.togglesprint.gui.core.RenderGuiData
+import com.github.brainage04.togglesprint.utils.ChatUtils
+import com.github.brainage04.togglesprint.utils.MathUtils.round
 import net.minecraft.client.Minecraft
 
 object EquipmentTracker {
@@ -12,14 +14,72 @@ object EquipmentTracker {
         val thePlayer = Minecraft.getMinecraft().thePlayer ?: return
 
         val textArray = arrayListOf(
-            ""
+            "${ChatUtils.aquaChar}Equipment:"
         )
 
-        val hand = thePlayer.getCurrentEquippedItem() ?: return
-        val head = thePlayer.getCurrentArmor(0) ?: return
-        val chest = thePlayer.getCurrentArmor(1) ?: return
-        val legs = thePlayer.getCurrentArmor(2) ?: return
-        val feet = thePlayer.getCurrentArmor(3) ?: return
+        val equipmentNameList = arrayListOf(
+            "Hand",
+            "Head",
+            "Chest",
+            "Legs",
+            "Feet"
+        )
+
+        val equipmentList = arrayListOf(
+            thePlayer.getCurrentEquippedItem(), // Hand
+            thePlayer.getCurrentArmor(3), // Head
+            thePlayer.getCurrentArmor(2), // Chest
+            thePlayer.getCurrentArmor(1), // Legs
+            thePlayer.getCurrentArmor(0) // Feet
+        )
+
+        for (i in equipmentList.indices) {
+            var currentLine = ChatUtils.whiteChar
+
+            if (equipmentList[i] == null) continue
+
+            when (guiElements.equipmentTracker.prefixFormat) {
+                0 -> { // icon (0)
+                    when (guiElements.equipmentTracker.displayDurabilityBar) {
+                        true -> {
+
+                        }
+
+                        false -> {
+
+                        }
+                    }
+                }
+
+                else -> { // name (1)
+                    currentLine += if (guiElements.equipmentTracker.nameFormat == 0 || !equipmentList[i].isItemStackDamageable) equipmentList[i].item.getItemStackDisplayName(equipmentList[i]) // item name (0)
+                    else equipmentNameList[i] // slot name (1)
+                }
+            }
+
+            if (equipmentList[i].isItemStackDamageable) { // if item has durability:
+                currentLine += ": " // separator between icon/name and durability
+
+                val durabilityPercentage = ((equipmentList[i].maxDamage - equipmentList[i].itemDamage).toFloat() / equipmentList[i].maxDamage.toFloat() * 100.0f).round(
+                    guiElements.equipmentTracker.decimals)
+
+                currentLine += when {
+                    durabilityPercentage <= 20f -> ChatUtils.redChar
+                    durabilityPercentage <= 50f -> ChatUtils.yellowChar
+                    else -> ChatUtils.greenChar
+                }
+
+                when (guiElements.equipmentTracker.durabilityFormat) {
+                    0 -> currentLine += "${durabilityPercentage}%"
+                    1 -> currentLine += "${equipmentList[i].maxDamage - equipmentList[i].itemDamage} / ${equipmentList[i].maxDamage}"
+                    2 -> currentLine += equipmentList[i].maxDamage - equipmentList[i].itemDamage
+                }
+            }
+
+            textArray.add(currentLine)
+        }
+
+        if (textArray.size < 2) textArray[0] += " ${ChatUtils.redChar}N/A"
 
         RenderGuiData.renderElement(
             guiElements.equipmentTracker.coreSettings.x,
