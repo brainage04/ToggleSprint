@@ -43,7 +43,7 @@ object EntityTracker {
             || guiElements.entityTracker.showWaterCreatures
             || guiElements.entityTracker.showAmbients
             || guiElements.entityTracker.showMonsters) {
-            textArray.add("${GUIUtils.secondaryChars}Entity groups: ")
+            textArray.add("${GUIUtils.secondaryChars}Entity groups:")
         }
         if (guiElements.entityTracker.showCreatures) textArray.add("${GUIUtils.primaryChars}  - Creatures: $creaturesCount")
         if (guiElements.entityTracker.showWaterCreatures) textArray.add("${GUIUtils.primaryChars}  - Water Creatures: $waterCreaturesCount")
