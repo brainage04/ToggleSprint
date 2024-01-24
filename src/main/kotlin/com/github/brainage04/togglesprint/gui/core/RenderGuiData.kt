@@ -34,7 +34,7 @@ class RenderGuiData {
         foodTracker()
         realTimeTracker()
         pingTracker()
-        tpsTracker()
+        //tpsTracker()
         entityTracker()
 
         GlStateManager.popMatrix()
