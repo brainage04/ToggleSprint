@@ -42,7 +42,7 @@ class ToggleSprintMain {
         registerKeyBinds(
             toggleSprintKeybind,
             toggleSneakKeybind,
-            //statsKeybind,
+            statsKeybind,
             configKeybind,
         )
     }
@@ -53,7 +53,7 @@ class ToggleSprintMain {
         MinecraftForge.EVENT_BUS.register(configManager)
 
         registerEvents(
-            //statsKeybind,
+            statsKeybind,
             configKeybind,
 
             InputEventTracker(),
