@@ -9,6 +9,8 @@ import com.github.brainage04.togglesprint.gui.PlayerRotationTracker.playerRotati
 import com.github.brainage04.togglesprint.gui.RealTimeTracker.realTimeTracker
 import com.github.brainage04.togglesprint.gui.TPSTracker.Companion.tpsTracker
 import com.github.brainage04.togglesprint.gui.ToggleSprintTracker.toggleSprintTracker
+import com.github.brainage04.togglesprint.gui.inventory_trackers.FoodTracker.foodTracker
+import com.github.brainage04.togglesprint.gui.inventory_trackers.ProjectileTracker.projectileTracker
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.ScaledResolution
 import net.minecraft.client.renderer.GlStateManager
@@ -19,6 +21,7 @@ class RenderGuiData {
     @SubscribeEvent
     fun onRenderOverlay(event: RenderGameOverlayEvent.Pre) {
         if (event.type != RenderGameOverlayEvent.ElementType.HOTBAR) return
+        //if (Minecraft.getMinecraft().thePlayer == null) return
 
         GlStateManager.pushMatrix()
 
@@ -27,6 +30,8 @@ class RenderGuiData {
         playerMotionTracker()
         playerRotationTracker()
         equipmentTracker()
+        projectileTracker()
+        foodTracker()
         realTimeTracker()
         pingTracker()
         tpsTracker()

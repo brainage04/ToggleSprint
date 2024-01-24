@@ -17,17 +17,27 @@ public class GUIElements {
     @Expose
     @ConfigOption(name = "Rotation Tracker", desc = "")
     @Accordion
-    public RotationTracker rotationTracker = new RotationTracker(new CoreSettings(true, 10, 50, 0), 2, false, false);
+    public RotationTracker rotationTracker = new RotationTracker(new CoreSettings(true, 10, 110, 0), 2, false, false);
 
     @Expose
     @ConfigOption(name = "Motion Tracker", desc = "")
     @Accordion
-    public MotionTracker motionTracker = new MotionTracker(new CoreSettings(false, 10, 50, 1), 4, false);
+    public MotionTracker motionTracker = new MotionTracker(new CoreSettings(false, 80, 10, 0), 2, false);
 
     @Expose
     @ConfigOption(name = "Equipment Tracker", desc = "")
     @Accordion
-    public EquipmentTracker equipmentTracker = new EquipmentTracker(new CoreSettings(true, 10, 10, 1), 0, 0, true);
+    public EquipmentTracker equipmentTracker = new EquipmentTracker(new CoreSettings(true, 10, 10, 3), 1, true, 0, 0, 1);
+
+    @Expose
+    @ConfigOption(name = "Projectile Tracker", desc = "")
+    @Accordion
+    public ItemTracker projectileTracker = new ItemTracker(new CoreSettings(true, 10, 80, 3), 1);
+
+    @Expose
+    @ConfigOption(name = "Food Tracker", desc = "")
+    @Accordion
+    public ItemTracker foodTracker = new ItemTracker(new CoreSettings(true, 10, 140, 3), 1);
 
     @Expose
     @ConfigOption(name = "Real Time Tracker", desc = "")
@@ -37,17 +47,17 @@ public class GUIElements {
     @Expose
     @ConfigOption(name = "Ping Tracker", desc = "")
     @Accordion
-    public LagTracker pingTracker = new LagTracker(new CoreSettings(true, 10, 80, 0), true);
+    public LagTracker pingTracker = new LagTracker(new CoreSettings(true, 10, 70, 0), true);
 
     @Expose
     @ConfigOption(name = "TPS Tracker", desc = "")
     @Accordion
-    public LagTracker tpsTracker = new LagTracker(new CoreSettings(false, 10, 100, 0), true);
+    public LagTracker tpsTracker = new LagTracker(new CoreSettings(false, 10, 90, 0), true);
 
     @Expose
     @ConfigOption(name = "Entity Tracker", desc = "")
     @Accordion
-    public EntityTracker entityTracker = new EntityTracker(new CoreSettings(false, 10, 10, 3), false, false, false, true, true);
+    public EntityTracker entityTracker = new EntityTracker(new CoreSettings(false, 10, 50, 1), true, true, true, true, true);
 
 /*
     public static class ExampleElement {
@@ -86,7 +96,7 @@ public class GUIElements {
         public CoreSettings coreSettings;
 
         @Expose
-        @ConfigOption(name = "Decimal Points", desc = "The number of decimal points displayed.")
+        @ConfigOption(name = "Decimal Places", desc = "The number of decimal places displayed.")
         @ConfigEditorSlider(minValue = 0, maxValue = 10, minStep = 1)
         public int decimals;
 
@@ -103,7 +113,7 @@ public class GUIElements {
         public CoreSettings coreSettings;
 
         @Expose
-        @ConfigOption(name = "Decimal Points", desc = "The number of decimal points displayed.")
+        @ConfigOption(name = "Decimal Places", desc = "The number of decimal places displayed.")
         @ConfigEditorSlider(minValue = 0, maxValue = 10, minStep = 1)
         public int decimals;
 
@@ -132,7 +142,7 @@ public class GUIElements {
         public CoreSettings coreSettings;
 
         @Expose
-        @ConfigOption(name = "Decimal Points", desc = "The number of decimal points displayed.")
+        @ConfigOption(name = "Decimal Places", desc = "The number of decimal places displayed.")
         @ConfigEditorSlider(minValue = 0, maxValue = 10, minStep = 1)
         public int decimals;
 
@@ -155,25 +165,54 @@ public class GUIElements {
         public CoreSettings coreSettings;
 
         @Expose
+        @ConfigOption(name = "Prefix Format", desc = "Switch between displaying the prefix as the item's icon or name.")
+        @ConfigEditorDropdown(values = {"Icon", "Name"})
+        public int prefixFormat;
+
+        @Expose
+        @ConfigOption(name = "Display Durability Bar", desc = "If \"Prefix Format\" is set to \"Icon\", display the durability bar of the item.")
+        @ConfigEditorBoolean
+        public boolean displayDurabilityBar;
+
+        @Expose
+        @ConfigOption(name = "Name Format", desc = "If \"Prefix Format\" is set to \"Name\", switch between displaying the slot or item name.")
+        @ConfigEditorDropdown(values = {"Item Name", "Slot Name"})
+        public int nameFormat;
+
+        @Expose
+        @ConfigOption(name = "Decimal Places", desc = "The number of decimal places displayed.")
+        @ConfigEditorSlider(minValue = 0, maxValue = 10, minStep = 1)
+        public int decimals;
+
+        @Expose
         @ConfigOption(name = "Durability Format", desc = "Switch between displaying the durability as a percentage, fraction or number (fraction without the denominator).")
         @ConfigEditorDropdown(values = {"Percentage", "Fraction", "Number"})
         public int durabilityFormat;
 
-        @Expose
-        @ConfigOption(name = "Prefix Format", desc = "Switch between displaying the prefix")
-        @ConfigEditorDropdown(values = {"Icon", "Text", "Both"})
-        public int prefixFormat;
-
-        @Expose
-        @ConfigOption(name = "Display Durability Bar", desc = "Display the durability bar of the item if \"Prefix Format\" is set to \"Icon\".")
-        @ConfigEditorBoolean
-        public boolean displayDurabilityBar;
-
-        public EquipmentTracker(CoreSettings coreSettings, int durabilityFormat, int prefixFormat, boolean displayDurabilityBar) {
+        public EquipmentTracker(CoreSettings coreSettings, int prefixFormat, boolean displayDurabilityBar, int nameFormat, int durabilityFormat, int decimals) {
             this.coreSettings = coreSettings;
-            this.durabilityFormat = durabilityFormat;
             this.prefixFormat = prefixFormat;
             this.displayDurabilityBar = displayDurabilityBar;
+            this.nameFormat = nameFormat;
+            this.decimals = decimals;
+            this.durabilityFormat = durabilityFormat;
+        }
+    }
+
+    public static class ItemTracker {
+        @Expose
+        @ConfigOption(name = "Core Settings", desc = "")
+        @Accordion
+        public CoreSettings coreSettings;
+
+        @Expose
+        @ConfigOption(name = "Prefix Format", desc = "Switch between displaying the prefix as the item's icon or name.")
+        @ConfigEditorDropdown(values = {"Icon", "Name"})
+        public int prefixFormat;
+
+        public ItemTracker(CoreSettings coreSettings, int prefixFormat) {
+            this.coreSettings = coreSettings;
+            this.prefixFormat = prefixFormat;
         }
     }
 
@@ -272,12 +311,12 @@ public class GUIElements {
 
         @Expose
         @ConfigOption(name = "X Coordinate", desc = "The X coordinate of the GUI element.")
-        @ConfigEditorSlider(minValue = 0, maxValue = 1_920 * 2, minStep = 1)
+        @ConfigEditorSlider(minValue = -1_920, maxValue = 1_920, minStep = 1)
         public double x;
 
         @Expose
         @ConfigOption(name = "Y Coordinate", desc = "The Y coordinate of the GUI element.")
-        @ConfigEditorSlider(minValue = 0, maxValue = 1_080 * 2, minStep = 1)
+        @ConfigEditorSlider(minValue = -1_080, maxValue = 1_080, minStep = 1)
         public double y;
 
         @Expose

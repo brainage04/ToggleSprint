@@ -1,0 +1,35 @@
+package com.github.brainage04.togglesprint.gui.inventory_trackers
+
+import com.github.brainage04.togglesprint.utils.ChatUtils
+import net.minecraft.client.Minecraft
+import net.minecraft.item.Item
+
+object InventoryTrackerShared {
+    data class InventoryTrackerItem(
+        val name: String,
+        val item: Item,
+        var count: Int = 0,
+        var countArray: ArrayList<Int> = arrayListOf()
+    )
+
+    fun trackInventoryItems(itemList: ArrayList<InventoryTrackerItem>): ArrayList<String> {
+        val textArray: ArrayList<String> = arrayListOf()
+
+        val mainInventory = Minecraft.getMinecraft().thePlayer.inventory.mainInventory ?: return textArray
+
+        for (currentSlot in mainInventory) {
+            for (item in itemList) {
+                if (currentSlot == null) break // skip all iterations of THIS for loop (j) but not the outside one (i)
+
+                if (currentSlot.item == item.item) {
+                    item.count += currentSlot.stackSize
+                    item.countArray.add(currentSlot.stackSize)
+                }
+            }
+        }
+
+        for (item in itemList) if (item.count > 0) textArray.add("${ChatUtils.whiteChar}${item.name}: ${item.count} ${item.countArray}")
+
+        return textArray
+    }
+}
