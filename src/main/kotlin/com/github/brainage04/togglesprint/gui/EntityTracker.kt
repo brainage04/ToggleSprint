@@ -2,16 +2,12 @@ package com.github.brainage04.togglesprint.gui
 
 import com.github.brainage04.togglesprint.ToggleSprintMain
 import com.github.brainage04.togglesprint.gui.core.RenderGuiData
-import com.github.brainage04.togglesprint.utils.ChatUtils
+import com.github.brainage04.togglesprint.utils.GUIUtils
 import net.minecraft.client.Minecraft
 import net.minecraft.entity.EnumCreatureType
 
 object EntityTracker {
     private val guiElements get() = ToggleSprintMain.config.guiElements
-    private val globalGuiSettings get() = ToggleSprintMain.config.globalGuiSettings
-
-    val primaryChars = ChatUtils.colourChars[globalGuiSettings.primaryColour] + ChatUtils.effectChars[globalGuiSettings.primaryEffect]
-    val secondaryChars = ChatUtils.colourChars[globalGuiSettings.secondaryColour] + ChatUtils.effectChars[globalGuiSettings.secondaryEffect]
 
     fun entityTracker() {
         if (!guiElements.entityTracker.coreSettings.isEnabled) return
@@ -21,7 +17,7 @@ object EntityTracker {
         val entities = theWorld.loadedEntityList
 
         val textArray = arrayListOf(
-            "${secondaryChars + entities.size} entities loaded"
+            "${GUIUtils.secondaryChars + entities.size} entities loaded"
         )
 
         var creaturesCount = 0
@@ -38,7 +34,7 @@ object EntityTracker {
 
         val allCategoriesCount = creaturesCount + waterCreaturesCount + ambientsCount + monstersCount
 
-        var allEntitiesDescriptor = "${secondaryChars + allCategoriesCount} grouped"
+        var allEntitiesDescriptor = "${GUIUtils.secondaryChars + allCategoriesCount} grouped"
         if (guiElements.entityTracker.showOthers) allEntitiesDescriptor += ", ${entities.size - allCategoriesCount} non-grouped"
 
         textArray.add(allEntitiesDescriptor)
@@ -47,12 +43,12 @@ object EntityTracker {
             || guiElements.entityTracker.showWaterCreatures
             || guiElements.entityTracker.showAmbients
             || guiElements.entityTracker.showMonsters) {
-            textArray.add("${secondaryChars}Entity groups: ")
+            textArray.add("${GUIUtils.secondaryChars}Entity groups: ")
         }
-        if (guiElements.entityTracker.showCreatures) textArray.add("$primaryChars  - Creatures: $creaturesCount")
-        if (guiElements.entityTracker.showWaterCreatures) textArray.add("$primaryChars  - Water Creatures: $waterCreaturesCount")
-        if (guiElements.entityTracker.showAmbients) textArray.add("$primaryChars  - Ambients: $ambientsCount")
-        if (guiElements.entityTracker.showMonsters) textArray.add("$primaryChars  - Monsters: $monstersCount")
+        if (guiElements.entityTracker.showCreatures) textArray.add("${GUIUtils.primaryChars}  - Creatures: $creaturesCount")
+        if (guiElements.entityTracker.showWaterCreatures) textArray.add("${GUIUtils.primaryChars}  - Water Creatures: $waterCreaturesCount")
+        if (guiElements.entityTracker.showAmbients) textArray.add("${GUIUtils.primaryChars}  - Ambients: $ambientsCount")
+        if (guiElements.entityTracker.showMonsters) textArray.add("${GUIUtils.primaryChars}  - Monsters: $monstersCount")
 
         RenderGuiData.renderElement(
             guiElements.entityTracker.coreSettings.x,

@@ -3,22 +3,19 @@ package com.github.brainage04.togglesprint.gui
 import com.github.brainage04.togglesprint.ToggleSprintMain
 import com.github.brainage04.togglesprint.gui.core.RenderGuiData
 import com.github.brainage04.togglesprint.utils.ChatUtils
+import com.github.brainage04.togglesprint.utils.GUIUtils
 import com.github.brainage04.togglesprint.utils.MathUtils.round
 import net.minecraft.client.Minecraft
 
 object EquipmentTracker {
     private val guiElements get() = ToggleSprintMain.config.guiElements
-    private val globalGuiSettings get() = ToggleSprintMain.config.globalGuiSettings
-
-    val primaryChars = ChatUtils.colourChars[globalGuiSettings.primaryColour] + ChatUtils.effectChars[globalGuiSettings.primaryEffect]
-    val secondaryChars = ChatUtils.colourChars[globalGuiSettings.secondaryColour] + ChatUtils.effectChars[globalGuiSettings.secondaryEffect]
 
     fun equipmentTracker() {
         if (!guiElements.equipmentTracker.coreSettings.isEnabled) return
         val thePlayer = Minecraft.getMinecraft().thePlayer ?: return
 
         val textArray = arrayListOf(
-            "${secondaryChars}Equipment:"
+            "${GUIUtils.secondaryChars}Equipment:"
         )
 
         val equipmentNameList = arrayListOf(
@@ -38,7 +35,7 @@ object EquipmentTracker {
         )
 
         for (i in equipmentList.indices) {
-            var currentLine = primaryChars
+            var currentLine = GUIUtils.primaryChars
 
             if (equipmentList[i] == null) continue
 
@@ -83,7 +80,7 @@ object EquipmentTracker {
             textArray.add(currentLine)
         }
 
-        if (textArray.size < 2) textArray[0] += " ${ChatUtils.redChar}N/A"
+        if (textArray.size < 2) textArray[0] += "${ChatUtils.redChar} N/A"
 
         RenderGuiData.renderElement(
             guiElements.equipmentTracker.coreSettings.x,

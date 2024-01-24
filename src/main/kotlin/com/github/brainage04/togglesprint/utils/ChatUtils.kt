@@ -50,6 +50,7 @@ object ChatUtils {
     const val italicChar = "§o"
 
     val effectChars = arrayListOf(
+        "",
         obfuscatedChar,
         boldChar,
         strikethroughChar,

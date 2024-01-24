@@ -25,10 +25,10 @@ public class ToggleSprintConfig extends Config {
     public ToggleMovementKeys toggleMovementKeys = new ToggleMovementKeys();
 
     @Expose
-    @Category(name = "GUI Elements", desc = "Edit toggle sprint/sneak and other GUI elements.")
-    public GUIElements guiElements = new GUIElements();
+    @Category(name = "Global GUI Settings", desc = "Edit settings for all GUI elements.")
+    public GlobalGUISettings globalGuiSettings = new GlobalGUISettings();
 
     @Expose
-    @Category(name = "GUI Elements", desc = "Edit settings for all GUI elements.")
-    public GlobalGUISettings globalGuiSettings = new GlobalGUISettings();
+    @Category(name = "GUI Elements", desc = "Edit toggle sprint/sneak and other GUI elements.")
+    public GUIElements guiElements = new GUIElements();
 }
