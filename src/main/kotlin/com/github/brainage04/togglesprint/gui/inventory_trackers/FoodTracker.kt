@@ -5,6 +5,7 @@ import com.github.brainage04.togglesprint.gui.core.RenderGuiData
 import com.github.brainage04.togglesprint.gui.inventory_trackers.InventoryTrackerShared.InventoryTrackerItem
 import com.github.brainage04.togglesprint.gui.inventory_trackers.InventoryTrackerShared.trackInventoryItems
 import com.github.brainage04.togglesprint.utils.ChatUtils
+import com.github.brainage04.togglesprint.utils.GUIUtils
 import net.minecraft.client.Minecraft
 import net.minecraft.init.Items
 import net.minecraft.item.ItemStack
@@ -37,12 +38,12 @@ object FoodTracker {
         )
 
         val textArray = arrayListOf(
-            "${ChatUtils.aquaChar}Food:"
+            "${GUIUtils.secondaryChars}Food:"
         )
 
         textArray.addAll(trackInventoryItems(itemList))
 
-        if (textArray.size < 2) textArray[0] += " ${ChatUtils.redChar}N/A"
+        if (textArray.size < 2) textArray[0] += "${ChatUtils.redChar} N/A"
 
         RenderGuiData.renderElement(
             guiElements.foodTracker.coreSettings.x,

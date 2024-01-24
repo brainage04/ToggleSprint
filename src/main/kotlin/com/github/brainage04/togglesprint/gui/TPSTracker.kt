@@ -4,6 +4,7 @@ import com.github.brainage04.togglesprint.ToggleSprintMain
 import com.github.brainage04.togglesprint.events.core.PacketEvent
 import com.github.brainage04.togglesprint.gui.core.RenderGuiData
 import com.github.brainage04.togglesprint.utils.ChatUtils
+import com.github.brainage04.togglesprint.utils.GUIUtils
 import com.github.brainage04.togglesprint.utils.MathUtils.round
 import net.minecraft.client.Minecraft
 import net.minecraftforge.fml.common.eventhandler.Event
@@ -16,14 +17,11 @@ class TPSTracker {
 
     companion object {
         private val guiElements get() = ToggleSprintMain.config.guiElements
-        private val globalGuiSettings get() = ToggleSprintMain.config.globalGuiSettings
-
-        val primaryChars = ChatUtils.colourChars[globalGuiSettings.primaryColour] + ChatUtils.effectChars[globalGuiSettings.primaryEffect]
 
         private const val minDataAmount = 5
         private const val waitAfterWorldSwitch = 6
 
-        var display = "${primaryChars}TPS: "
+        var display = "${GUIUtils.primaryChars}TPS: "
 
         fun tpsTracker() {
             if (!guiElements.tpsTracker.coreSettings.isEnabled) return
@@ -39,9 +37,9 @@ class TPSTracker {
     }
 
     private var packetsFromLastSecond = 0
-    var tpsList = mutableListOf<Int>()
+    private var tpsList = mutableListOf<Int>()
     private var ignoreFirstTicks = waitAfterWorldSwitch
-    var hasPacketReceived = false
+    private var hasPacketReceived = false
 
     init {
         fixedRateTimer(name = "brainage04-togglesprint-tps-counter-seconds", period = 1_000L) {

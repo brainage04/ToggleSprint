@@ -2,24 +2,21 @@ package com.github.brainage04.togglesprint.gui
 
 import com.github.brainage04.togglesprint.ToggleSprintMain
 import com.github.brainage04.togglesprint.gui.core.RenderGuiData
-import com.github.brainage04.togglesprint.utils.ChatUtils
+import com.github.brainage04.togglesprint.utils.GUIUtils
 import com.github.brainage04.togglesprint.utils.MathUtils.round
 import net.minecraft.client.Minecraft
 
 object PlayerRotationTracker {
     private val guiElements get() = ToggleSprintMain.config.guiElements
-    private val globalGuiSettings get() = ToggleSprintMain.config.globalGuiSettings
-
-    val primaryChars = ChatUtils.colourChars[globalGuiSettings.primaryColour] + ChatUtils.effectChars[globalGuiSettings.primaryEffect]
 
     private fun formatYaw(yaw: Float): String {
         val positiveYaw = (((yaw + 180) % 360) - 180).round(guiElements.rotationTracker.decimals)
         val negativeYaw = (((yaw - 180) % 360) + 180).round(guiElements.rotationTracker.decimals)
 
         var returnString: String = if (yaw > 0.0) {
-            "${primaryChars}Yaw: $positiveYaw"
+            "${GUIUtils.primaryChars}Yaw: $positiveYaw"
         } else {
-            "${primaryChars}Yaw: $negativeYaw"
+            "${GUIUtils.primaryChars}Yaw: $negativeYaw"
         }
 
         if (guiElements.rotationTracker.showTrueYaw && !(yaw == positiveYaw || yaw == negativeYaw)) {
@@ -35,7 +32,7 @@ object PlayerRotationTracker {
 
         val textArray = arrayListOf(
             formatYaw(Minecraft.getMinecraft().thePlayer.rotationYaw),
-            "${primaryChars}Pitch: ${Minecraft.getMinecraft().thePlayer.rotationPitch.round(guiElements.rotationTracker.decimals)}",
+            "${GUIUtils.primaryChars}Pitch: ${Minecraft.getMinecraft().thePlayer.rotationPitch.round(guiElements.rotationTracker.decimals)}",
         )
 
         if (guiElements.rotationTracker.dependOnFarmingTool) {
