@@ -27,7 +27,7 @@ public class GUIElements {
     @Expose
     @ConfigOption(name = "Equipment Tracker", desc = "")
     @Accordion
-    public EquipmentTracker equipmentTracker = new EquipmentTracker(new CoreSettings(true, 10, 10, 3), 1, true, 0, 0, 1);
+    public EquipmentTracker equipmentTracker = new EquipmentTracker(new CoreSettings(true, 10, 10, 3), 1, true, 0, 1);
 
     @Expose
     @ConfigOption(name = "Projectile Tracker", desc = "")
@@ -187,11 +187,6 @@ public class GUIElements {
         public boolean displayDurabilityBar;
 
         @Expose
-        @ConfigOption(name = "Name Format", desc = "If \"Prefix Format\" is set to \"Name\", switch between displaying the slot or item name.")
-        @ConfigEditorDropdown(values = {"Item Name", "Slot Name"})
-        public int nameFormat;
-
-        @Expose
         @ConfigOption(name = "Decimal Places", desc = "The number of decimal places displayed.")
         @ConfigEditorSlider(minValue = 0, maxValue = 10, minStep = 1)
         public int decimals;
@@ -201,11 +196,10 @@ public class GUIElements {
         @ConfigEditorDropdown(values = {"Percentage", "Fraction", "Number"})
         public int durabilityFormat;
 
-        public EquipmentTracker(CoreSettings coreSettings, int prefixFormat, boolean displayDurabilityBar, int nameFormat, int durabilityFormat, int decimals) {
+        public EquipmentTracker(CoreSettings coreSettings, int prefixFormat, boolean displayDurabilityBar, int durabilityFormat, int decimals) {
             this.coreSettings = coreSettings;
             this.prefixFormat = prefixFormat;
             this.displayDurabilityBar = displayDurabilityBar;
-            this.nameFormat = nameFormat;
             this.decimals = decimals;
             this.durabilityFormat = durabilityFormat;
         }

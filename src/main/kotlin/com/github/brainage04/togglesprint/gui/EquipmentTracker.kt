@@ -18,14 +18,6 @@ object EquipmentTracker {
             "${GUIUtils.secondaryChars}Equipment:"
         )
 
-        val equipmentNameList = arrayListOf(
-            "Hand",
-            "Head",
-            "Chest",
-            "Legs",
-            "Feet"
-        )
-
         val equipmentList = arrayListOf(
             thePlayer.getCurrentEquippedItem(), // Hand
             thePlayer.getCurrentArmor(3), // Head
@@ -52,10 +44,7 @@ object EquipmentTracker {
                     }
                 }
 
-                else -> { // name (1)
-                    currentLine += if (guiElements.equipmentTracker.nameFormat == 0 || !equipmentList[i].isItemStackDamageable) equipmentList[i].item.getItemStackDisplayName(equipmentList[i]) // item name (0)
-                    else equipmentNameList[i] // slot name (1)
-                }
+                else -> currentLine += equipmentList[i].item.getItemStackDisplayName(equipmentList[i]) // name (1)
             }
 
             if (equipmentList[i].isItemStackDamageable) { // if item has durability:
