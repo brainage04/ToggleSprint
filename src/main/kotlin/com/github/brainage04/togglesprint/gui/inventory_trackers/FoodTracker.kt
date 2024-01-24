@@ -41,7 +41,7 @@ object FoodTracker {
             "${GUIUtils.secondaryChars}Food:"
         )
 
-        textArray.addAll(trackInventoryItems(itemList))
+        textArray.addAll(trackInventoryItems(itemList, guiElements.foodTracker.includeArrays))
 
         if (textArray.size < 2) textArray[0] += "${ChatUtils.redChar} N/A"
 

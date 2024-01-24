@@ -41,6 +41,7 @@ class TPSTracker {
     private var ignoreFirstTicks = waitAfterWorldSwitch
     private var hasPacketReceived = false
 
+    /*
     init {
         fixedRateTimer(name = "brainage04-togglesprint-tps-counter-seconds", period = 1_000L) {
             if (!guiElements.tpsTracker.coreSettings.isEnabled) return@fixedRateTimer
@@ -83,6 +84,7 @@ class TPSTracker {
             }
         }
     }
+     */
 
     @SubscribeEvent
     fun onWorldChange(event: Event) {

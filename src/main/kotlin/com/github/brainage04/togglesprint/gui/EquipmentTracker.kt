@@ -44,7 +44,10 @@ object EquipmentTracker {
                     }
                 }
 
-                else -> currentLine += equipmentList[i].item.getItemStackDisplayName(equipmentList[i]) // name (1)
+                else -> { // name (1)
+                    currentLine += if (equipmentList[i].hasDisplayName()) equipmentList[i].displayName.trim()
+                    else equipmentList[i].item.getItemStackDisplayName(equipmentList[i]).trim()
+                }
             }
 
             if (equipmentList[i].isItemStackDamageable) { // if item has durability:
