@@ -24,18 +24,45 @@ object ChatUtils {
     const val darkGrayChar = "§8"
     const val blackChar = "§0"
 
+    val colourChars = arrayListOf(
+        darkRedChar,
+        redChar,
+        goldChar,
+        yellowChar,
+        darkGreenChar,
+        greenChar,
+        aquaChar,
+        darkAquaChar,
+        darkBlueChar,
+        blueChar,
+        lightPurpleChar,
+        darkPurpleChar,
+        whiteChar,
+        grayChar,
+        darkGrayChar,
+        blackChar,
+    )
+
     const val obfuscatedChar = "§k"
     const val boldChar = "§l"
     const val strikethroughChar = "§m"
     const val underlineChar = "§n"
     const val italicChar = "§o"
 
+    val effectChars = arrayListOf(
+        obfuscatedChar,
+        boldChar,
+        strikethroughChar,
+        underlineChar,
+        italicChar,
+    )
+
     const val resetChar = "§r"
 
-    private const val defaultPrefix = "$yellowChar[${MOD_NAME}]$resetChar "
-    private const val redPrefix = "$yellowChar[${MOD_NAME}]$redChar "
-    private const val yellowPrefix = "$yellowChar[${MOD_NAME}]$yellowChar "
-    private const val greenPrefix = "$yellowChar[${MOD_NAME}]$greenChar "
+    const val defaultPrefix = "$yellowChar[${MOD_NAME}]${resetChar + whiteChar} "
+    const val redPrefix = "$yellowChar[${MOD_NAME}]$redChar "
+    const val yellowPrefix = "$yellowChar[${MOD_NAME}]$yellowChar "
+    const val greenPrefix = "$yellowChar[${MOD_NAME}]$greenChar "
 
     enum class PrefixType {
         DEFAULT,
