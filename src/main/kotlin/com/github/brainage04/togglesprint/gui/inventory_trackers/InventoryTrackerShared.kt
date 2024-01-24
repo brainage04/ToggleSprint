@@ -17,7 +17,7 @@ object InventoryTrackerShared {
 
     val primaryChars = ChatUtils.colourChars[globalGuiSettings.primaryColour] + ChatUtils.effectChars[globalGuiSettings.primaryEffect]
 
-    fun trackInventoryItems(itemList: ArrayList<InventoryTrackerItem>): ArrayList<String> {
+    fun trackInventoryItems(itemList: ArrayList<InventoryTrackerItem>, includeArrays: Boolean): ArrayList<String> {
         val textArray: ArrayList<String> = arrayListOf()
 
         val mainInventory = Minecraft.getMinecraft().thePlayer.inventory.mainInventory ?: return textArray
@@ -33,7 +33,13 @@ object InventoryTrackerShared {
             }
         }
 
-        for (item in itemList) if (item.count > 0) textArray.add("${primaryChars + item.name}: ${item.count} ${item.countArray}")
+        for (item in itemList) if (item.count > 0) {
+            var currentLine = "${primaryChars + item.name}: ${item.count}"
+
+            if (includeArrays && item.countArray.size > 1) currentLine += " ${item.countArray}"
+
+            textArray.add(currentLine)
+        }
 
         return textArray
     }

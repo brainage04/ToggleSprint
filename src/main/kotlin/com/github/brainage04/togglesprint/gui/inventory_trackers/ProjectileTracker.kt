@@ -28,7 +28,7 @@ object ProjectileTracker {
             "${GUIUtils.secondaryChars}Projectiles:"
         )
 
-        textArray.addAll(trackInventoryItems(itemList))
+        textArray.addAll(trackInventoryItems(itemList, guiElements.projectileTracker.includeArrays))
 
         if (textArray.size < 2) textArray[0] += "${ChatUtils.redChar} N/A"
 

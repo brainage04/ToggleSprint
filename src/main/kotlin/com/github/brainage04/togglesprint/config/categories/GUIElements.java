@@ -32,12 +32,12 @@ public class GUIElements {
     @Expose
     @ConfigOption(name = "Projectile Tracker", desc = "")
     @Accordion
-    public ItemTracker projectileTracker = new ItemTracker(new CoreSettings(true, 10, 80, 3), 1);
+    public ItemTracker projectileTracker = new ItemTracker(new CoreSettings(true, 10, 50, 1), 1, true);
 
     @Expose
     @ConfigOption(name = "Food Tracker", desc = "")
     @Accordion
-    public ItemTracker foodTracker = new ItemTracker(new CoreSettings(true, 10, 140, 3), 1);
+    public ItemTracker foodTracker = new ItemTracker(new CoreSettings(true, 10, 80, 3), 1, true);
 
     @Expose
     @ConfigOption(name = "Real Time Tracker", desc = "")
@@ -57,7 +57,7 @@ public class GUIElements {
     @Expose
     @ConfigOption(name = "Entity Tracker", desc = "")
     @Accordion
-    public EntityTracker entityTracker = new EntityTracker(new CoreSettings(false, 10, 50, 1), true, true, true, true, true);
+    public EntityTracker entityTracker = new EntityTracker(new CoreSettings(false, 130, 10, 1), true, true, true, true, true);
 
 /*
     public static class ExampleElement {
@@ -216,9 +216,15 @@ public class GUIElements {
         @ConfigEditorDropdown(values = {"Icon", "Name"})
         public int prefixFormat;
 
-        public ItemTracker(CoreSettings coreSettings, int prefixFormat) {
+        @Expose
+        @ConfigOption(name = "Print Arrays", desc = "If items are contained in more than 1 slot, show the number in each slot in order (hotbar from left to right, then inventory rows 1, 2, 3).")
+        @ConfigEditorBoolean
+        public boolean includeArrays;
+
+        public ItemTracker(CoreSettings coreSettings, int prefixFormat, boolean includeArrays) {
             this.coreSettings = coreSettings;
             this.prefixFormat = prefixFormat;
+            this.includeArrays = includeArrays;
         }
     }
 
