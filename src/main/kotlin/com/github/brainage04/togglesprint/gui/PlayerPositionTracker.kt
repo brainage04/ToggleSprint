@@ -8,21 +8,24 @@ import net.minecraft.client.Minecraft
 
 object PlayerPositionTracker {
     private val guiElements get() = ToggleSprintMain.config.guiElements
+    private val globalGuiSettings get() = ToggleSprintMain.config.globalGuiSettings
+
+    val primaryChars = ChatUtils.colourChars[globalGuiSettings.primaryColour] + ChatUtils.effectChars[globalGuiSettings.primaryEffect]
 
     fun playerPositionTracker() {
         if (!guiElements.positionTracker.coreSettings.isEnabled) return
 
         val textArray = arrayListOf(
-            "${ChatUtils.whiteChar}X: ${Minecraft.getMinecraft().thePlayer.posX.round(guiElements.positionTracker.decimals)}",
-            "${ChatUtils.whiteChar}Y: ${Minecraft.getMinecraft().thePlayer.posY.round(guiElements.positionTracker.decimals)}",
-            "${ChatUtils.whiteChar}Z: ${Minecraft.getMinecraft().thePlayer.posZ.round(guiElements.positionTracker.decimals)}",
+            "${primaryChars}X: ${Minecraft.getMinecraft().thePlayer.posX.round(guiElements.positionTracker.decimals)}",
+            "${primaryChars}Y: ${Minecraft.getMinecraft().thePlayer.posY.round(guiElements.positionTracker.decimals)}",
+            "${primaryChars}Z: ${Minecraft.getMinecraft().thePlayer.posZ.round(guiElements.positionTracker.decimals)}",
         )
 
         if (guiElements.positionTracker.showChunkCounter) {
-            val text = ChatUtils.whiteChar + Minecraft.getMinecraft().renderGlobal.debugInfoRenders.split(" ")
-            textArray.add("${ChatUtils.whiteChar + text[0]} ${text[1]}")
+            val text = primaryChars + Minecraft.getMinecraft().renderGlobal.debugInfoRenders.split(" ")
+            textArray.add("${primaryChars + text[0]} ${text[1]}")
         }
-        if (guiElements.positionTracker.showEntityCounter) textArray.add(Minecraft.getMinecraft().renderGlobal.debugInfoEntities.split(",")[0])
+        if (guiElements.positionTracker.showEntityCounter) textArray.add(primaryChars + Minecraft.getMinecraft().renderGlobal.debugInfoEntities.split(",")[0])
 
         RenderGuiData.renderElement(
             guiElements.positionTracker.coreSettings.x,

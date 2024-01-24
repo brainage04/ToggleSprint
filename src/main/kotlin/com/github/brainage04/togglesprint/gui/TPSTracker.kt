@@ -16,11 +16,14 @@ class TPSTracker {
 
     companion object {
         private val guiElements get() = ToggleSprintMain.config.guiElements
+        private val globalGuiSettings get() = ToggleSprintMain.config.globalGuiSettings
+
+        val primaryChars = ChatUtils.colourChars[globalGuiSettings.primaryColour] + ChatUtils.effectChars[globalGuiSettings.primaryEffect]
 
         private const val minDataAmount = 5
         private const val waitAfterWorldSwitch = 6
 
-        var display = "§fTPS: "
+        var display = "${primaryChars}TPS: "
 
         fun tpsTracker() {
             if (!guiElements.tpsTracker.coreSettings.isEnabled) return

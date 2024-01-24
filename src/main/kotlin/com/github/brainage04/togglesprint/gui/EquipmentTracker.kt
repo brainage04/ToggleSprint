@@ -8,13 +8,17 @@ import net.minecraft.client.Minecraft
 
 object EquipmentTracker {
     private val guiElements get() = ToggleSprintMain.config.guiElements
+    private val globalGuiSettings get() = ToggleSprintMain.config.globalGuiSettings
+
+    val primaryChars = ChatUtils.colourChars[globalGuiSettings.primaryColour] + ChatUtils.effectChars[globalGuiSettings.primaryEffect]
+    val secondaryChars = ChatUtils.colourChars[globalGuiSettings.secondaryColour] + ChatUtils.effectChars[globalGuiSettings.secondaryEffect]
 
     fun equipmentTracker() {
         if (!guiElements.equipmentTracker.coreSettings.isEnabled) return
         val thePlayer = Minecraft.getMinecraft().thePlayer ?: return
 
         val textArray = arrayListOf(
-            "${ChatUtils.aquaChar}Equipment:"
+            "${secondaryChars}Equipment:"
         )
 
         val equipmentNameList = arrayListOf(
@@ -34,7 +38,7 @@ object EquipmentTracker {
         )
 
         for (i in equipmentList.indices) {
-            var currentLine = ChatUtils.whiteChar
+            var currentLine = primaryChars
 
             if (equipmentList[i] == null) continue
 

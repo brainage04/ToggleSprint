@@ -2,18 +2,22 @@ package com.github.brainage04.togglesprint.gui
 
 import com.github.brainage04.togglesprint.ToggleSprintMain
 import com.github.brainage04.togglesprint.gui.core.RenderGuiData
+import com.github.brainage04.togglesprint.utils.ChatUtils
 import net.minecraft.client.Minecraft
 
 object PingTracker {
     private val guiElements get() = ToggleSprintMain.config.guiElements
+    private val globalGuiSettings get() = ToggleSprintMain.config.globalGuiSettings
+
+    val primaryChars = ChatUtils.colourChars[globalGuiSettings.primaryColour] + ChatUtils.effectChars[globalGuiSettings.primaryEffect]
 
     private fun getColor(ping: Long): String {
         return when {
-            ping < 50L -> "§2"
-            ping < 100L -> "§a"
-            ping < 200L -> "§6"
-            ping < 300L -> "§c"
-            else -> "§4"
+            ping < 50L -> ChatUtils.darkGreenChar
+            ping < 100L -> ChatUtils.greenChar
+            ping < 200L -> ChatUtils.yellowChar
+            ping < 300L -> ChatUtils.redChar
+            else -> ChatUtils.darkRedChar
         }
     }
 
@@ -25,14 +29,14 @@ object PingTracker {
         val minecraft = Minecraft.getMinecraft() ?: return
         if (minecraft.thePlayer == null) return
 
-        ping =  0L
+        ping = 0L
         if (!minecraft.isSingleplayer) {
             val currentServerData = minecraft.currentServerData ?: return
             ping = currentServerData.pingToServer
         }
 
-        val text = if (guiElements.pingTracker.showColor) "§fPing: ${getColor(ping) + ping}ms"
-        else "§fPing: ${ping}ms"
+        val text = if (guiElements.pingTracker.showColor) "${primaryChars}Ping: ${getColor(ping) + ping}ms"
+        else "${primaryChars}Ping: ${ping}ms"
 
         RenderGuiData.renderElement(
             guiElements.pingTracker.coreSettings.x,

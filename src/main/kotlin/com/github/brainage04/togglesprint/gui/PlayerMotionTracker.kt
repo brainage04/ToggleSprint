@@ -2,14 +2,18 @@ package com.github.brainage04.togglesprint.gui
 
 import com.github.brainage04.togglesprint.ToggleSprintMain
 import com.github.brainage04.togglesprint.gui.core.RenderGuiData
+import com.github.brainage04.togglesprint.utils.ChatUtils
 import com.github.brainage04.togglesprint.utils.MathUtils.round
 import net.minecraft.client.Minecraft
 
 object PlayerMotionTracker {
     private val guiElements get() = ToggleSprintMain.config.guiElements
+    private val globalGuiSettings get() = ToggleSprintMain.config.globalGuiSettings
+
+    val primaryChars = ChatUtils.colourChars[globalGuiSettings.primaryColour] + ChatUtils.effectChars[globalGuiSettings.primaryEffect]
 
     private fun formatMotion(motion: Double, axis: String): String {
-        var returnString = "§fMotion $axis: ${(motion * 20 * 2).round(guiElements.motionTracker.decimals)} m/s" // for some reason this number is half as big as it should be???
+        var returnString = "${primaryChars}Motion $axis: ${(motion * 20 * 2).round(guiElements.motionTracker.decimals)} m/s" // for some reason this number is half as big as it should be???
 
         if (guiElements.motionTracker.showTrueMotion) {
             returnString += " (${(motion * 2).round(guiElements.motionTracker.decimals)} m/tick)"
