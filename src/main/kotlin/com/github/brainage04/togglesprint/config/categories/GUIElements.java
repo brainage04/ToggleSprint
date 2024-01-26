@@ -235,12 +235,12 @@ public class GUIElements {
         public CoreSettings coreSettings;
 
         @Expose
-        @ConfigOption(name = "24 Hour Format", desc = "Switches to 24-hour format instead of 12.")
-        @ConfigEditorDropdown(values = {"None", "12-hour", "24-hour"})
-        public int dateFormat;
+        @ConfigOption(name = "Time Format", desc = "Switches between 12 and 24 hour format. Select \"None\" to remove the time from this element.")
+        @ConfigEditorDropdown(values = {"12-hour", "24-hour", "None"})
+        public int timeFormat;
 
         @Expose
-        @ConfigOption(name = "Include Date", desc = "Appends today's date to the start of the element.")
+        @ConfigOption(name = "Include Date", desc = "Appends your computer's date to the start of the element.")
         @ConfigEditorBoolean
         public boolean includeDate;
 
@@ -249,9 +249,9 @@ public class GUIElements {
         @ConfigEditorBoolean
         public boolean includeTimezone;
 
-        public RealTimeTracker(CoreSettings coreSettings, int dateFormat, boolean includeDate, boolean includeTimezone) {
+        public RealTimeTracker(CoreSettings coreSettings, int timeFormat, boolean includeDate, boolean includeTimezone) {
             this.coreSettings = coreSettings;
-            this.dateFormat = dateFormat;
+            this.timeFormat = timeFormat;
             this.includeDate = includeDate;
             this.includeTimezone = includeTimezone;
         }
