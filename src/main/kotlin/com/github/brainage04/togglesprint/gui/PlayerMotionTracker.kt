@@ -1,26 +1,23 @@
 package com.github.brainage04.togglesprint.gui
 
-import com.github.brainage04.togglesprint.ToggleSprintMain
 import com.github.brainage04.togglesprint.gui.core.RenderGuiData
-import com.github.brainage04.togglesprint.utils.GUIUtils
+import com.github.brainage04.togglesprint.utils.ConfigUtils
 import com.github.brainage04.togglesprint.utils.MathUtils.round
 import net.minecraft.client.Minecraft
 
 object PlayerMotionTracker {
-    private val guiElements get() = ToggleSprintMain.config.guiElements
-
     private fun formatMotion(motion: Double, axis: String): String {
-        var returnString = "${GUIUtils.primaryChars}Motion $axis: ${(motion * 20 * 2).round(guiElements.motionTracker.decimals)} m/s" // for some reason this number is half as big as it should be???
+        var returnString = "${ConfigUtils.primaryChars}Motion $axis: ${(motion * 20 * 2).round(ConfigUtils.guiElements.motionTracker.decimals)} m/s" // for some reason this number is half as big as it should be???
 
-        if (guiElements.motionTracker.showTrueMotion) {
-            returnString += " (${(motion * 2).round(guiElements.motionTracker.decimals)} m/tick)"
+        if (ConfigUtils.guiElements.motionTracker.showTrueMotion) {
+            returnString += " (${(motion * 2).round(ConfigUtils.guiElements.motionTracker.decimals)} m/tick)"
         }
 
         return returnString
     }
 
     fun playerMotionTracker() {
-        if (!guiElements.motionTracker.coreSettings.isEnabled) return
+        if (!ConfigUtils.guiElements.motionTracker.coreSettings.isEnabled) return
 
         val textArray = arrayListOf(
             formatMotion(Minecraft.getMinecraft().thePlayer.motionX, "X"),
@@ -29,9 +26,9 @@ object PlayerMotionTracker {
         )
 
         RenderGuiData.renderElement(
-            guiElements.motionTracker.coreSettings.x,
-            guiElements.motionTracker.coreSettings.y,
-            guiElements.motionTracker.coreSettings.anchorCorner,
+            ConfigUtils.guiElements.motionTracker.coreSettings.x,
+            ConfigUtils.guiElements.motionTracker.coreSettings.y,
+            ConfigUtils.guiElements.motionTracker.coreSettings.anchorCorner,
             textArray,
         )
     }

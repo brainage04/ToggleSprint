@@ -23,4 +23,9 @@ public class GlobalGUISettings {
     @ConfigOption(name = "Secondary Effect", desc = "Change the secondary effect of GUI elements.")
     @ConfigEditorDropdown(values = {"None", "Obfuscated", "Bold", "Strikethrough", "Underline", "Italic"})
     public int secondaryEffect = 2;
+
+    @Expose
+    @ConfigOption(name = "Padding", desc = "The number of pixels between lines in GUI elements.")
+    @ConfigEditorSlider(minValue = 0, maxValue = 16, minStep = 1)
+    public int paddingInPixels = 2;
 }

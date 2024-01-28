@@ -1,16 +1,16 @@
 package com.github.brainage04.togglesprint.gui.core
 
 import com.github.brainage04.togglesprint.gui.EntityTracker.entityTracker
-import com.github.brainage04.togglesprint.gui.EquipmentTracker.equipmentTracker
 import com.github.brainage04.togglesprint.gui.PingTracker.pingTracker
 import com.github.brainage04.togglesprint.gui.PlayerMotionTracker.playerMotionTracker
 import com.github.brainage04.togglesprint.gui.PlayerPositionTracker.playerPositionTracker
 import com.github.brainage04.togglesprint.gui.PlayerRotationTracker.playerRotationTracker
 import com.github.brainage04.togglesprint.gui.RealTimeTracker.realTimeTracker
-import com.github.brainage04.togglesprint.gui.TPSTracker.Companion.tpsTracker
 import com.github.brainage04.togglesprint.gui.ToggleSprintTracker.toggleSprintTracker
+import com.github.brainage04.togglesprint.gui.inventory_trackers.EquipmentTracker.equipmentTracker
 import com.github.brainage04.togglesprint.gui.inventory_trackers.FoodTracker.foodTracker
 import com.github.brainage04.togglesprint.gui.inventory_trackers.ProjectileTracker.projectileTracker
+import com.github.brainage04.togglesprint.utils.ConfigUtils
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.ScaledResolution
 import net.minecraft.client.renderer.GlStateManager
@@ -41,8 +41,6 @@ class RenderGuiData {
     }
 
     companion object {
-        private var paddingInPixels = 2
-
         fun renderElement(x: Double, y: Double, anchorCorner: Int, text: String) {
             val minecraft = Minecraft.getMinecraft() ?: return
             val renderer = minecraft.renderManager.fontRenderer ?: return
@@ -71,7 +69,7 @@ class RenderGuiData {
         fun renderElement(x: Double, y: Double, anchorCorner: Int, textArray: ArrayList<String>) {
             val renderer = Minecraft.getMinecraft().renderManager.fontRenderer ?: return
 
-            val heightInPixels = (renderer.FONT_HEIGHT + paddingInPixels)
+            val heightInPixels = (renderer.FONT_HEIGHT + ConfigUtils.globalGuiSettings.paddingInPixels)
 
             when (anchorCorner) {
                 0, 1, 6 -> for (i in textArray.indices) renderElement(x, y + (heightInPixels * i), anchorCorner, textArray[i]) // top left/right/center

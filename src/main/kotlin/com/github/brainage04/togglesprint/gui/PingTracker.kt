@@ -1,14 +1,11 @@
 package com.github.brainage04.togglesprint.gui
 
-import com.github.brainage04.togglesprint.ToggleSprintMain
 import com.github.brainage04.togglesprint.gui.core.RenderGuiData
 import com.github.brainage04.togglesprint.utils.ChatUtils
-import com.github.brainage04.togglesprint.utils.GUIUtils
+import com.github.brainage04.togglesprint.utils.ConfigUtils
 import net.minecraft.client.Minecraft
 
 object PingTracker {
-    private val guiElements get() = ToggleSprintMain.config.guiElements
-
     private fun getColor(ping: Long): String {
         return when {
             ping < 50L -> ChatUtils.darkGreenChar
@@ -22,7 +19,7 @@ object PingTracker {
     private var ping = 0L
 
     fun pingTracker() {
-        if (!guiElements.pingTracker.coreSettings.isEnabled) return
+        if (!ConfigUtils.guiElements.pingTracker.coreSettings.isEnabled) return
 
         val minecraft = Minecraft.getMinecraft() ?: return
         if (minecraft.thePlayer == null) return
@@ -33,13 +30,13 @@ object PingTracker {
             ping = currentServerData.pingToServer
         }
 
-        val text = if (guiElements.pingTracker.showColor) "${GUIUtils.primaryChars}Ping: ${getColor(ping) + ping}ms"
-        else "${GUIUtils.primaryChars}Ping: ${ping}ms"
+        val text = if (ConfigUtils.guiElements.pingTracker.showColor) "${ConfigUtils.primaryChars}Ping: ${getColor(ping) + ping}ms"
+        else "${ConfigUtils.primaryChars}Ping: ${ping}ms"
 
         RenderGuiData.renderElement(
-            guiElements.pingTracker.coreSettings.x,
-            guiElements.pingTracker.coreSettings.y,
-            guiElements.pingTracker.coreSettings.anchorCorner,
+            ConfigUtils.guiElements.pingTracker.coreSettings.x,
+            ConfigUtils.guiElements.pingTracker.coreSettings.y,
+            ConfigUtils.guiElements.pingTracker.coreSettings.anchorCorner,
             text,
         )
     }

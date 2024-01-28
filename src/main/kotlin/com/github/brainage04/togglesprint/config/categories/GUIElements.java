@@ -12,32 +12,17 @@ public class GUIElements {
     @Expose
     @ConfigOption(name = "Position Tracker", desc = "")
     @Accordion
-    public PositionTracker positionTracker = new PositionTracker(new CoreSettings(true, 10, 10, 0), 1, true, true);
+    public PositionTracker positionTracker = new PositionTracker(new CoreSettings(true, 10, 10, 0), 1, true, true, true);
 
     @Expose
     @ConfigOption(name = "Rotation Tracker", desc = "")
     @Accordion
-    public RotationTracker rotationTracker = new RotationTracker(new CoreSettings(true, 10, 110, 0), 2, false, false);
+    public RotationTracker rotationTracker = new RotationTracker(new CoreSettings(true, 10, 120, 0), 2, false, false, false);
 
     @Expose
     @ConfigOption(name = "Motion Tracker", desc = "")
     @Accordion
     public MotionTracker motionTracker = new MotionTracker(new CoreSettings(false, 80, 10, 0), 2, false);
-
-    @Expose
-    @ConfigOption(name = "Equipment Tracker", desc = "")
-    @Accordion
-    public EquipmentTracker equipmentTracker = new EquipmentTracker(new CoreSettings(true, 10, 10, 3), 1, true, 0, 1);
-
-    @Expose
-    @ConfigOption(name = "Projectile Tracker", desc = "")
-    @Accordion
-    public ItemTracker projectileTracker = new ItemTracker(new CoreSettings(true, 10, 50, 1), 1, true);
-
-    @Expose
-    @ConfigOption(name = "Food Tracker", desc = "")
-    @Accordion
-    public ItemTracker foodTracker = new ItemTracker(new CoreSettings(true, 10, 80, 3), 1, true);
 
     @Expose
     @ConfigOption(name = "Real Time Tracker", desc = "")
@@ -47,12 +32,12 @@ public class GUIElements {
     @Expose
     @ConfigOption(name = "Ping Tracker", desc = "")
     @Accordion
-    public LagTracker pingTracker = new LagTracker(new CoreSettings(true, 10, 70, 0), true);
+    public LagTracker pingTracker = new LagTracker(new CoreSettings(true, 10, 80, 0), true);
 
     @Expose
     @ConfigOption(name = "TPS Tracker", desc = "")
     @Accordion
-    public LagTracker tpsTracker = new LagTracker(new CoreSettings(false, 10, 90, 0), true);
+    public LagTracker tpsTracker = new LagTracker(new CoreSettings(false, 10, 100, 0), true);
 
     @Expose
     @ConfigOption(name = "Entity Tracker", desc = "")
@@ -101,6 +86,11 @@ public class GUIElements {
         public int decimals;
 
         @Expose
+        @ConfigOption(name = "Show Facing", desc = "Show the direction that the player is facing.")
+        @ConfigEditorBoolean
+        public boolean showFacing;
+
+        @Expose
         @ConfigOption(name = "C Counter", desc = "Shows the number of loaded cubic chunks (16x16x16) containing air blocks (excluding 0% and 100% air chunks) within the player's viewport.")
         @ConfigEditorBoolean
         public boolean showChunkCounter;
@@ -110,9 +100,10 @@ public class GUIElements {
         @ConfigEditorBoolean
         public boolean showEntityCounter;
 
-        public PositionTracker(CoreSettings coreSettings, int decimals, boolean showChunkCounter, boolean showEntityCounter) {
+        public PositionTracker(CoreSettings coreSettings, int decimals, boolean showFacing, boolean showChunkCounter, boolean showEntityCounter) {
             this.coreSettings = coreSettings;
             this.decimals = decimals;
+            this.showFacing = showFacing;
             this.showChunkCounter = showChunkCounter;
             this.showEntityCounter = showEntityCounter;
         }
@@ -130,6 +121,11 @@ public class GUIElements {
         public int decimals;
 
         @Expose
+        @ConfigOption(name = "Compact Format", desc = "Compacts the format to match that of the F3 debug menu.")
+        @ConfigEditorBoolean
+        public boolean compactFormat;
+
+        @Expose
         @ConfigOption(name = "Show True Yaw", desc = "Shows the player's true yaw value (If different from the clamped value. Useful for debugging purposes).")
         @ConfigEditorBoolean
         public boolean showTrueYaw;
@@ -139,9 +135,10 @@ public class GUIElements {
         @ConfigEditorBoolean
         public boolean dependOnFarmingTool;
 
-        public RotationTracker(CoreSettings coreSettings, int decimals, boolean showTrueYaw,  boolean dependOnFarmingTool) {
+        public RotationTracker(CoreSettings coreSettings, int decimals, boolean compactFormat, boolean showTrueYaw,  boolean dependOnFarmingTool) {
             this.coreSettings = coreSettings;
             this.decimals = decimals;
+            this.compactFormat = compactFormat;
             this.showTrueYaw = showTrueYaw;
             this.dependOnFarmingTool = dependOnFarmingTool;
         }
@@ -167,64 +164,6 @@ public class GUIElements {
             this.coreSettings = coreSettings;
             this.decimals = decimals;
             this.showTrueMotion = showTrueMotion;
-        }
-    }
-
-    public static class EquipmentTracker {
-        @Expose
-        @ConfigOption(name = "Core Settings", desc = "")
-        @Accordion
-        public CoreSettings coreSettings;
-
-        @Expose
-        @ConfigOption(name = "Prefix Format", desc = "Switch between displaying the prefix as the item's icon or name.")
-        @ConfigEditorDropdown(values = {"Icon", "Name"})
-        public int prefixFormat;
-
-        @Expose
-        @ConfigOption(name = "Display Durability Bar", desc = "If \"Prefix Format\" is set to \"Icon\", display the durability bar of the item.")
-        @ConfigEditorBoolean
-        public boolean displayDurabilityBar;
-
-        @Expose
-        @ConfigOption(name = "Decimal Places", desc = "The number of decimal places displayed.")
-        @ConfigEditorSlider(minValue = 0, maxValue = 10, minStep = 1)
-        public int decimals;
-
-        @Expose
-        @ConfigOption(name = "Durability Format", desc = "Switch between displaying the durability as a percentage, fraction or number (fraction without the denominator).")
-        @ConfigEditorDropdown(values = {"Percentage", "Fraction", "Number"})
-        public int durabilityFormat;
-
-        public EquipmentTracker(CoreSettings coreSettings, int prefixFormat, boolean displayDurabilityBar, int durabilityFormat, int decimals) {
-            this.coreSettings = coreSettings;
-            this.prefixFormat = prefixFormat;
-            this.displayDurabilityBar = displayDurabilityBar;
-            this.decimals = decimals;
-            this.durabilityFormat = durabilityFormat;
-        }
-    }
-
-    public static class ItemTracker {
-        @Expose
-        @ConfigOption(name = "Core Settings", desc = "")
-        @Accordion
-        public CoreSettings coreSettings;
-
-        @Expose
-        @ConfigOption(name = "Prefix Format", desc = "Switch between displaying the prefix as the item's icon or name.")
-        @ConfigEditorDropdown(values = {"Icon", "Name"})
-        public int prefixFormat;
-
-        @Expose
-        @ConfigOption(name = "Print Arrays", desc = "If items are contained in more than 1 slot, show the number in each slot in order (hotbar from left to right, then inventory rows 1, 2, 3).")
-        @ConfigEditorBoolean
-        public boolean includeArrays;
-
-        public ItemTracker(CoreSettings coreSettings, int prefixFormat, boolean includeArrays) {
-            this.coreSettings = coreSettings;
-            this.prefixFormat = prefixFormat;
-            this.includeArrays = includeArrays;
         }
     }
 

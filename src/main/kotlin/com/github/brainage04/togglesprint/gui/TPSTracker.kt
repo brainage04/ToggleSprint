@@ -1,36 +1,28 @@
 package com.github.brainage04.togglesprint.gui
 
-import com.github.brainage04.togglesprint.ToggleSprintMain
 import com.github.brainage04.togglesprint.events.core.PacketEvent
 import com.github.brainage04.togglesprint.gui.core.RenderGuiData
-import com.github.brainage04.togglesprint.utils.ChatUtils
-import com.github.brainage04.togglesprint.utils.GUIUtils
-import com.github.brainage04.togglesprint.utils.MathUtils.round
+import com.github.brainage04.togglesprint.utils.ConfigUtils
 import net.minecraft.client.Minecraft
 import net.minecraftforge.fml.common.eventhandler.Event
 import net.minecraftforge.fml.common.eventhandler.EventPriority
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
-import kotlin.concurrent.fixedRateTimer
 
 class TPSTracker {
-    private val guiElements get() = ToggleSprintMain.config.guiElements
-
     companion object {
-        private val guiElements get() = ToggleSprintMain.config.guiElements
-
         private const val minDataAmount = 5
         private const val waitAfterWorldSwitch = 6
 
-        var display = "${GUIUtils.primaryChars}TPS: "
+        var display = "${ConfigUtils.primaryChars}TPS: "
 
         fun tpsTracker() {
-            if (!guiElements.tpsTracker.coreSettings.isEnabled) return
+            if (!ConfigUtils.guiElements.tpsTracker.coreSettings.isEnabled) return
             if (Minecraft.getMinecraft().thePlayer == null) return
 
             RenderGuiData.renderElement(
-                guiElements.tpsTracker.coreSettings.x,
-                guiElements.tpsTracker.coreSettings.y,
-                guiElements.tpsTracker.coreSettings.anchorCorner,
+                ConfigUtils.guiElements.tpsTracker.coreSettings.x,
+                ConfigUtils.guiElements.tpsTracker.coreSettings.y,
+                ConfigUtils.guiElements.tpsTracker.coreSettings.anchorCorner,
                 display,
             )
         }
@@ -96,7 +88,7 @@ class TPSTracker {
 
     @SubscribeEvent(priority = EventPriority.LOW, receiveCanceled = true)
     fun onPacketEvent(event: PacketEvent.ReceiveEvent) {
-        if (!guiElements.tpsTracker.coreSettings.isEnabled) return
+        if (!ConfigUtils.guiElements.tpsTracker.coreSettings.isEnabled) return
         hasPacketReceived = true
     }
 

@@ -1,33 +1,46 @@
 package com.github.brainage04.togglesprint.gui
 
-import com.github.brainage04.togglesprint.ToggleSprintMain
 import com.github.brainage04.togglesprint.gui.core.RenderGuiData
-import com.github.brainage04.togglesprint.utils.GUIUtils
+import com.github.brainage04.togglesprint.utils.ConfigUtils
 import com.github.brainage04.togglesprint.utils.MathUtils.round
 import net.minecraft.client.Minecraft
+import net.minecraft.util.EnumFacing
 
 object PlayerPositionTracker {
-    private val guiElements get() = ToggleSprintMain.config.guiElements
-
     fun playerPositionTracker() {
-        if (!guiElements.positionTracker.coreSettings.isEnabled) return
+        if (!ConfigUtils.guiElements.positionTracker.coreSettings.isEnabled) return
 
         val textArray = arrayListOf(
-            "${GUIUtils.primaryChars}X: ${Minecraft.getMinecraft().thePlayer.posX.round(guiElements.positionTracker.decimals)}",
-            "${GUIUtils.primaryChars}Y: ${Minecraft.getMinecraft().thePlayer.posY.round(guiElements.positionTracker.decimals)}",
-            "${GUIUtils.primaryChars}Z: ${Minecraft.getMinecraft().thePlayer.posZ.round(guiElements.positionTracker.decimals)}",
+            "${ConfigUtils.primaryChars}X: ${Minecraft.getMinecraft().thePlayer.posX.round(ConfigUtils.guiElements.positionTracker.decimals)}",
+            "${ConfigUtils.primaryChars}Y: ${Minecraft.getMinecraft().thePlayer.posY.round(ConfigUtils.guiElements.positionTracker.decimals)}",
+            "${ConfigUtils.primaryChars}Z: ${Minecraft.getMinecraft().thePlayer.posZ.round(ConfigUtils.guiElements.positionTracker.decimals)}",
         )
 
-        if (guiElements.positionTracker.showChunkCounter) {
-            val text = Minecraft.getMinecraft().renderGlobal.debugInfoRenders.split(" ")
-            textArray.add("${GUIUtils.primaryChars + text[0]} ${text[1]}")
+        if (ConfigUtils.guiElements.positionTracker.showFacing) {
+            val facing = Minecraft.getMinecraft().thePlayer.horizontalFacing
+
+            val facingString = when (facing) {
+                EnumFacing.NORTH -> "North (-Z)"
+                EnumFacing.SOUTH -> "South (+Z)"
+                EnumFacing.WEST -> "West (-X)"
+                EnumFacing.EAST -> "East (+X)"
+                else -> "???"
+            }
+
+            textArray.add("${ConfigUtils.primaryChars}Facing: $facingString")
         }
-        if (guiElements.positionTracker.showEntityCounter) textArray.add(GUIUtils.primaryChars + Minecraft.getMinecraft().renderGlobal.debugInfoEntities.split(",")[0])
+
+        if (ConfigUtils.guiElements.positionTracker.showChunkCounter) {
+            val text = Minecraft.getMinecraft().renderGlobal.debugInfoRenders.split(" ")
+            textArray.add("${ConfigUtils.primaryChars + text[0]} ${text[1]}")
+        }
+
+        if (ConfigUtils.guiElements.positionTracker.showEntityCounter) textArray.add(ConfigUtils.primaryChars + Minecraft.getMinecraft().renderGlobal.debugInfoEntities.split(",")[0])
 
         RenderGuiData.renderElement(
-            guiElements.positionTracker.coreSettings.x,
-            guiElements.positionTracker.coreSettings.y,
-            guiElements.positionTracker.coreSettings.anchorCorner,
+            ConfigUtils.guiElements.positionTracker.coreSettings.x,
+            ConfigUtils.guiElements.positionTracker.coreSettings.y,
+            ConfigUtils.guiElements.positionTracker.coreSettings.anchorCorner,
             textArray,
         )
     }

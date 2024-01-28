@@ -3,6 +3,7 @@ package com.github.brainage04.togglesprint.config;
 import com.github.brainage04.togglesprint.ToggleSprintMain;
 import com.github.brainage04.togglesprint.config.categories.GUIElements;
 import com.github.brainage04.togglesprint.config.categories.GlobalGUISettings;
+import com.github.brainage04.togglesprint.config.categories.InventoryTrackers;
 import com.github.brainage04.togglesprint.config.categories.ToggleMovementKeys;
 import com.google.gson.annotations.Expose;
 import io.github.moulberry.moulconfig.Config;
@@ -29,6 +30,10 @@ public class ToggleSprintConfig extends Config {
     public GlobalGUISettings globalGuiSettings = new GlobalGUISettings();
 
     @Expose
-    @Category(name = "GUI Elements", desc = "Edit toggle sprint/sneak and other GUI elements.")
+    @Category(name = "GUI Elements (Main)", desc = "Edit toggle sprint/sneak and other main GUI elements.")
     public GUIElements guiElements = new GUIElements();
+
+    @Expose
+    @Category(name = "GUI Elements (Inventory trackers)", desc = "GUI elements responsible for tracking the inventory.")
+    public InventoryTrackers inventoryTrackers = new InventoryTrackers();
 }
