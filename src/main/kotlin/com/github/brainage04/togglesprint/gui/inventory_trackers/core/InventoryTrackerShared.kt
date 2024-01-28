@@ -1,7 +1,7 @@
-package com.github.brainage04.togglesprint.gui.inventory_trackers
+package com.github.brainage04.togglesprint.gui.inventory_trackers.core
 
-import com.github.brainage04.togglesprint.ToggleSprintMain
 import com.github.brainage04.togglesprint.utils.ChatUtils
+import com.github.brainage04.togglesprint.utils.ConfigUtils
 import net.minecraft.client.Minecraft
 import net.minecraft.item.Item
 
@@ -13,9 +13,7 @@ object InventoryTrackerShared {
         var countArray: ArrayList<Int> = arrayListOf()
     )
 
-    private val globalGuiSettings get() = ToggleSprintMain.config.globalGuiSettings
-
-    val primaryChars = ChatUtils.colourChars[globalGuiSettings.primaryColour] + ChatUtils.effectChars[globalGuiSettings.primaryEffect]
+    val primaryChars = ChatUtils.colourChars[ConfigUtils.globalGuiSettings.primaryColour] + ChatUtils.effectChars[ConfigUtils.globalGuiSettings.primaryEffect]
 
     fun trackInventoryItems(itemList: ArrayList<InventoryTrackerItem>, includeArrays: Boolean): ArrayList<String> {
         val textArray: ArrayList<String> = arrayListOf()

@@ -1,42 +1,45 @@
 package com.github.brainage04.togglesprint.gui
 
-import com.github.brainage04.togglesprint.ToggleSprintMain
 import com.github.brainage04.togglesprint.gui.core.RenderGuiData
-import com.github.brainage04.togglesprint.utils.GUIUtils
+import com.github.brainage04.togglesprint.utils.ConfigUtils
 import com.github.brainage04.togglesprint.utils.MathUtils.round
 import net.minecraft.client.Minecraft
 
 object PlayerRotationTracker {
-    private val guiElements get() = ToggleSprintMain.config.guiElements
-
     private fun formatYaw(yaw: Float): String {
-        val positiveYaw = (((yaw + 180.0f) % 360.0f) - 180.0f).round(guiElements.rotationTracker.decimals)
-        val negativeYaw = (((yaw - 180.0f) % 360.0f) + 180.0f).round(guiElements.rotationTracker.decimals)
+        val positiveYaw = (((yaw + 180.0f) % 360.0f) - 180.0f).round(ConfigUtils.guiElements.rotationTracker.decimals)
+        val negativeYaw = (((yaw - 180.0f) % 360.0f) + 180.0f).round(ConfigUtils.guiElements.rotationTracker.decimals)
 
         var returnString = if (yaw > 0.0f) {
-            "${GUIUtils.primaryChars}Yaw: $positiveYaw"
+            positiveYaw.toString()
         } else {
-            "${GUIUtils.primaryChars}Yaw: $negativeYaw"
+            negativeYaw.toString()
         }
 
-        if (guiElements.rotationTracker.showTrueYaw && !(yaw > -180.0f && yaw < 180.0f)) {
-            returnString += " (${yaw.round(guiElements.rotationTracker.decimals)})"
+        if (ConfigUtils.guiElements.rotationTracker.showTrueYaw && !(yaw > -180.0f && yaw < 180.0f)) {
+            returnString += " (${yaw.round(ConfigUtils.guiElements.rotationTracker.decimals)})"
         }
 
         return returnString
     }
 
     fun playerRotationTracker() {
-        if (!guiElements.rotationTracker.coreSettings.isEnabled) return
+        if (!ConfigUtils.guiElements.rotationTracker.coreSettings.isEnabled) return
         val thePlayer = Minecraft.getMinecraft().thePlayer ?: return
 
-        val textArray = arrayListOf(
-            formatYaw(Minecraft.getMinecraft().thePlayer.rotationYaw),
-            "${GUIUtils.primaryChars}Pitch: ${Minecraft.getMinecraft().thePlayer.rotationPitch.round(guiElements.rotationTracker.decimals)}",
-        )
+        val textArray = if (ConfigUtils.guiElements.rotationTracker.compactFormat) {
+            arrayListOf(
+                "${ConfigUtils.primaryChars + formatYaw(Minecraft.getMinecraft().thePlayer.rotationYaw)} / ${Minecraft.getMinecraft().thePlayer.rotationPitch.round(ConfigUtils.guiElements.rotationTracker.decimals)}",
+            )
+        } else {
+            arrayListOf(
+                "${ConfigUtils.primaryChars}Yaw: ${formatYaw(Minecraft.getMinecraft().thePlayer.rotationYaw)}",
+                "${ConfigUtils.primaryChars}Pitch: ${Minecraft.getMinecraft().thePlayer.rotationPitch.round(ConfigUtils.guiElements.rotationTracker.decimals)}",
+            )
+        }
 
-        if (guiElements.rotationTracker.dependOnFarmingTool) {
-            val currentEquippedItem = thePlayer.getCurrentEquippedItem() ?: return
+        if (ConfigUtils.guiElements.rotationTracker.dependOnFarmingTool) {
+            val currentEquippedItem = thePlayer.currentEquippedItem ?: return
 
             val itemName = currentEquippedItem.displayName
 
@@ -63,9 +66,9 @@ object PlayerRotationTracker {
         }
 
         RenderGuiData.renderElement(
-            guiElements.rotationTracker.coreSettings.x,
-            guiElements.rotationTracker.coreSettings.y,
-            guiElements.rotationTracker.coreSettings.anchorCorner,
+            ConfigUtils.guiElements.rotationTracker.coreSettings.x,
+            ConfigUtils.guiElements.rotationTracker.coreSettings.y,
+            ConfigUtils.guiElements.rotationTracker.coreSettings.anchorCorner,
             textArray,
         )
     }

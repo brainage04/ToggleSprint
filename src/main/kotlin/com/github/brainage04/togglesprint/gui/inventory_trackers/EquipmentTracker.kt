@@ -1,21 +1,18 @@
-package com.github.brainage04.togglesprint.gui
+package com.github.brainage04.togglesprint.gui.inventory_trackers
 
-import com.github.brainage04.togglesprint.ToggleSprintMain
 import com.github.brainage04.togglesprint.gui.core.RenderGuiData
 import com.github.brainage04.togglesprint.utils.ChatUtils
-import com.github.brainage04.togglesprint.utils.GUIUtils
+import com.github.brainage04.togglesprint.utils.ConfigUtils
 import com.github.brainage04.togglesprint.utils.MathUtils.round
 import net.minecraft.client.Minecraft
 
 object EquipmentTracker {
-    private val guiElements get() = ToggleSprintMain.config.guiElements
-
     fun equipmentTracker() {
-        if (!guiElements.equipmentTracker.coreSettings.isEnabled) return
+        if (!ConfigUtils.inventoryTrackers.equipmentTracker.coreSettings.isEnabled) return
         val thePlayer = Minecraft.getMinecraft().thePlayer ?: return
 
         val textArray = arrayListOf(
-            "${GUIUtils.secondaryChars}Equipment:"
+            "${ConfigUtils.secondaryChars}Equipment:"
         )
 
         val equipmentList = arrayListOf(
@@ -27,13 +24,13 @@ object EquipmentTracker {
         )
 
         for (i in equipmentList.indices) {
-            var currentLine = GUIUtils.primaryChars
+            var currentLine = ConfigUtils.primaryChars
 
             if (equipmentList[i] == null) continue
 
-            when (guiElements.equipmentTracker.prefixFormat) {
+            when (ConfigUtils.inventoryTrackers.equipmentTracker.prefixFormat) {
                 0 -> { // icon (0)
-                    when (guiElements.equipmentTracker.displayDurabilityBar) {
+                    when (ConfigUtils.inventoryTrackers.equipmentTracker.displayDurabilityBar) {
                         true -> {
 
                         }
@@ -54,7 +51,7 @@ object EquipmentTracker {
                 currentLine += ": " // separator between icon/name and durability
 
                 val durabilityPercentage = ((equipmentList[i].maxDamage - equipmentList[i].itemDamage).toFloat() / equipmentList[i].maxDamage.toFloat() * 100.0f).round(
-                    guiElements.equipmentTracker.decimals)
+                    ConfigUtils.inventoryTrackers.equipmentTracker.decimals)
 
                 currentLine += when {
                     durabilityPercentage <= 20f -> ChatUtils.redChar
@@ -62,7 +59,7 @@ object EquipmentTracker {
                     else -> ChatUtils.greenChar
                 }
 
-                when (guiElements.equipmentTracker.durabilityFormat) {
+                when (ConfigUtils.inventoryTrackers.equipmentTracker.durabilityFormat) {
                     0 -> currentLine += "${durabilityPercentage}%"
                     1 -> currentLine += "${equipmentList[i].maxDamage - equipmentList[i].itemDamage} / ${equipmentList[i].maxDamage}"
                     2 -> currentLine += equipmentList[i].maxDamage - equipmentList[i].itemDamage
@@ -75,9 +72,9 @@ object EquipmentTracker {
         if (textArray.size < 2) textArray[0] += "${ChatUtils.redChar} N/A"
 
         RenderGuiData.renderElement(
-            guiElements.equipmentTracker.coreSettings.x,
-            guiElements.equipmentTracker.coreSettings.y,
-            guiElements.equipmentTracker.coreSettings.anchorCorner,
+            ConfigUtils.inventoryTrackers.equipmentTracker.coreSettings.x,
+            ConfigUtils.inventoryTrackers.equipmentTracker.coreSettings.y,
+            ConfigUtils.inventoryTrackers.equipmentTracker.coreSettings.anchorCorner,
             textArray,
         )
     }
