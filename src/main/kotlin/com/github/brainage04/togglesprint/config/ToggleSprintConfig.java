@@ -34,6 +34,6 @@ public class ToggleSprintConfig extends Config {
     public GUIElements guiElements = new GUIElements();
 
     @Expose
-    @Category(name = "GUI Elements (Inventory trackers)", desc = "GUI elements responsible for tracking the inventory.")
+    @Category(name = "(Inventory Trackers)", desc = "GUI elements responsible for tracking the inventory.")
     public InventoryTrackers inventoryTrackers = new InventoryTrackers();
 }

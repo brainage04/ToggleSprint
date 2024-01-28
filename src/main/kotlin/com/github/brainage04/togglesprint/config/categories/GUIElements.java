@@ -10,32 +10,32 @@ public class GUIElements {
     public ToggleSprintElement toggleSprintElement = new ToggleSprintElement(new CoreSettings(true, 5, 3, 2), false);
 
     @Expose
-    @ConfigOption(name = "Position Tracker", desc = "")
+    @ConfigOption(name = "Position Display", desc = "")
     @Accordion
     public PositionTracker positionTracker = new PositionTracker(new CoreSettings(true, 10, 10, 0), 1, true, true, true);
 
     @Expose
-    @ConfigOption(name = "Rotation Tracker", desc = "")
+    @ConfigOption(name = "Rotation Display", desc = "")
     @Accordion
     public RotationTracker rotationTracker = new RotationTracker(new CoreSettings(true, 10, 120, 0), 2, false, false, false);
 
     @Expose
-    @ConfigOption(name = "Motion Tracker", desc = "")
+    @ConfigOption(name = "Motion Display", desc = "")
     @Accordion
     public MotionTracker motionTracker = new MotionTracker(new CoreSettings(false, 80, 10, 0), 2, false);
 
     @Expose
-    @ConfigOption(name = "Real Time Tracker", desc = "")
+    @ConfigOption(name = "Date/Time Display", desc = "")
     @Accordion
     public RealTimeTracker realTimeTracker = new RealTimeTracker(new CoreSettings(true, 10, 10, 1), 1, true, true);
 
     @Expose
-    @ConfigOption(name = "Ping Tracker", desc = "")
+    @ConfigOption(name = "Ping", desc = "")
     @Accordion
     public LagTracker pingTracker = new LagTracker(new CoreSettings(true, 10, 80, 0), true);
 
     @Expose
-    @ConfigOption(name = "TPS Tracker", desc = "")
+    @ConfigOption(name = "TPS", desc = "")
     @Accordion
     public LagTracker tpsTracker = new LagTracker(new CoreSettings(false, 10, 100, 0), true);
 
