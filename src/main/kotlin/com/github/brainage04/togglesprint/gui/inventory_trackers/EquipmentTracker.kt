@@ -26,9 +26,8 @@ object EquipmentTracker {
 
         if (ConfigUtils.inventoryTrackers.equipmentTracker.itemTypes == null) { // prevents crashing when users update their mod from a previous version
             ToggleSprintMain.LOGGER.warn("equipmentTracker.itemTypes was missing, this may be due to an update. updating config...")
-            ConfigUtils.inventoryTrackers.equipmentTracker.itemTypes = ArrayList(mutableListOf(0, 1, 2, 3, 4))
+            ToggleSprintMain.config.inventoryTrackers.equipmentTracker.itemTypes = ArrayList(mutableListOf(0, 1, 2, 3, 4))
             ToggleSprintMain.configManager.save()
-            ToggleSprintMain.configManager.tryReadConfig()
             ToggleSprintMain.LOGGER.warn("Config updated.")
         }
 
