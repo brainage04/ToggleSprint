@@ -4,6 +4,7 @@ import com.github.brainage04.togglesprint.ToggleSprintMain
 import com.github.brainage04.togglesprint.config.ToggleSprintConfig
 import com.github.brainage04.togglesprint.errors.ConfigError
 import com.google.gson.GsonBuilder
+import com.google.gson.JsonObject
 import com.google.gson.TypeAdapter
 import com.google.gson.stream.JsonReader
 import com.google.gson.stream.JsonWriter
@@ -90,7 +91,7 @@ class ConfigManager {
         screenToOpen = GuiScreenElementWrapper(editor)
     }
 
-    fun tryReadConfig() {
+    private fun tryReadConfig() {
         try {
             val inputStreamReader = InputStreamReader(FileInputStream(configFile), StandardCharsets.UTF_8)
             val bufferedReader = BufferedReader(inputStreamReader)
@@ -100,12 +101,15 @@ class ConfigManager {
                 builder.append(line)
                 builder.append("\n")
             }
-            config = gson.fromJson(builder.toString(), ToggleSprintConfig::class.java)
+
+            val jsonObject = gson.fromJson(builder.toString(), JsonObject::class.java)
+            val newJsonObject = ConfigUpdaterMigrator.fixConfig(jsonObject)
+            config = gson.fromJson(newJsonObject, ToggleSprintConfig::class.java)
+
+            ToggleSprintMain.LOGGER.info("Config loaded.")
         } catch (e: Exception) {
             throw ConfigError("Could not load config", e)
         }
-
-        ToggleSprintMain.LOGGER.info("Config loaded.")
     }
 
     fun save() {
