@@ -11,7 +11,7 @@ public class InventoryTrackers {
     @Expose
     @ConfigOption(name = "Equipment Tracker", desc = "")
     @Accordion
-    public EquipmentTracker equipmentTracker = new EquipmentTracker(new GUIElements.CoreSettings(true, 10, 10, 3), 1, true, 0, 1);
+    public EquipmentTracker equipmentTracker = new EquipmentTracker(new GUIElements.CoreSettings(true, 10, 10, 3), 1, true, 0, 1, new ArrayList<>(Arrays.asList(0, 1, 2, 3, 4)));
 
     @Expose
     @ConfigOption(name = "Projectile Tracker", desc = "")
@@ -40,21 +40,35 @@ public class InventoryTrackers {
         public boolean displayDurabilityBar;
 
         @Expose
+        @ConfigOption(name = "Durability Format", desc = "Switch between displaying the durability as a percentage, fraction or number (fraction without the denominator).")
+        @ConfigEditorDropdown(values = {"Percentage", "Fraction", "Number"})
+        public int durabilityFormat;
+
+        @Expose
         @ConfigOption(name = "Decimal Places", desc = "The number of decimal places displayed.")
         @ConfigEditorSlider(minValue = 0, maxValue = 10, minStep = 1)
         public int decimals;
 
         @Expose
-        @ConfigOption(name = "Durability Format", desc = "Switch between displaying the durability as a percentage, fraction or number (fraction without the denominator).")
-        @ConfigEditorDropdown(values = {"Percentage", "Fraction", "Number"})
-        public int durabilityFormat;
+        @ConfigOption(name = "Item Types", desc = "The list of items to display in the tracker.")
+        @ConfigEditorDraggableList(
+                exampleText = {
+                        "Hand",
+                        "Helmet",
+                        "Chestplate",
+                        "Leggings",
+                        "Boots",
+                }
+        )
+        public List<Integer> itemTypes;
 
-        public EquipmentTracker(GUIElements.CoreSettings coreSettings, int prefixFormat, boolean displayDurabilityBar, int durabilityFormat, int decimals) {
+        public EquipmentTracker(GUIElements.CoreSettings coreSettings, int prefixFormat, boolean displayDurabilityBar, int durabilityFormat, int decimals, List<Integer> itemTypes) {
             this.coreSettings = coreSettings;
             this.prefixFormat = prefixFormat;
             this.displayDurabilityBar = displayDurabilityBar;
             this.decimals = decimals;
             this.durabilityFormat = durabilityFormat;
+            this.itemTypes = itemTypes;
         }
     }
 
