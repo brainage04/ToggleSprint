@@ -1,5 +1,6 @@
 package com.github.brainage04.togglesprint.config.manager
 
+import com.github.brainage04.togglesprint.ToggleSprintMain
 import com.github.brainage04.togglesprint.config.ToggleSprintConfig
 import com.github.brainage04.togglesprint.errors.ConfigError
 import com.google.gson.GsonBuilder
@@ -89,7 +90,7 @@ class ConfigManager {
         screenToOpen = GuiScreenElementWrapper(editor)
     }
 
-    private fun tryReadConfig() {
+    fun tryReadConfig() {
         try {
             val inputStreamReader = InputStreamReader(FileInputStream(configFile), StandardCharsets.UTF_8)
             val bufferedReader = BufferedReader(inputStreamReader)
@@ -103,6 +104,8 @@ class ConfigManager {
         } catch (e: Exception) {
             throw ConfigError("Could not load config", e)
         }
+
+        ToggleSprintMain.LOGGER.info("Config loaded.")
     }
 
     fun save() {
@@ -126,6 +129,8 @@ class ConfigManager {
         } catch (e: IOException) {
             throw ConfigError("Could not save config", e)
         }
+
+        ToggleSprintMain.LOGGER.info("Config saved.")
     }
 
     private var screenToOpen: GuiScreen? = null

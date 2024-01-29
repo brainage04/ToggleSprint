@@ -1,5 +1,6 @@
 package com.github.brainage04.togglesprint.gui.inventory_trackers
 
+import com.github.brainage04.togglesprint.ToggleSprintMain
 import com.github.brainage04.togglesprint.gui.core.RenderGuiData
 import com.github.brainage04.togglesprint.utils.ChatUtils
 import com.github.brainage04.togglesprint.utils.ConfigUtils
@@ -16,14 +17,22 @@ object EquipmentTracker {
         )
 
         val equipmentList = arrayListOf(
-            thePlayer.getCurrentEquippedItem(), // Hand
-            thePlayer.getCurrentArmor(3), // Head
-            thePlayer.getCurrentArmor(2), // Chest
-            thePlayer.getCurrentArmor(1), // Legs
-            thePlayer.getCurrentArmor(0) // Feet
+            thePlayer.currentEquippedItem, // Hand
+            thePlayer.getCurrentArmor(3), // Helmet
+            thePlayer.getCurrentArmor(2), // Chestplate
+            thePlayer.getCurrentArmor(1), // Leggings
+            thePlayer.getCurrentArmor(0) // Boots
         )
 
-        for (i in equipmentList.indices) {
+        if (ConfigUtils.inventoryTrackers.equipmentTracker.itemTypes == null) { // prevents crashing when users update their mod from a previous version
+            ToggleSprintMain.LOGGER.warn("equipmentTracker.itemTypes was missing, this may be due to an update. updating config...")
+            ConfigUtils.inventoryTrackers.equipmentTracker.itemTypes = ArrayList(mutableListOf(0, 1, 2, 3, 4))
+            ToggleSprintMain.configManager.save()
+            ToggleSprintMain.configManager.tryReadConfig()
+            ToggleSprintMain.LOGGER.warn("Config updated.")
+        }
+
+        for (i in ConfigUtils.inventoryTrackers.equipmentTracker.itemTypes) {
             var currentLine = ConfigUtils.primaryChars
 
             if (equipmentList[i] == null) continue

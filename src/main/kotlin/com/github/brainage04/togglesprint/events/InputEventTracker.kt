@@ -1,11 +1,11 @@
 package com.github.brainage04.togglesprint.events
 
-import com.github.brainage04.togglesprint.ToggleSprintMain
 import com.github.brainage04.togglesprint.ToggleSprintMain.Companion.toggleSneakKeybind
 import com.github.brainage04.togglesprint.ToggleSprintMain.Companion.toggleSprintKeybind
 import com.github.brainage04.togglesprint.events.ClientTickEventTracker.Companion.updateToggleSprintSneakStates
 import com.github.brainage04.togglesprint.gui.ToggleSprintTracker.isSneakToggled
 import com.github.brainage04.togglesprint.gui.ToggleSprintTracker.isSprintToggled
+import com.github.brainage04.togglesprint.utils.ConfigUtils
 import net.minecraft.client.Minecraft
 import net.minecraft.client.settings.KeyBinding
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
@@ -13,15 +13,13 @@ import net.minecraftforge.fml.common.gameevent.InputEvent
 import org.lwjgl.input.Keyboard
 
 class InputEventTracker {
-    private val toggleMovementKeys get() = ToggleSprintMain.config.toggleMovementKeys
-
     @SubscribeEvent
     fun onInputEvent(event: InputEvent) {
         val minecraft = Minecraft.getMinecraft() ?: return
         if (minecraft.thePlayer == null) return
 
         // sprint handling
-        if (toggleMovementKeys.toggleSprint.isEnabled && toggleSprintKeybind.isPressed) {
+        if (ConfigUtils.toggleMovementKeys.toggleSprint.isEnabled && toggleSprintKeybind.isPressed) {
             isSprintToggled = !isSprintToggled
 
             if (!isSprintToggled) {
@@ -30,7 +28,7 @@ class InputEventTracker {
         }
 
         // sneak handling
-        if (toggleMovementKeys.toggleSneak.isEnabled && toggleSneakKeybind.isPressed) {
+        if (ConfigUtils.toggleMovementKeys.toggleSneak.isEnabled && toggleSneakKeybind.isPressed) {
             isSneakToggled = !isSneakToggled
 
             if (!isSneakToggled) {
