@@ -21,7 +21,11 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
 
-@Mod(modid = ToggleSprintMain.MOD_ID, useMetadata = true)
+@Mod(
+    modid = ToggleSprintMain.MOD_ID,
+    clientSideOnly = true,
+    useMetadata = true
+)
 class ToggleSprintMain {
     private fun registerKeyBinds(vararg keybinds: KeyBinding?) {
         for (keybind in keybinds) {
