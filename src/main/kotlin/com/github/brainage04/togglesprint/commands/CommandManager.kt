@@ -2,6 +2,8 @@ package com.github.brainage04.togglesprint.commands
 
 import com.github.brainage04.togglesprint.ToggleSprintMain
 import com.github.brainage04.togglesprint.commands.SimpleCommand.ProcessCommandRunnable
+import com.github.brainage04.togglesprint.utils.ChatUtils
+import java.util.Locale
 import net.minecraft.command.ICommandSender
 import net.minecraftforge.client.ClientCommandHandler
 
@@ -22,6 +24,19 @@ class CommandManager {
                 }
             }
         }
+        registerCommand("fullbright", ::setFullbright)
+    }
+
+    private fun setFullbright(args: Array<String>) {
+        val amount = args.singleOrNull()?.toFloatOrNull()
+        if (amount == null || amount.isNaN() || amount.isInfinite() || amount < -1.0f || amount > 1.0f) {
+            ChatUtils.messageToChat("Usage: /fullbright <amount from -1 to 1>", ChatUtils.PrefixType.RED)
+            return
+        }
+
+        ToggleSprintMain.config.brainageHudParity.fullbright = amount
+        ToggleSprintMain.configManager.save()
+        ChatUtils.messageToChat(String.format(Locale.US, "Fullbright set to %f.", amount))
     }
 
     private fun registerCommand(name: String, function: (Array<String>) -> Unit) {

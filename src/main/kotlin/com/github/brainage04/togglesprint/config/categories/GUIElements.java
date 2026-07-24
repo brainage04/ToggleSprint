@@ -12,7 +12,7 @@ public class GUIElements {
     @Expose
     @ConfigOption(name = "Position Display", desc = "")
     @Accordion
-    public PositionTracker positionTracker = new PositionTracker(new CoreSettings(true, 10, 10, 0), 1, true, true, true);
+    public PositionTracker positionTracker = new PositionTracker(new CoreSettings(true, 10, 10, 0), 1, true, true, true, true, true, true);
 
     @Expose
     @ConfigOption(name = "Rotation Display", desc = "")
@@ -100,12 +100,31 @@ public class GUIElements {
         @ConfigEditorBoolean
         public boolean showEntityCounter;
 
-        public PositionTracker(CoreSettings coreSettings, int decimals, boolean showFacing, boolean showChunkCounter, boolean showEntityCounter) {
+        @Expose
+        @ConfigOption(name = "Position Within Chunk", desc = "Show the player's block position within the current 16x16x16 chunk section.")
+        @ConfigEditorBoolean
+        public boolean showChunkPosition;
+
+        @Expose
+        @ConfigOption(name = "Light Levels", desc = "Show sky and block light at the player's feet.")
+        @ConfigEditorBoolean
+        public boolean showLightLevels;
+
+        @Expose
+        @ConfigOption(name = "Biome", desc = "Show the biome at the player's position.")
+        @ConfigEditorBoolean
+        public boolean showBiome;
+
+        public PositionTracker(CoreSettings coreSettings, int decimals, boolean showFacing, boolean showChunkCounter, boolean showEntityCounter,
+                               boolean showChunkPosition, boolean showLightLevels, boolean showBiome) {
             this.coreSettings = coreSettings;
             this.decimals = decimals;
             this.showFacing = showFacing;
             this.showChunkCounter = showChunkCounter;
             this.showEntityCounter = showEntityCounter;
+            this.showChunkPosition = showChunkPosition;
+            this.showLightLevels = showLightLevels;
+            this.showBiome = showBiome;
         }
     }
 

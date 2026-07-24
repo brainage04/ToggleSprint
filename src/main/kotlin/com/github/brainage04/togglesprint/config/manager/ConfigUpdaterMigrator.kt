@@ -7,7 +7,7 @@ import com.google.gson.JsonPrimitive
 import net.minecraftforge.fml.common.eventhandler.Event
 
 object ConfigUpdaterMigrator {
-    const val CONFIG_VERSION = 1
+    const val CONFIG_VERSION = 3
 
     fun JsonElement.at(chain: List<String>, init: Boolean): JsonElement? {
         if (chain.isEmpty()) return this
@@ -128,6 +128,27 @@ object ConfigUpdaterMigrator {
             val migration = ConfigFixEvent(accumulator, JsonObject().also {
                 it.add("lastVersion", JsonPrimitive(i + 1))
             }, i, 0, dynamicPrefix)
+            when (i + 1) {
+                2 -> {
+                    migration.transform(2, "brainageHudParity.fullbright") { value ->
+                        val primitive = value as? JsonPrimitive
+                        if (primitive?.isBoolean == true) JsonPrimitive(if (primitive.asBoolean) 1.0f else 0.0f) else value
+                    }
+                    migration.move(
+                        2,
+                        "brainageHudParity.keystrokes.showCps",
+                        "brainageHudParity.keystrokes.clicksPerSecondFormat",
+                    ) { value ->
+                        val primitive = value as? JsonPrimitive
+                        if (primitive?.isBoolean == true) JsonPrimitive(if (primitive.asBoolean) 3 else 0) else value
+                    }
+                }
+                3 -> migration.move(
+                    3,
+                    "guiElements.positionTracker.showChunkCoordinates",
+                    "guiElements.positionTracker.showChunkPosition",
+                )
+            }
             LOGGER.info("Transformations scheduled: ${migration.new}")
             val mergesPerformed = merge(migration.old, migration.new)
             LOGGER.info("Migration done with $mergesPerformed merges and ${migration.movesPerformed} moves performed")

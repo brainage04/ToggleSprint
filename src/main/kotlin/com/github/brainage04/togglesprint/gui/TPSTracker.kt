@@ -1,104 +1,72 @@
 package com.github.brainage04.togglesprint.gui
 
-import com.github.brainage04.togglesprint.events.core.PacketEvent
 import com.github.brainage04.togglesprint.gui.core.RenderGuiData
 import com.github.brainage04.togglesprint.utils.ConfigUtils
+import com.github.brainage04.togglesprint.utils.MathUtils.round
 import net.minecraft.client.Minecraft
-import net.minecraftforge.fml.common.eventhandler.Event
-import net.minecraftforge.fml.common.eventhandler.EventPriority
+import net.minecraftforge.event.world.WorldEvent
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
+import net.minecraftforge.fml.common.gameevent.TickEvent
 
 class TPSTracker {
-    companion object {
-        private const val minDataAmount = 5
-        private const val waitAfterWorldSwitch = 6
+    @SubscribeEvent
+    fun onClientTick(event: TickEvent.ClientTickEvent) {
+        if (event.phase != TickEvent.Phase.START) return
 
-        var display = "${ConfigUtils.primaryChars}TPS: "
-
-        fun tpsTracker() {
-            if (!ConfigUtils.guiElements.tpsTracker.coreSettings.isEnabled) return
-            if (Minecraft.getMinecraft().thePlayer == null) return
-
-            RenderGuiData.renderElement(
-                ConfigUtils.guiElements.tpsTracker.coreSettings.x,
-                ConfigUtils.guiElements.tpsTracker.coreSettings.y,
-                ConfigUtils.guiElements.tpsTracker.coreSettings.anchorCorner,
-                display,
-            )
+        val config = ConfigUtils.guiElements.tpsTracker
+        val minecraft = Minecraft.getMinecraft()
+        if (!config.coreSettings.isEnabled || minecraft.thePlayer == null || minecraft.theWorld == null) {
+            sampler.reset()
+            display = ""
+            return
         }
+
+        if (sampler.tick()) display = formatTps(sampler.tps, config.showColor)
     }
-
-    private var packetsFromLastSecond = 0
-    private var tpsList = mutableListOf<Int>()
-    private var ignoreFirstTicks = waitAfterWorldSwitch
-    private var hasPacketReceived = false
-
-    /*
-    init {
-        fixedRateTimer(name = "brainage04-togglesprint-tps-counter-seconds", period = 1_000L) {
-            if (!guiElements.tpsTracker.coreSettings.isEnabled) return@fixedRateTimer
-            if (packetsFromLastSecond == 0) return@fixedRateTimer
-
-            if (ignoreFirstTicks > 0) {
-                ignoreFirstTicks--
-                val current = ignoreFirstTicks + minDataAmount
-                display = "§eTPS: §f(${current}s)"
-                packetsFromLastSecond = 0
-                return@fixedRateTimer
-            }
-
-            tpsList.add(packetsFromLastSecond)
-            packetsFromLastSecond = 0
-            if (tpsList.size > 10) {
-                tpsList = tpsList.drop(1).toMutableList()
-            }
-
-            display = if (tpsList.size < minDataAmount) {
-                val current = minDataAmount - tpsList.size
-                "§eTPS: §f(${current}s)"
-            } else {
-                val sum = tpsList.sum().toDouble()
-                var tps = (sum / tpsList.size).round(1)
-                if (tps > 20) tps = 20.0
-                val color = getColor(tps)
-                "§eTPS: $color$tps"
-            }
-
-            ChatUtils.messageToChat("TPS List: $tpsList", soundType = ChatUtils.SoundType.NOTIFICATION)
-        }
-
-        fixedRateTimer(name = "brainage04-togglesprint-tps-counter-ticks", period = 50L) {
-            if (!guiElements.tpsTracker.coreSettings.isEnabled) return@fixedRateTimer
-
-            if (hasPacketReceived) {
-                hasPacketReceived = false
-                packetsFromLastSecond++
-            }
-        }
-    }
-     */
 
     @SubscribeEvent
-    fun onWorldChange(event: Event) {
-        tpsList.clear()
-        packetsFromLastSecond = 0
-        ignoreFirstTicks = waitAfterWorldSwitch
+    fun onWorldUnload(event: WorldEvent.Unload) {
+        if (!event.world.isRemote) return
+        sampler.reset()
         display = ""
     }
 
-    @SubscribeEvent(priority = EventPriority.LOW, receiveCanceled = true)
-    fun onPacketEvent(event: PacketEvent.ReceiveEvent) {
-        if (!ConfigUtils.guiElements.tpsTracker.coreSettings.isEnabled) return
-        hasPacketReceived = true
-    }
+    companion object {
+        private val sampler = TpsSampler()
+        private var display = ""
 
-    private fun getColor(tps: Double): String {
-        return when {
-            tps > 19 -> "§2"
-            tps > 18 -> "§a"
-            tps > 15 -> "§6"
-            tps > 10 -> "§c"
-            else -> "§4"
+        @JvmStatic
+        fun onPacketReceived() {
+            sampler.recordPacket()
+        }
+
+        fun tpsTracker() {
+            val config = ConfigUtils.guiElements.tpsTracker
+            if (!config.coreSettings.isEnabled) return
+            if (Minecraft.getMinecraft().thePlayer == null) return
+
+            if (display.isEmpty()) display = formatTps(0.0, config.showColor)
+            RenderGuiData.renderElement(
+                config.coreSettings.x,
+                config.coreSettings.y,
+                config.coreSettings.anchorCorner,
+                display,
+            )
+        }
+
+        private fun formatTps(tps: Double, showColor: Boolean): String {
+            val color = if (showColor) getColor(tps) else ""
+            return "${ConfigUtils.primaryChars}TPS: $color${tps.round(1)}"
+        }
+
+        private fun getColor(tps: Double): String {
+            return when {
+                tps > 19 -> "§2"
+                tps > 18 -> "§a"
+                tps > 15 -> "§6"
+                tps > 10 -> "§c"
+                else -> "§4"
+            }
         }
     }
 }

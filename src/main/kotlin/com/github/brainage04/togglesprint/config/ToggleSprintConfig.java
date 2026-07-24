@@ -4,6 +4,7 @@ import com.github.brainage04.togglesprint.ToggleSprintMain;
 import com.github.brainage04.togglesprint.config.categories.GUIElements;
 import com.github.brainage04.togglesprint.config.categories.GlobalGUISettings;
 import com.github.brainage04.togglesprint.config.categories.InventoryTrackers;
+import com.github.brainage04.togglesprint.config.categories.BrainageHudParity;
 import com.github.brainage04.togglesprint.config.categories.ToggleMovementKeys;
 import com.github.brainage04.togglesprint.config.manager.ConfigUpdaterMigrator;
 import com.google.gson.annotations.Expose;
@@ -37,6 +38,10 @@ public class ToggleSprintConfig extends Config {
     @Expose
     @Category(name = "(Inventory Trackers)", desc = "GUI elements responsible for tracking the inventory.")
     public InventoryTrackers inventoryTrackers = new InventoryTrackers();
+
+    @Expose
+    @Category(name = "BrainageHUD Parity", desc = "Modern HUD elements backported for Forge 1.8.9.")
+    public BrainageHudParity brainageHudParity = new BrainageHudParity();
 
     @Expose
     public int lastVersion = ConfigUpdaterMigrator.CONFIG_VERSION;

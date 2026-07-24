@@ -1,6 +1,12 @@
 package com.github.brainage04.togglesprint.gui.core
 
 import com.github.brainage04.togglesprint.gui.EntityTracker.entityTracker
+import com.github.brainage04.togglesprint.gui.FishingHud.fishingHud
+import com.github.brainage04.togglesprint.gui.KeystrokesHud.keystrokesHud
+import com.github.brainage04.togglesprint.gui.PerformanceHud.performanceHud
+import com.github.brainage04.togglesprint.gui.ReachHud.reachHud
+import com.github.brainage04.togglesprint.gui.WaypointHud
+import com.github.brainage04.togglesprint.gui.TPSTracker.Companion.tpsTracker
 import com.github.brainage04.togglesprint.gui.PingTracker.pingTracker
 import com.github.brainage04.togglesprint.gui.PlayerMotionTracker.playerMotionTracker
 import com.github.brainage04.togglesprint.gui.PlayerPositionTracker.playerPositionTracker
@@ -34,8 +40,13 @@ class RenderGuiData {
         foodTracker()
         realTimeTracker()
         pingTracker()
-        //tpsTracker()
+        tpsTracker()
         entityTracker()
+        fishingHud()
+        performanceHud()
+        reachHud()
+        keystrokesHud()
+        WaypointHud.render()
 
         GlStateManager.popMatrix()
     }

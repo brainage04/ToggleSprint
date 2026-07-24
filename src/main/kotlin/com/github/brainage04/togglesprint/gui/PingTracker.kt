@@ -22,12 +22,12 @@ object PingTracker {
         if (!ConfigUtils.guiElements.pingTracker.coreSettings.isEnabled) return
 
         val minecraft = Minecraft.getMinecraft() ?: return
-        if (minecraft.thePlayer == null) return
+        val player = minecraft.thePlayer ?: return
 
-        ping = 0L
-        if (!minecraft.isSingleplayer) {
-            val currentServerData = minecraft.currentServerData ?: return
-            ping = currentServerData.pingToServer
+        ping = if (minecraft.isSingleplayer) {
+            0L
+        } else {
+            minecraft.netHandler?.getPlayerInfo(player.uniqueID)?.responseTime?.toLong() ?: return
         }
 
         val text = if (ConfigUtils.guiElements.pingTracker.showColor) "${ConfigUtils.primaryChars}Ping: ${getColor(ping) + ping}ms"

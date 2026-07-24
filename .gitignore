@@ -3,4 +3,10 @@
 run/
 build/
 .gradle/
+.kotlin/
+logs/
+
+.classpath
+.project
+.settings/
 
