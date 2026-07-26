@@ -2,7 +2,7 @@ name: Run Gradle Build
 on: [push, pull_request]
 jobs:
   gradle:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: Checkout source
         uses: actions/checkout@v5
@@ -15,7 +15,7 @@ jobs:
         uses: gradle/actions/setup-gradle@v6
       - name: Execute Gradle build
         run: ./gradlew --no-daemon build
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         name: Upload built mod JAR
         with:
           name: mod-jar
