@@ -1,0 +1,92 @@
+{
+  "mod": "ToggleSprint",
+  "source_folder": "round3/blender-h",
+  "source_folder_absolute": "/home/thomas/01_TM/Coding/Websites/brainage04.github.io/.local-icon-variants/round3/blender-h",
+  "icon_source": "blender-h/toggle-sprint-2.png",
+  "icon_sha256_source": "6c082fede726e89e94eb1200fc338d07aed7961aa161ac91ea7de763e70aafc0",
+  "icon_sha256_copy": "6c082fede726e89e94eb1200fc338d07aed7961aa161ac91ea7de763e70aafc0",
+  "icon_dimensions": [
+    1024,
+    1024
+  ],
+  "files_copied": [
+    "assemble.py",
+    "asset-provenance.json",
+    "manifest.json",
+    "measurements.json",
+    "png-verification.json",
+    "recreate.py",
+    "resources.json",
+    "saved-scene-verification.json",
+    "sources/toggle-sprint-01.blend",
+    "toggle-sprint-2-metadata.json",
+    "toggle-sprint-2.blend",
+    "toggle-sprint-2.py",
+    "verify.py",
+    "visual-review.json"
+  ],
+  "file_count_copied": 14,
+  "json_curation": [
+    {
+      "file": "manifest.json",
+      "curation": "kept the toggle-sprint-2 entry only"
+    },
+    {
+      "file": "png-verification.json",
+      "curation": "kept the toggle-sprint-2 row"
+    },
+    {
+      "file": "saved-scene-verification.json",
+      "curation": "kept the toggle-sprint-2 row"
+    },
+    {
+      "file": "measurements.json",
+      "curation": "kept the toggle-sprint-2 measurements"
+    },
+    {
+      "file": "visual-review.json",
+      "curation": "kept the toggle-sprint-2 review row"
+    },
+    {
+      "file": "asset-provenance.json",
+      "curation": "kept only the toggle-sprint-2 inputs"
+    }
+  ],
+  "excluded": [
+    {
+      "path": "blender-h/actionassist-*",
+      "reason": "other mod in the shared blender-h folder"
+    },
+    {
+      "path": "blender-h/npc-addons-*",
+      "reason": "other mod in the shared blender-h folder"
+    },
+    {
+      "path": "blender-h/blockers.json",
+      "reason": "empty blocker list"
+    },
+    {
+      "path": "blender-h/toggle-sprint-1.*",
+      "reason": "unselected sibling candidate"
+    },
+    {
+      "path": "blender-h/sources/{actionassist-2.blend,npc-addons-head-1.blend}",
+      "reason": "other mods"
+    },
+    {
+      "path": "blender-h/{measure_reference.py,orientation-reference.json,measurements.json source data}",
+      "reason": "NPCAddons head measurement inputs, retained only in the NPCAddons repository"
+    }
+  ],
+  "bytes_added_total": 912439,
+  "deliverable": {
+    "icon": "icon.png",
+    "icon_sha256_round3_source": "6c082fede726e89e94eb1200fc338d07aed7961aa161ac91ea7de763e70aafc0",
+    "icon_sha256_shipped_copy": "6c082fede726e89e94eb1200fc338d07aed7961aa161ac91ea7de763e70aafc0",
+    "provenance_file_count": 14,
+    "total_file_count": 17,
+    "total_bytes": 919618,
+    "largest_file": "icon.png",
+    "largest_file_bytes": 671755
+  }
+}

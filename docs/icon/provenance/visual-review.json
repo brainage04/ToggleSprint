@@ -1,0 +1,8 @@
+{
+  "method": "Opened and visually inspected all six final 1024x1024 PNGs with the image read tool; independent saved-scene geometry checks in verify.py and decoded-pixel checks in assemble.py passed.",
+  "images": {
+    "toggle-sprint-2.png": "Canonical powered lever is enlarged to 1.5x with the same 90-degree clockwise mounting-plane rotation. Source Speed-symbol background and camera framing are unchanged. Entire lever remains visible with top margin."
+  },
+  "resource_status": "All finite Blender rendering and validation commands exited. No display, display server, audio sink, audio device or GPU was allocated; only CPU Cycles in background mode with -noaudio was used.",
+  "blockers": []
+}

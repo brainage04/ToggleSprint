@@ -1,0 +1,164 @@
+{
+  "source_scenes": [
+    {
+      "path": "sources/toggle-sprint-01.blend",
+      "sha256": "efba54b2de98a256d0fd04d5f15da3db1be687cf5426a223552632926b639238",
+      "textures": "All original FILE images packed in .blend"
+    }
+  ],
+  "toggle_sprint_original_provenance": {
+    "assets": [
+      {
+        "asset": "stone",
+        "jar": "/home/thomas/.gradle/caches/fabric-loom/26.2/minecraft-merged.jar",
+        "member": "assets/minecraft/textures/block/stone.png",
+        "sha256": "b5e10adc72442bfb257ce7ba0b9bbe36475a0c8cdfec89b80dc9517203ff3e9f"
+      },
+      {
+        "asset": "deepslate",
+        "jar": "/home/thomas/.gradle/caches/fabric-loom/26.2/minecraft-merged.jar",
+        "member": "assets/minecraft/textures/block/deepslate.png",
+        "sha256": "dc72c722bec23c929817fab7cc56e08e5e828ae3607fbfb7e7730e68b67d4cfc"
+      },
+      {
+        "asset": "deepslate_top",
+        "jar": "/home/thomas/.gradle/caches/fabric-loom/26.2/minecraft-merged.jar",
+        "member": "assets/minecraft/textures/block/deepslate_top.png",
+        "sha256": "9f2f5e0a67b4a007244cf7064e09da7e693322cfd21b1884190bcd6b26e91aec"
+      },
+      {
+        "asset": "diamond_ore",
+        "jar": "/home/thomas/.gradle/caches/fabric-loom/26.2/minecraft-merged.jar",
+        "member": "assets/minecraft/textures/block/diamond_ore.png",
+        "sha256": "2ef421308b678d2225aef41affc087ae512a81213a24a98cf456dbe231884122"
+      },
+      {
+        "asset": "deepslate_diamond_ore",
+        "jar": "/home/thomas/.gradle/caches/fabric-loom/26.2/minecraft-merged.jar",
+        "member": "assets/minecraft/textures/block/deepslate_diamond_ore.png",
+        "sha256": "0acd146e99716a104c6053198fa51fe0d1ef464501c123ae9a56ba3f6f957dd7"
+      },
+      {
+        "asset": "cobblestone",
+        "jar": "/home/thomas/.gradle/caches/fabric-loom/26.2/minecraft-merged.jar",
+        "member": "assets/minecraft/textures/block/cobblestone.png",
+        "sha256": "bcda95fdf5afa91747657aa198fc0b69ebf44141de30a718075f74045e9a5def"
+      },
+      {
+        "asset": "lever",
+        "jar": "/home/thomas/.gradle/caches/fabric-loom/26.2/minecraft-merged.jar",
+        "member": "assets/minecraft/textures/block/lever.png",
+        "sha256": "0ee6f47a1b5b86c8277dc2248d0a717b92e656f8f8d6d9cb89e6c2cb0f39d5c7"
+      },
+      {
+        "asset": "torch",
+        "jar": "/home/thomas/.gradle/caches/fabric-loom/26.2/minecraft-merged.jar",
+        "member": "assets/minecraft/textures/block/torch.png",
+        "sha256": "1e0a18d6a5f4e839f07b3a7cbe2703f98d7db1c65eb1c96e1e575eec61410e16"
+      },
+      {
+        "asset": "lava_still",
+        "jar": "/home/thomas/.gradle/caches/fabric-loom/26.2/minecraft-merged.jar",
+        "member": "assets/minecraft/textures/block/lava_still.png",
+        "sha256": "9d28ac5d4ac1a9965552e5c8b5e1229a38a5f7216c0250b35d2400dee1f1b8be"
+      },
+      {
+        "asset": "diamond_pickaxe",
+        "jar": "/home/thomas/.gradle/caches/fabric-loom/26.2/minecraft-merged.jar",
+        "member": "assets/minecraft/textures/item/diamond_pickaxe.png",
+        "sha256": "dfec8e1467b335133521a42c8fde0f124ba7b5c45c0a84fba789736df4f92325"
+      },
+      {
+        "asset": "diamond_sword",
+        "jar": "/home/thomas/.gradle/caches/fabric-loom/26.2/minecraft-merged.jar",
+        "member": "assets/minecraft/textures/item/diamond_sword.png",
+        "sha256": "5634a8cb79a70beb306210de9ec492fc2d4dc8f739372683e9882ef06bf63008"
+      },
+      {
+        "asset": "bone",
+        "jar": "/home/thomas/.gradle/caches/fabric-loom/26.2/minecraft-merged.jar",
+        "member": "assets/minecraft/textures/item/bone.png",
+        "sha256": "acc1fb127f3f1139e51e748ee8b259eebac8f1ad369b33bd9643246ee96ae62d"
+      },
+      {
+        "asset": "rotten_flesh",
+        "jar": "/home/thomas/.gradle/caches/fabric-loom/26.2/minecraft-merged.jar",
+        "member": "assets/minecraft/textures/item/rotten_flesh.png",
+        "sha256": "9168edab9a9063ee23340fedd2bbf31f85aed2bd42c3fedf527dba24629d48e8"
+      },
+      {
+        "asset": "steve",
+        "jar": "/home/thomas/.gradle/caches/fabric-loom/26.2/minecraft-merged.jar",
+        "member": "assets/minecraft/textures/entity/player/wide/steve.png",
+        "sha256": "06628f9cef88520da742ab280a01677ce17c99717f964ed89ed791673121094c"
+      },
+      {
+        "asset": "zombie",
+        "jar": "/home/thomas/.gradle/caches/fabric-loom/26.2/minecraft-merged.jar",
+        "member": "assets/minecraft/textures/entity/zombie/zombie.png",
+        "sha256": "1b88eea9b63889c2c3399773f887af375defc3aad0e7a375adc84249da54cbbd"
+      },
+      {
+        "asset": "skeleton",
+        "jar": "/home/thomas/.gradle/caches/fabric-loom/26.2/minecraft-merged.jar",
+        "member": "assets/minecraft/textures/entity/skeleton/skeleton.png",
+        "sha256": "854dd39acb1d8852db3b9e5d3d2bdc032070e37f421b53661ff48d0c1ddf290a"
+      },
+      {
+        "asset": "speed",
+        "jar": "/home/thomas/.gradle/caches/fabric-loom/26.2/minecraft-merged.jar",
+        "member": "assets/minecraft/textures/mob_effect/speed.png",
+        "sha256": "3745e2979516481b70ecbc8b016817003cbd0f6bc4d49498ee66a9480816617c"
+      },
+      {
+        "asset": "experience_orb",
+        "jar": "/home/thomas/.gradle/caches/fabric-loom/26.2/minecraft-merged.jar",
+        "member": "assets/minecraft/textures/entity/experience/experience_orb.png",
+        "sha256": "fe55d3823ae0f2c8114e051ae26a38d48808abc31a514401047ed08862ac8ec0"
+      },
+      {
+        "path": "models/models-block-lever.json",
+        "jar": "/home/thomas/.gradle/caches/fabric-loom/26.2/minecraft-merged.jar",
+        "member": "assets/minecraft/models/block/lever.json",
+        "sha256": "c27b3258bd94a956ed72a4e2dcaddf1097f0a8d140edf7e86741d9e49fcbea6a"
+      },
+      {
+        "path": "models/models-block-lever_on.json",
+        "jar": "/home/thomas/.gradle/caches/fabric-loom/26.2/minecraft-merged.jar",
+        "member": "assets/minecraft/models/block/lever_on.json",
+        "sha256": "d14f881051cd1c8926352f66623796438c68e9ec1612b8273279b6dce94eb0ee"
+      },
+      {
+        "path": "models/blockstates-lever.json",
+        "jar": "/home/thomas/.gradle/caches/fabric-loom/26.2/minecraft-merged.jar",
+        "member": "assets/minecraft/blockstates/lever.json",
+        "sha256": "8f16b68bec64c1313e7c3c573787a03fb6627a3d078d1276d275427cac09a588"
+      },
+      {
+        "path": "models/models-block-torch.json",
+        "jar": "/home/thomas/.gradle/caches/fabric-loom/26.2/minecraft-merged.jar",
+        "member": "assets/minecraft/models/block/torch.json",
+        "sha256": "834b8a24a98d2a2c3505de5a33a734fb327cd036086abd2f9f8141c2d309ba89"
+      },
+      {
+        "path": "models/models-item-handheld.json",
+        "jar": "/home/thomas/.gradle/caches/fabric-loom/26.2/minecraft-merged.jar",
+        "member": "assets/minecraft/models/item/handheld.json",
+        "sha256": "8fe990d1c011429e27df2d49d35cf8571946370eac8d0fb7497aacede4ff20f5"
+      }
+    ],
+    "client": "Minecraft 26.2",
+    "design_references": [
+      "../blender-a/telekinesis-mobs-02.png",
+      "../blender-a/vein-miner-02.png",
+      "../generated/toggle-sprint-3.webp"
+    ],
+    "source_evidence": [
+      "LivingEntityRenderer.javap.txt",
+      "HumanoidModel.javap.txt",
+      "AnimationUtils.javap.txt",
+      "SkeletonModel.javap.txt"
+    ],
+    "local_only": true
+  }
+}

@@ -1,0 +1,10 @@
+[
+  {
+    "project": "ToggleSprint",
+    "label": "Powered lever +90 degrees CW / 1.5x / unchanged real Speed symbol and framing",
+    "path": "blender-h/toggle-sprint-2.png",
+    "method": "Headless Blender CLI, Cycles CPU; deterministic correction of packed source scene",
+    "source": "blender-d/toggle-sprint-01.blend; official Minecraft client lever model, lever/cobblestone textures, mob_effect/speed.png. Packed assets unchanged.",
+    "notes": "Clockwise viewed down from +Z: +90 degrees CW equals Blender Euler Z=-90 degrees, original +Y facing becomes +X. Entire lever scaled uniformly about original camera target. Source camera transform, orthographic scale 1.65, and Speed backdrop mesh/UV/material retained exactly. Blender 5.1.1; Cycles CPU; 64 samples; render 41.376 seconds; 1024x1024 PNG. Script and packed .blend share this PNG basename."
+  }
+]

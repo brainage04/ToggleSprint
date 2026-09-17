@@ -1,0 +1,75 @@
+{
+  "project": "ToggleSprint",
+  "source": "blender-d/toggle-sprint-01.png",
+  "variant": 2,
+  "lever_clockwise_rotation_degrees": 90.00000250447806,
+  "cw_definition": "Viewed down from +Z at XY plane: positive CW equals negative right-handed Blender Z rotation. Original +Y lever facing maps to +X.",
+  "lever_uniform_scale_factor": 1.5,
+  "scale_and_rotation_pivot": [
+    0.0,
+    0.0,
+    0.2199999988079071
+  ],
+  "pivot_reason": "Original camera target; source framing is held fixed while enlarging lever about the composition center.",
+  "lever_objects": [
+    {
+      "name": "Vanilla lever base",
+      "cw_rotation_degrees": 90,
+      "blender_right_handed_z_degrees": -89.999995674289,
+      "scale": [
+        1.5,
+        1.5,
+        1.5
+      ],
+      "edge_distance_scale_ratio": 1.5,
+      "max_canonical_vertex_error": 6.664001874625056e-08
+    },
+    {
+      "name": "Vanilla lever powered handle",
+      "cw_rotation_degrees": 90,
+      "blender_right_handed_z_degrees": -89.999995674289,
+      "scale": [
+        1.5,
+        1.5,
+        1.5
+      ],
+      "edge_distance_scale_ratio": 1.5,
+      "max_canonical_vertex_error": 8.195638656616211e-08
+    }
+  ],
+  "symbol_geometry_and_uv_unchanged": true,
+  "speed_symbol_source": "assets/minecraft/textures/mob_effect/speed.png, official client jar, packed original texture",
+  "camera_framing_unchanged": true,
+  "camera_ortho_scale": 1.649999976158142,
+  "name": "toggle-sprint-2",
+  "subject_screen_bounds": [
+    0.14732390642166138,
+    0.17340172827243805,
+    0.7812360525131226,
+    0.9147506356239319
+  ],
+  "source_blend": "sources/toggle-sprint-01.blend",
+  "source_blend_sha256": "efba54b2de98a256d0fd04d5f15da3db1be687cf5426a223552632926b639238",
+  "author_script_sha256": "717e37a1870d84734671a4f44156a505826b96e43ea29fd0f2f61b334c4aaaae",
+  "blender_version": "5.1.1",
+  "engine": "CYCLES",
+  "device": "CPU",
+  "samples": 64,
+  "render_duration_seconds": 41.37585043799481,
+  "resolution": [
+    1024,
+    1024
+  ],
+  "png_sha256": "6c082fede726e89e94eb1200fc338d07aed7961aa161ac91ea7de763e70aafc0",
+  "decoded_png_sampled_variance": 0.04068022479165693,
+  "packed_textures": 3,
+  "script": "toggle-sprint-2.py",
+  "resources": {
+    "display": null,
+    "audio": null,
+    "gpu": null,
+    "background": true,
+    "noaudio": true,
+    "threads": 2
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "toggle-sprint-2": {
+    "packed_textures": [
+      {
+        "name": "cobblestone.png",
+        "packed_bytes": 200,
+        "sha256": "bcda95fdf5afa91747657aa198fc0b69ebf44141de30a718075f74045e9a5def"
+      },
+      {
+        "name": "lever.png",
+        "packed_bytes": 137,
+        "sha256": "0ee6f47a1b5b86c8277dc2248d0a717b92e656f8f8d6d9cb89e6c2cb0f39d5c7"
+      },
+      {
+        "name": "speed.png",
+        "packed_bytes": 230,
+        "sha256": "3745e2979516481b70ecbc8b016817003cbd0f6bc4d49498ee66a9480816617c"
+      }
+    ],
+    "cw_rotation_degrees": 90,
+    "scale_factor": 1.5,
+    "original_backdrop_and_camera_exactly_unchanged": true,
+    "png_decoded_size": [
+      1024,
+      1024
+    ],
+    "png_sha256": "6c082fede726e89e94eb1200fc338d07aed7961aa161ac91ea7de763e70aafc0"
+  }
+}

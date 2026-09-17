@@ -1,0 +1,20 @@
+{
+  "blender_version": "5.1.1",
+  "engine": "CYCLES",
+  "device": "CPU",
+  "samples": 64,
+  "threads_per_render": 2,
+  "command": "blender --background -noaudio --python <candidate>.py",
+  "environment": {
+    "DISPLAY": "",
+    "WAYLAND_DISPLAY": "",
+    "CUDA_VISIBLE_DEVICES": "",
+    "HIP_VISIBLE_DEVICES": "",
+    "ROCR_VISIBLE_DEVICES": "",
+    "SDL_AUDIODRIVER": "dummy"
+  },
+  "display_allocated": false,
+  "audio_allocated": false,
+  "gpu_allocated": false,
+  "git": "No tracked portfolio files edited; no commits; no pushes. Python scripts saved next to outputs as clarified by Main."
+}
