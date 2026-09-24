@@ -5,7 +5,7 @@ import com.github.brainage04.togglesprint.ToggleSprintMain
 import io.netty.channel.ChannelHandler
 import io.netty.channel.ChannelHandlerContext
 import io.netty.channel.ChannelInboundHandlerAdapter
-import net.minecraft.network.Packet
+import net.minecraft.network.play.server.S03PacketTimeUpdate
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.fml.common.network.FMLNetworkEvent
 
@@ -24,7 +24,7 @@ object NetworkPacketMonitor : ChannelInboundHandlerAdapter() {
     }
 
     override fun channelRead(context: ChannelHandlerContext, message: Any) {
-        if (message is Packet<*>) TPSTracker.onPacketReceived()
+        if (message is S03PacketTimeUpdate) TPSTracker.onServerGameTime(message.totalWorldTime)
         context.fireChannelRead(message)
     }
 }

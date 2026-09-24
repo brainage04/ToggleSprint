@@ -1,17 +1,24 @@
 package com.github.brainage04.togglesprint
 
 import com.github.brainage04.togglesprint.commands.CommandManager
-import com.github.brainage04.togglesprint.gui.WaypointCommands
+import com.github.brainage04.togglesprint.commands.EnchantCommands
+import com.github.brainage04.togglesprint.waypoint.WaypointRenderer
+import com.github.brainage04.togglesprint.waypoint.WaypointsCommand
+import com.github.brainage04.togglesprint.waypoint.WaypointStore
 import com.github.brainage04.togglesprint.config.manager.ConfigManager
 import com.github.brainage04.togglesprint.config.ToggleSprintConfig
 import com.github.brainage04.togglesprint.events.ClientTickEventTracker
 import com.github.brainage04.togglesprint.events.InputEventTracker
 import com.github.brainage04.togglesprint.events.FullbrightHandler
 import com.github.brainage04.togglesprint.events.NetworkPacketMonitor
+import com.github.brainage04.togglesprint.events.EnchantTooltipHandler
 import com.github.brainage04.togglesprint.gui.PerformanceHud
 import com.github.brainage04.togglesprint.gui.TPSTracker
 import com.github.brainage04.togglesprint.gui.core.RenderGuiData
 import com.github.brainage04.togglesprint.keybinds.ConfigKeybind
+import com.github.brainage04.togglesprint.keybinds.ElementEditorKeybind
+import com.github.brainage04.togglesprint.keybinds.CreateWaypointKeybind
+import com.github.brainage04.togglesprint.keybinds.ManageWaypointsKeybind
 import com.github.brainage04.togglesprint.keybinds.StatsKeybind
 import com.github.brainage04.togglesprint.keybinds.ToggleSneakKeybind
 import com.github.brainage04.togglesprint.keybinds.ToggleSprintKeybind
@@ -28,7 +35,8 @@ import org.apache.logging.log4j.Logger
 @Mod(
     modid = ToggleSprintMain.MOD_ID,
     clientSideOnly = true,
-    useMetadata = true
+    useMetadata = true,
+    guiFactory = "com.github.brainage04.togglesprint.config.ModGuiFactory",
 )
 class ToggleSprintMain {
     private fun registerKeyBinds(vararg keybinds: KeyBinding?) {
@@ -46,13 +54,17 @@ class ToggleSprintMain {
     @Mod.EventHandler
     fun preInit(event: FMLPreInitializationEvent) {
         CommandManager()
-        WaypointCommands.registerCommands()
+        WaypointsCommand.register()
+        EnchantCommands.registerCommands()
 
         registerKeyBinds(
             toggleSprintKeybind,
             toggleSneakKeybind,
             statsKeybind,
             configKeybind,
+            elementEditorKeybind,
+            createWaypointKeybind,
+            manageWaypointsKeybind,
         )
     }
 
@@ -64,14 +76,21 @@ class ToggleSprintMain {
         registerEvents(
             statsKeybind,
             configKeybind,
+            elementEditorKeybind,
+            createWaypointKeybind,
+            manageWaypointsKeybind,
 
             NetworkPacketMonitor,
             InputEventTracker(),
             ClientTickEventTracker(),
             RenderGuiData(),
-            TPSTracker(),
+            TPSTracker,
             FullbrightHandler(),
+            EnchantTooltipHandler(),
             PerformanceHud,
+            WaypointRenderer,
+            WaypointsCommand,
+            WaypointStore,
         )
     }
 
@@ -93,5 +112,8 @@ class ToggleSprintMain {
         val toggleSneakKeybind: KeyBinding = ToggleSneakKeybind()
         val statsKeybind: KeyBinding = StatsKeybind()
         val configKeybind: KeyBinding = ConfigKeybind()
+        val elementEditorKeybind: KeyBinding = ElementEditorKeybind()
+        val createWaypointKeybind: KeyBinding = CreateWaypointKeybind()
+        val manageWaypointsKeybind: KeyBinding = ManageWaypointsKeybind()
     }
 }

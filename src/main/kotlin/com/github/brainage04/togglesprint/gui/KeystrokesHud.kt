@@ -1,9 +1,10 @@
 package com.github.brainage04.togglesprint.gui
 
+import com.github.brainage04.togglesprint.config.categories.GUIElements
+import com.github.brainage04.togglesprint.gui.core.RenderGuiData
 import com.github.brainage04.togglesprint.utils.ConfigUtils
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.Gui
-import net.minecraft.client.gui.ScaledResolution
 import net.minecraft.client.settings.KeyBinding
 import java.util.IdentityHashMap
 
@@ -17,13 +18,12 @@ object KeystrokesHud {
     private var leftWasDown = false
     private var rightWasDown = false
 
-    fun keystrokesHud() {
+    fun render(coreSettings: GUIElements.CoreSettings) {
         val config = ConfigUtils.brainageHudParity.keystrokes
-        if (!config.coreSettings.isEnabled) return
         val minecraft = Minecraft.getMinecraft()
         val nowMillis = System.currentTimeMillis()
         updateClicks(minecraft, nowMillis)
-        val items = buildItems(minecraft)
+        val items = buildItems(minecraft, RenderGuiData.padding(coreSettings))
         if (items.isEmpty()) return
 
         var width = 0
@@ -32,9 +32,11 @@ object KeystrokesHud {
             width = Math.max(width, item.x + item.width)
             height = Math.max(height, item.y + item.height)
         }
-        val position = anchoredPosition(minecraft, width, height)
+        val bounds = RenderGuiData.placeElement(coreSettings, width, height)
+        val position = Pair(bounds.left, bounds.top)
         val nowNanos = System.nanoTime()
-        val textRgb = primaryRgb(ConfigUtils.globalGuiSettings.primaryColour)
+        val textRgb = RenderGuiData.textColour(coreSettings) and 0xFFFFFF
+        val shadows = RenderGuiData.textShadows(coreSettings)
         val backdropAlpha = config.keyBackdropOpacity
         val seen = IdentityHashMap<KeyBinding, Boolean>()
         val font = minecraft.fontRendererObj ?: return
@@ -57,7 +59,7 @@ object KeystrokesHud {
                 textColour = KeystrokesHudSupport.withAlpha(KeystrokesHudSupport.lerpRgb(textRgb, 0, transition.progress), 255)
             }
             Gui.drawRect(position.first + item.x, position.second + item.y, position.first + item.x + item.width, position.second + item.y + item.height, backdrop)
-            font.drawStringWithShadow(item.label, (position.first + item.x + (item.width - font.getStringWidth(item.label)) / 2).toFloat(), (position.second + item.y + (item.height - font.FONT_HEIGHT) / 2).toFloat(), textColour)
+            font.drawString(item.label, (position.first + item.x + (item.width - font.getStringWidth(item.label)) / 2).toFloat(), (position.second + item.y + (item.height - font.FONT_HEIGHT) / 2).toFloat(), textColour, shadows)
         }
         val iterator = transitions.keys.iterator()
         while (iterator.hasNext()) if (!seen.containsKey(iterator.next())) iterator.remove()
@@ -80,9 +82,8 @@ object KeystrokesHud {
         }
     }
 
-    private fun buildItems(minecraft: Minecraft): List<KeyItem> {
+    private fun buildItems(minecraft: Minecraft, gap: Int): List<KeyItem> {
         val config = ConfigUtils.brainageHudParity.keystrokes
-        val gap = ConfigUtils.globalGuiSettings.paddingInPixels
         val items = ArrayList<KeyItem>()
         var y = 0
         if (config.showWasd) {
@@ -115,16 +116,4 @@ object KeystrokesHud {
         3 -> "$leftClicks | $rightClicks CPS"
         else -> null
     }
-
-    private fun anchoredPosition(minecraft: Minecraft, width: Int, height: Int): Pair<Int, Int> {
-        val settings = ConfigUtils.brainageHudParity.keystrokes.coreSettings
-        val resolution = ScaledResolution(minecraft)
-        val x = settings.x.toInt()
-        val y = settings.y.toInt()
-        val posX = when (settings.anchorCorner) { 1, 3, 5 -> resolution.scaledWidth - x - width; 6, 7, 8 -> (resolution.scaledWidth - x - width) / 2; else -> x }
-        val posY = when (settings.anchorCorner) { 2, 3, 7 -> resolution.scaledHeight - y - height; 4, 5, 8 -> (resolution.scaledHeight - y - height) / 2; else -> y }
-        return Pair(posX, posY)
-    }
-
-    private fun primaryRgb(index: Int): Int = intArrayOf(0xAA0000, 0xFF5555, 0xFFAA00, 0xFFFF55, 0x00AA00, 0x55FF55, 0x55FFFF, 0x00AAAA, 0x0000AA, 0x5555FF, 0xFF55FF, 0xAA00AA, 0xFFFFFF, 0xAAAAAA, 0x555555, 0x000000)[Math.max(0, Math.min(15, index))]
 }

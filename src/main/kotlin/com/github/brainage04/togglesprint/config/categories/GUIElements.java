@@ -37,7 +37,7 @@ public class GUIElements {
     @Expose
     @ConfigOption(name = "TPS", desc = "")
     @Accordion
-    public LagTracker tpsTracker = new LagTracker(new CoreSettings(false, 10, 100, 0), true);
+    public TpsTracker tpsTracker = new TpsTracker(new CoreSettings(false, 10, 100, 0), true);
 
     @Expose
     @ConfigOption(name = "Entity Tracker", desc = "")
@@ -222,13 +222,29 @@ public class GUIElements {
         public CoreSettings coreSettings;
 
         @Expose
-        @ConfigOption(name = "Show Color", desc = "Color the number based on how high or low it is (green = low, red = high).")
+        @ConfigOption(name = "Show Colour", desc = "Colour the number based on how good or bad it is (green = good, red = bad).")
         @ConfigEditorBoolean
         public boolean showColor;
 
         public LagTracker(CoreSettings coreSettings, boolean showColor) {
             this.coreSettings = coreSettings;
             this.showColor = showColor;
+        }
+    }
+
+    public static class TpsTracker extends LagTracker {
+        @Expose
+        @ConfigOption(name = "Intervals Tracked", desc = "How many of the server's game time reports (sent about once a second) the TPS is averaged over.")
+        @ConfigEditorSlider(minValue = 1, maxValue = 30, minStep = 1)
+        public int intervalsTracked = 3;
+
+        /** Used by Gson so that fields added later keep their defaults in existing configs. */
+        public TpsTracker() {
+            super(null, true);
+        }
+
+        public TpsTracker(CoreSettings coreSettings, boolean showColor) {
+            super(coreSettings, showColor);
         }
     }
 
@@ -291,8 +307,17 @@ public class GUIElements {
 
         @Expose
         @ConfigOption(name = "Anchor Corner", desc = "Aligns text to a corner of the screen.")
-        @ConfigEditorDropdown(values = {"Top Left", "Top Right", "Bottom Left", "Bottom Right", "Center Left", "Center Right", "Center Top", "Center Bottom", "Center"})
+        @ConfigEditorDropdown(values = {"Top Left", "Top Right", "Bottom Left", "Bottom Right", "Centre Left", "Centre Right", "Centre Top", "Centre Bottom", "Centre"})
         public int anchorCorner;
+
+        @Expose
+        @ConfigOption(name = "Style Overrides", desc = "Replace the global GUI style settings for this element only.")
+        @Accordion
+        public ElementOverrides elementOverrides = new ElementOverrides();
+
+        /** Used by Gson so that fields added later keep their defaults in existing configs. */
+        public CoreSettings() {
+        }
 
         public CoreSettings(boolean isEnabled, int x, int y, int anchorCorner) {
             this.isEnabled = isEnabled;
@@ -300,5 +325,58 @@ public class GUIElements {
             this.y = y;
             this.anchorCorner = anchorCorner;
         }
+    }
+
+    /** Per-element replacements for the global GUI style; each value applies only while its toggle is on. */
+    public static class ElementOverrides {
+        @Expose
+        @ConfigOption(name = "Override Text Colour", desc = "Use the text colour below instead of the global one.")
+        @ConfigEditorBoolean
+        public boolean overrideTextColour = false;
+
+        @Expose
+        @ConfigOption(name = "Text Colour", desc = "The colour of text without its own colour code.")
+        @ConfigEditorColour
+        public String textColour = "0:255:255:255:255";
+
+        @Expose
+        @ConfigOption(name = "Override Text Shadows", desc = "Use the text shadow setting below instead of the global one.")
+        @ConfigEditorBoolean
+        public boolean overrideTextShadows = false;
+
+        @Expose
+        @ConfigOption(name = "Text Shadows", desc = "Draw a shadow behind the text.")
+        @ConfigEditorBoolean
+        public boolean textShadows = true;
+
+        @Expose
+        @ConfigOption(name = "Override Backdrop Opacity", desc = "Use the backdrop opacity below instead of the global one.")
+        @ConfigEditorBoolean
+        public boolean overrideBackdropOpacity = false;
+
+        @Expose
+        @ConfigOption(name = "Backdrop Opacity", desc = "The opacity of the dark backdrop behind the element (0 = no backdrop).")
+        @ConfigEditorSlider(minValue = 0, maxValue = 255, minStep = 1)
+        public int backdropOpacity = 100;
+
+        @Expose
+        @ConfigOption(name = "Override Padding", desc = "Use the padding below instead of the global one.")
+        @ConfigEditorBoolean
+        public boolean overridePadding = false;
+
+        @Expose
+        @ConfigOption(name = "Padding", desc = "The number of pixels between lines and around the element.")
+        @ConfigEditorSlider(minValue = 0, maxValue = 16, minStep = 1)
+        public int padding = 2;
+
+        @Expose
+        @ConfigOption(name = "Override Max Width", desc = "Use the maximum width below instead of the global one.")
+        @ConfigEditorBoolean
+        public boolean overrideMaxWidth = false;
+
+        @Expose
+        @ConfigOption(name = "Max Width", desc = "Lines wider than this many pixels wrap onto the next line (0 = no limit).")
+        @ConfigEditorSlider(minValue = 0, maxValue = 1_000, minStep = 1)
+        public int maxWidth = 0;
     }
 }

@@ -1,6 +1,5 @@
 package com.github.brainage04.togglesprint.gui
 
-import com.github.brainage04.togglesprint.gui.core.RenderGuiData
 import com.github.brainage04.togglesprint.utils.ConfigUtils
 import com.github.brainage04.togglesprint.utils.MathUtils.round
 import net.minecraft.client.Minecraft
@@ -23,23 +22,22 @@ object PlayerRotationTracker {
         return returnString
     }
 
-    fun playerRotationTracker() {
-        if (!ConfigUtils.guiElements.rotationTracker.coreSettings.isEnabled) return
-        val thePlayer = Minecraft.getMinecraft().thePlayer ?: return
+    fun lines(): List<String> {
+        val thePlayer = Minecraft.getMinecraft().thePlayer ?: return emptyList()
 
         val textArray = if (ConfigUtils.guiElements.rotationTracker.compactFormat) {
             arrayListOf(
-                "${ConfigUtils.primaryChars + formatYaw(Minecraft.getMinecraft().thePlayer.rotationYaw)} / ${Minecraft.getMinecraft().thePlayer.rotationPitch.round(ConfigUtils.guiElements.rotationTracker.decimals)}",
+                "${formatYaw(thePlayer.rotationYaw)} / ${thePlayer.rotationPitch.round(ConfigUtils.guiElements.rotationTracker.decimals)}",
             )
         } else {
             arrayListOf(
-                "${ConfigUtils.primaryChars}Yaw: ${formatYaw(Minecraft.getMinecraft().thePlayer.rotationYaw)}",
-                "${ConfigUtils.primaryChars}Pitch: ${Minecraft.getMinecraft().thePlayer.rotationPitch.round(ConfigUtils.guiElements.rotationTracker.decimals)}",
+                "Yaw: ${formatYaw(thePlayer.rotationYaw)}",
+                "Pitch: ${thePlayer.rotationPitch.round(ConfigUtils.guiElements.rotationTracker.decimals)}",
             )
         }
 
         if (ConfigUtils.guiElements.rotationTracker.dependOnFarmingTool) {
-            val currentEquippedItem = thePlayer.currentEquippedItem ?: return
+            val currentEquippedItem = thePlayer.currentEquippedItem ?: return emptyList()
 
             val itemName = currentEquippedItem.displayName
 
@@ -62,14 +60,9 @@ object PlayerRotationTracker {
                 }
             }
 
-            if (!holdingFarmingTool) return
+            if (!holdingFarmingTool) return emptyList()
         }
 
-        RenderGuiData.renderElement(
-            ConfigUtils.guiElements.rotationTracker.coreSettings.x,
-            ConfigUtils.guiElements.rotationTracker.coreSettings.y,
-            ConfigUtils.guiElements.rotationTracker.coreSettings.anchorCorner,
-            textArray,
-        )
+        return textArray
     }
 }

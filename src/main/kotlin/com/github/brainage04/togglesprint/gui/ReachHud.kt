@@ -1,6 +1,5 @@
 package com.github.brainage04.togglesprint.gui
 
-import com.github.brainage04.togglesprint.gui.core.RenderGuiData
 import com.github.brainage04.togglesprint.utils.ConfigUtils
 import net.minecraft.client.Minecraft
 import net.minecraft.util.MovingObjectPosition
@@ -11,12 +10,10 @@ object ReachHud {
     private var attackWasDown = false
     private var wasClickMode = false
 
-    fun reachHud() {
+    fun lines(): List<String> {
         val config = ConfigUtils.brainageHudParity.reach
-        if (!config.coreSettings.isEnabled) return
-
         val minecraft = Minecraft.getMinecraft()
-        val lines = if (!config.updateOnAttackClick) {
+        return if (!config.updateOnAttackClick) {
             wasClickMode = false
             attackWasDown = false
             calculateLines(minecraft)
@@ -27,7 +24,6 @@ object ReachHud {
             wasClickMode = true
             cachedLines
         }
-        if (lines.isNotEmpty()) RenderGuiData.renderElement(config.coreSettings.x, config.coreSettings.y, config.coreSettings.anchorCorner, lines)
     }
 
     private fun calculateLines(minecraft: Minecraft): ArrayList<String> {
@@ -42,19 +38,19 @@ object ReachHud {
             MovingObjectPosition.MovingObjectType.BLOCK -> {
                 val pos = hit.blockPos ?: return lines
                 val block = world.getBlockState(pos).block
-                if (config.showName) lines.add("${ConfigUtils.primaryChars}${block.localizedName}")
-                if (config.showCoordinates) lines.add("${ConfigUtils.primaryChars}${pos.x}, ${pos.y}, ${pos.z}")
+                if (config.showName) lines.add("${block.localizedName}")
+                if (config.showCoordinates) lines.add("${pos.x}, ${pos.y}, ${pos.z}")
             }
             MovingObjectPosition.MovingObjectType.ENTITY -> {
                 val entity = hit.entityHit ?: return lines
-                if (config.showName) lines.add("${ConfigUtils.primaryChars}${entity.name}")
-                if (config.showCoordinates) lines.add("${ConfigUtils.primaryChars}${entity.position.x}, ${entity.position.y}, ${entity.position.z}")
+                if (config.showName) lines.add("${entity.name}")
+                if (config.showCoordinates) lines.add("${entity.position.x}, ${entity.position.y}, ${entity.position.z}")
             }
             else -> return lines
         }
         val decimals = Math.max(0, Math.min(10, config.decimalPlaces))
         val distance = player.getPositionEyes(1.0f).distanceTo(hit.hitVec)
-        lines.add("${ConfigUtils.primaryChars}${String.format(Locale.US, "%.${decimals}f", distance)} blocks")
+        lines.add("${String.format(Locale.US, "%.${decimals}f", distance)} blocks")
         return lines
     }
 }

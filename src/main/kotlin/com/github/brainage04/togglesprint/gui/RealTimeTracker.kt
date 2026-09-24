@@ -1,33 +1,32 @@
 package com.github.brainage04.togglesprint.gui
 
-import com.github.brainage04.togglesprint.gui.core.RenderGuiData
 import com.github.brainage04.togglesprint.utils.ConfigUtils
-import java.text.SimpleDateFormat
-import java.util.*
+import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
 
 object RealTimeTracker {
-    fun realTimeTracker() {
-        if (!ConfigUtils.guiElements.realTimeTracker.coreSettings.isEnabled) return
+    private val DATE = DateTimeFormatter.ofPattern("E d/M/y")
+    private val TIME_12_HOUR = DateTimeFormatter.ofPattern("h:mm:ss a")
+    private val TIME_24_HOUR = DateTimeFormatter.ofPattern("HH:mm:ss")
+    // "xxx" always prints an offset such as +00:00, whereas "XXX" prints "Z" for UTC
+    private val TIMEZONE = DateTimeFormatter.ofPattern("z '(UTC 'xxx')'")
 
-        val textArray = arrayListOf<String>()
+    fun lines(): List<String> {
+        val config = ConfigUtils.guiElements.realTimeTracker
+        // one timestamp for every line, so the date and time cannot straddle midnight
+        val now = ZonedDateTime.now()
+        val textArray = ArrayList<String>(3)
 
-        if (ConfigUtils.guiElements.realTimeTracker.includeDate) textArray.add(ConfigUtils.primaryChars + SimpleDateFormat("E d/M/y").format(Date()))
+        if (config.includeDate) textArray.add(DATE.format(now))
 
-        when (ConfigUtils.guiElements.realTimeTracker.timeFormat) {
-            0 -> textArray.add(ConfigUtils.primaryChars + SimpleDateFormat("h:mm:ss a").format(Date()))
-            1 -> textArray.add(ConfigUtils.primaryChars + SimpleDateFormat("HH:mm:ss").format(Date()))
+        when (config.timeFormat) {
+            0 -> textArray.add(TIME_12_HOUR.format(now))
+            1 -> textArray.add(TIME_24_HOUR.format(now))
             else -> {}
         }
 
-        if (ConfigUtils.guiElements.realTimeTracker.includeTimezone) {
-            textArray.add("${ConfigUtils.primaryChars + SimpleDateFormat("z").format(Date())} (UTC ${SimpleDateFormat("XXX").format(Date())})")
-        }
+        if (config.includeTimezone) textArray.add(TIMEZONE.format(now))
 
-        RenderGuiData.renderElement(
-            ConfigUtils.guiElements.realTimeTracker.coreSettings.x,
-            ConfigUtils.guiElements.realTimeTracker.coreSettings.y,
-            ConfigUtils.guiElements.realTimeTracker.coreSettings.anchorCorner,
-            textArray,
-        )
+        return textArray
     }
 }

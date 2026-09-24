@@ -1,6 +1,5 @@
 package com.github.brainage04.togglesprint.gui.inventory_trackers
 
-import com.github.brainage04.togglesprint.gui.core.RenderGuiData
 import com.github.brainage04.togglesprint.gui.inventory_trackers.core.InventoryTrackerShared
 import com.github.brainage04.togglesprint.gui.inventory_trackers.core.InventoryTrackerShared.trackInventoryItems
 import com.github.brainage04.togglesprint.utils.ChatUtils
@@ -10,9 +9,8 @@ import net.minecraft.init.Items
 import net.minecraft.item.ItemStack
 
 object ProjectileTracker {
-    fun projectileTracker() {
-        if (!ConfigUtils.inventoryTrackers.projectileTracker.coreSettings.isEnabled) return
-        if (Minecraft.getMinecraft().thePlayer == null) return
+    fun lines(): List<String> {
+        if (Minecraft.getMinecraft().thePlayer == null) return emptyList()
 
         val itemList: ArrayList<InventoryTrackerShared.InventoryTrackerItem> = arrayListOf(
             InventoryTrackerShared.InventoryTrackerItem(
@@ -34,7 +32,7 @@ object ProjectileTracker {
         )
 
         val textArray = arrayListOf(
-            "${ConfigUtils.secondaryChars}Projectiles:"
+            "${ChatUtils.boldChar}Projectiles:"
         )
 
         val tempItemList: ArrayList<InventoryTrackerShared.InventoryTrackerItem> = arrayListOf()
@@ -47,11 +45,6 @@ object ProjectileTracker {
 
         if (textArray.size < 2) textArray[0] += "${ChatUtils.redChar} N/A"
 
-        RenderGuiData.renderElement(
-            ConfigUtils.inventoryTrackers.projectileTracker.coreSettings.x,
-            ConfigUtils.inventoryTrackers.projectileTracker.coreSettings.y,
-            ConfigUtils.inventoryTrackers.projectileTracker.coreSettings.anchorCorner,
-            textArray,
-        )
+        return textArray
     }
 }

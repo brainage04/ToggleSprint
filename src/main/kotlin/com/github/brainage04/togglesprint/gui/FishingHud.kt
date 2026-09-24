@@ -1,7 +1,5 @@
 package com.github.brainage04.togglesprint.gui
 
-import com.github.brainage04.togglesprint.gui.core.RenderGuiData
-import com.github.brainage04.togglesprint.utils.ConfigUtils
 import net.minecraft.block.BlockLiquid
 import net.minecraft.client.Minecraft
 import net.minecraft.init.Blocks
@@ -12,20 +10,17 @@ object FishingHud {
     private const val TREASURE_ELIGIBLE = "Treasure: eligible"
     private const val TREASURE_INELIGIBLE = "Treasure: ineligible"
 
-    /** Renders the active cast's open-water and treasure state. */
-    fun fishingHud() {
-        val settings = ConfigUtils.brainageHudParity.fishing.coreSettings
-        if (!settings.isEnabled) return
-
+    /** The active cast's open-water and treasure state. */
+    fun lines(): List<String> {
         val minecraft = Minecraft.getMinecraft()
-        val player = minecraft.thePlayer ?: return
+        val player = minecraft.thePlayer ?: return emptyList()
         val fishHook = player.fishEntity
         val lines = arrayListOf<String>()
 
         if (fishHook == null) {
-            lines.add(ConfigUtils.primaryChars + TREASURE_UNAVAILABLE)
+            lines.add(TREASURE_UNAVAILABLE)
         } else {
-            val world = minecraft.theWorld ?: return
+            val world = minecraft.theWorld ?: return emptyList()
             val hookPosition = BlockPos(fishHook.posX, fishHook.posY, fishHook.posZ)
             val openWater = FishingOpenWater.isOpenWater(
                 hookPosition.x,
@@ -44,10 +39,10 @@ object FishingHud {
                     }
                 },
             )
-            lines.add("${ConfigUtils.primaryChars}Open water: $openWater")
-            lines.add(ConfigUtils.primaryChars + if (openWater) TREASURE_ELIGIBLE else TREASURE_INELIGIBLE)
+            lines.add("Open water: $openWater")
+            lines.add(if (openWater) TREASURE_ELIGIBLE else TREASURE_INELIGIBLE)
         }
 
-        RenderGuiData.renderElement(settings.x, settings.y, settings.anchorCorner, lines)
+        return lines
     }
 }

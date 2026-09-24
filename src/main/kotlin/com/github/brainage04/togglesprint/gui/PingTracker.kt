@@ -1,6 +1,5 @@
 package com.github.brainage04.togglesprint.gui
 
-import com.github.brainage04.togglesprint.gui.core.RenderGuiData
 import com.github.brainage04.togglesprint.utils.ChatUtils
 import com.github.brainage04.togglesprint.utils.ConfigUtils
 import net.minecraft.client.Minecraft
@@ -18,26 +17,19 @@ object PingTracker {
 
     private var ping = 0L
 
-    fun pingTracker() {
-        if (!ConfigUtils.guiElements.pingTracker.coreSettings.isEnabled) return
-
-        val minecraft = Minecraft.getMinecraft() ?: return
-        val player = minecraft.thePlayer ?: return
+    fun lines(): List<String> {
+        val minecraft = Minecraft.getMinecraft() ?: return emptyList()
+        val player = minecraft.thePlayer ?: return emptyList()
 
         ping = if (minecraft.isSingleplayer) {
             0L
         } else {
-            minecraft.netHandler?.getPlayerInfo(player.uniqueID)?.responseTime?.toLong() ?: return
+            minecraft.netHandler?.getPlayerInfo(player.uniqueID)?.responseTime?.toLong() ?: return emptyList()
         }
 
-        val text = if (ConfigUtils.guiElements.pingTracker.showColor) "${ConfigUtils.primaryChars}Ping: ${getColor(ping) + ping}ms"
-        else "${ConfigUtils.primaryChars}Ping: ${ping}ms"
-
-        RenderGuiData.renderElement(
-            ConfigUtils.guiElements.pingTracker.coreSettings.x,
-            ConfigUtils.guiElements.pingTracker.coreSettings.y,
-            ConfigUtils.guiElements.pingTracker.coreSettings.anchorCorner,
-            text,
+        return listOf(
+            if (ConfigUtils.guiElements.pingTracker.showColor) "Ping: ${getColor(ping) + ping}ms"
+            else "Ping: ${ping}ms"
         )
     }
 }

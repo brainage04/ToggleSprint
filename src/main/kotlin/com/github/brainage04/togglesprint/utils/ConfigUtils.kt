@@ -8,6 +8,4 @@ object ConfigUtils {
     val inventoryTrackers get() = ToggleSprintMain.config.inventoryTrackers
     val brainageHudParity get() = ToggleSprintMain.config.brainageHudParity
     val toggleMovementKeys get() = ToggleSprintMain.config.toggleMovementKeys
-    val primaryChars get() = ChatUtils.colourChars[globalGuiSettings.primaryColour] + ChatUtils.effectChars[globalGuiSettings.primaryEffect]
-    val secondaryChars get() = ChatUtils.colourChars[globalGuiSettings.secondaryColour] + ChatUtils.effectChars[globalGuiSettings.secondaryEffect]
 }

@@ -7,7 +7,19 @@ import com.google.gson.JsonPrimitive
 import net.minecraftforge.fml.common.eventhandler.Event
 
 object ConfigUpdaterMigrator {
-    const val CONFIG_VERSION = 3
+    const val CONFIG_VERSION = 4
+
+    /** RGB of the version 3 "Primary Colour" dropdown entries, in dropdown order (the 16 § colours). */
+    private val LEGACY_PRIMARY_COLOURS = intArrayOf(
+        0xAA0000, 0xFF5555, 0xFFAA00, 0xFFFF55, 0x00AA00, 0x55FF55, 0x55FFFF, 0x00AAAA,
+        0x0000AA, 0x5555FF, 0xFF55FF, 0xAA00AA, 0xFFFFFF, 0xAAAAAA, 0x555555, 0x000000,
+    )
+
+    /** The MoulConfig colour string ("chroma speed:alpha:red:green:blue") for a legacy dropdown index. */
+    fun legacyColourToChroma(index: Int): String {
+        val rgb = LEGACY_PRIMARY_COLOURS.getOrElse(index) { 0xFFFFFF }
+        return "0:255:${rgb shr 16 and 0xFF}:${rgb shr 8 and 0xFF}:${rgb and 0xFF}"
+    }
 
     fun JsonElement.at(chain: List<String>, init: Boolean): JsonElement? {
         if (chain.isEmpty()) return this
@@ -148,6 +160,14 @@ object ConfigUpdaterMigrator {
                     "guiElements.positionTracker.showChunkCoordinates",
                     "guiElements.positionTracker.showChunkPosition",
                 )
+                4 -> migration.move(
+                    4,
+                    "globalGuiSettings.primaryColour",
+                    "globalGuiSettings.textColour",
+                ) { value ->
+                    val index = (value as? JsonPrimitive)?.asIntOrNull ?: -1
+                    JsonPrimitive(legacyColourToChroma(index))
+                }
             }
             LOGGER.info("Transformations scheduled: ${migration.new}")
             val mergesPerformed = merge(migration.old, migration.new)

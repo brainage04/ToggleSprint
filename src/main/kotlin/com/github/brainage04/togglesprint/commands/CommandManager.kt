@@ -16,13 +16,12 @@ class CommandManager {
                 return@registerCommand
             }
 
-            if (args.size == 1) {
-                when (args[0]) {
-                    "gui" -> {
-                        // open the gui element editor here
-                    }
-                }
+            if (args.size == 1 && args[0].equals("gui", ignoreCase = true)) {
+                ToggleSprintMain.configManager.openElementEditor()
+                return@registerCommand
             }
+
+            ChatUtils.messageToChat("Usage: /togglesprint [gui]", ChatUtils.PrefixType.RED)
         }
         registerCommand("fullbright", ::setFullbright)
     }

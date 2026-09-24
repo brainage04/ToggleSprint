@@ -1,20 +1,19 @@
 package com.github.brainage04.togglesprint.gui
 
-import com.github.brainage04.togglesprint.gui.core.RenderGuiData
+import com.github.brainage04.togglesprint.utils.ChatUtils
 import com.github.brainage04.togglesprint.utils.ConfigUtils
 import net.minecraft.client.Minecraft
 import net.minecraft.entity.EnumCreatureType
 
 object EntityTracker {
-    fun entityTracker() {
-        if (!ConfigUtils.guiElements.entityTracker.coreSettings.isEnabled) return
-
-        val theWorld = Minecraft.getMinecraft().theWorld ?: return
+    fun lines(): List<String> {
+        val theWorld = Minecraft.getMinecraft().theWorld ?: return emptyList()
+        val config = ConfigUtils.guiElements.entityTracker
 
         val entities = theWorld.loadedEntityList
 
         val textArray = arrayListOf(
-            "${ConfigUtils.secondaryChars + entities.size} entities loaded"
+            "${entities.size} entities loaded"
         )
 
         var creaturesCount = 0
@@ -31,27 +30,19 @@ object EntityTracker {
 
         val allCategoriesCount = creaturesCount + waterCreaturesCount + ambientsCount + monstersCount
 
-        var allEntitiesDescriptor = "${ConfigUtils.secondaryChars + allCategoriesCount} grouped"
-        if (ConfigUtils.guiElements.entityTracker.showOthers) allEntitiesDescriptor += ", ${entities.size - allCategoriesCount} non-grouped"
+        var allEntitiesDescriptor = "$allCategoriesCount grouped"
+        if (config.showOthers) allEntitiesDescriptor += ", ${entities.size - allCategoriesCount} non-grouped"
 
         textArray.add(allEntitiesDescriptor)
 
-        if (ConfigUtils.guiElements.entityTracker.showCreatures
-            || ConfigUtils.guiElements.entityTracker.showWaterCreatures
-            || ConfigUtils.guiElements.entityTracker.showAmbients
-            || ConfigUtils.guiElements.entityTracker.showMonsters) {
-            textArray.add("${ConfigUtils.secondaryChars}Entity groups:")
+        if (config.showCreatures || config.showWaterCreatures || config.showAmbients || config.showMonsters) {
+            textArray.add("${ChatUtils.boldChar}Entity groups:")
         }
-        if (ConfigUtils.guiElements.entityTracker.showCreatures) textArray.add("${ConfigUtils.primaryChars}  - Creatures: $creaturesCount")
-        if (ConfigUtils.guiElements.entityTracker.showWaterCreatures) textArray.add("${ConfigUtils.primaryChars}  - Water Creatures: $waterCreaturesCount")
-        if (ConfigUtils.guiElements.entityTracker.showAmbients) textArray.add("${ConfigUtils.primaryChars}  - Ambients: $ambientsCount")
-        if (ConfigUtils.guiElements.entityTracker.showMonsters) textArray.add("${ConfigUtils.primaryChars}  - Monsters: $monstersCount")
+        if (config.showCreatures) textArray.add("  - Creatures: $creaturesCount")
+        if (config.showWaterCreatures) textArray.add("  - Water Creatures: $waterCreaturesCount")
+        if (config.showAmbients) textArray.add("  - Ambients: $ambientsCount")
+        if (config.showMonsters) textArray.add("  - Monsters: $monstersCount")
 
-        RenderGuiData.renderElement(
-            ConfigUtils.guiElements.entityTracker.coreSettings.x,
-            ConfigUtils.guiElements.entityTracker.coreSettings.y,
-            ConfigUtils.guiElements.entityTracker.coreSettings.anchorCorner,
-            textArray,
-        )
+        return textArray
     }
 }

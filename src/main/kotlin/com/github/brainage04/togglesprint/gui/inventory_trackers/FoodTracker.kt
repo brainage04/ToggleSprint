@@ -1,6 +1,5 @@
 package com.github.brainage04.togglesprint.gui.inventory_trackers
 
-import com.github.brainage04.togglesprint.gui.core.RenderGuiData
 import com.github.brainage04.togglesprint.gui.inventory_trackers.core.InventoryTrackerShared
 import com.github.brainage04.togglesprint.gui.inventory_trackers.core.InventoryTrackerShared.trackInventoryItems
 import com.github.brainage04.togglesprint.utils.ChatUtils
@@ -9,9 +8,8 @@ import net.minecraft.client.Minecraft
 import net.minecraft.init.Items
 
 object FoodTracker {
-    fun foodTracker() {
-        if (!ConfigUtils.inventoryTrackers.foodTracker.coreSettings.isEnabled) return
-        if (Minecraft.getMinecraft().thePlayer == null) return
+    fun lines(): List<String> {
+        if (Minecraft.getMinecraft().thePlayer == null) return emptyList()
 
         val itemList: ArrayList<InventoryTrackerShared.InventoryTrackerItem> = arrayListOf(
             InventoryTrackerShared.InventoryTrackerItem("Apple", Items.apple),
@@ -42,7 +40,7 @@ object FoodTracker {
         )
 
         val textArray = arrayListOf(
-            "${ConfigUtils.secondaryChars}Food:"
+            "${ChatUtils.boldChar}Food:"
         )
 
         val tempItemList: ArrayList<InventoryTrackerShared.InventoryTrackerItem> = arrayListOf()
@@ -55,11 +53,6 @@ object FoodTracker {
 
         if (textArray.size < 2) textArray[0] += "${ChatUtils.redChar} N/A"
 
-        RenderGuiData.renderElement(
-            ConfigUtils.inventoryTrackers.foodTracker.coreSettings.x,
-            ConfigUtils.inventoryTrackers.foodTracker.coreSettings.y,
-            ConfigUtils.inventoryTrackers.foodTracker.coreSettings.anchorCorner,
-            textArray,
-        )
+        return textArray
     }
 }

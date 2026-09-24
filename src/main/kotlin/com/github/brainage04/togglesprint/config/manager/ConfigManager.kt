@@ -3,6 +3,7 @@ package com.github.brainage04.togglesprint.config.manager
 import com.github.brainage04.togglesprint.ToggleSprintMain
 import com.github.brainage04.togglesprint.config.ToggleSprintConfig
 import com.github.brainage04.togglesprint.errors.ConfigError
+import com.github.brainage04.togglesprint.gui.core.HudElementEditor
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonObject
 import com.google.gson.TypeAdapter
@@ -88,7 +89,14 @@ class ConfigManager {
     }
 
     fun openConfigGui() {
-        screenToOpen = GuiScreenElementWrapper(editor)
+        screenToOpen = configScreen()
+    }
+
+    /** A new MoulConfig editor screen for the whole config. */
+    fun configScreen(): GuiScreen = GuiScreenElementWrapper(editor)
+
+    fun openElementEditor() {
+        screenToOpen = HudElementEditor()
     }
 
     private fun tryReadConfig() {

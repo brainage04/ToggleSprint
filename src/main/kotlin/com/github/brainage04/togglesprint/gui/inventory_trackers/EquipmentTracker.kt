@@ -1,21 +1,20 @@
 package com.github.brainage04.togglesprint.gui.inventory_trackers
 
 import com.github.brainage04.togglesprint.ToggleSprintMain
+import com.github.brainage04.togglesprint.config.categories.GUIElements
 import com.github.brainage04.togglesprint.gui.core.RenderGuiData
 import com.github.brainage04.togglesprint.utils.ChatUtils
 import com.github.brainage04.togglesprint.utils.ConfigUtils
 import com.github.brainage04.togglesprint.utils.MathUtils.round
 import net.minecraft.client.Minecraft
-import net.minecraft.client.gui.ScaledResolution
 import net.minecraft.client.renderer.GlStateManager
 import net.minecraft.item.ItemStack
 
 object EquipmentTracker {
-    fun equipmentTracker() {
-        if (!ConfigUtils.inventoryTrackers.equipmentTracker.coreSettings.isEnabled) return
+    fun render(coreSettings: GUIElements.CoreSettings) {
         val thePlayer = Minecraft.getMinecraft().thePlayer ?: return
 
-        val textArray = arrayListOf("${ConfigUtils.secondaryChars}Equipment:")
+        val textArray = arrayListOf("${ChatUtils.boldChar}Equipment:")
         val iconStacks = arrayListOf<ItemStack?>()
 
         val equipmentList = arrayListOf(
@@ -34,7 +33,7 @@ object EquipmentTracker {
         }
 
         for (i in ConfigUtils.inventoryTrackers.equipmentTracker.itemTypes) {
-            var currentLine = ConfigUtils.primaryChars
+            var currentLine = ""
 
             if (i !in equipmentList.indices || equipmentList[i] == null) continue
 
@@ -74,43 +73,32 @@ object EquipmentTracker {
 
         if (textArray.size < 2) textArray[0] += "${ChatUtils.redChar} N/A"
 
-        val settings = ConfigUtils.inventoryTrackers.equipmentTracker.coreSettings
-        RenderGuiData.renderElement(settings.x, settings.y, settings.anchorCorner, textArray)
-        renderIcons(iconStacks, textArray, settings.x, settings.y, settings.anchorCorner)
+        val placedLines = RenderGuiData.drawElement(coreSettings, textArray)
+        renderIcons(iconStacks, placedLines)
     }
 
-    private fun renderIcons(iconStacks: List<ItemStack?>, lines: List<String>, x: Double, y: Double, anchor: Int) {
+    /** Draws each item's icon over the blank prefix reserved at the start of its line. */
+    private fun renderIcons(iconStacks: List<ItemStack?>, placedLines: List<RenderGuiData.PlacedLine>) {
         if (iconStacks.none { it != null }) return
         val minecraft = Minecraft.getMinecraft()
-        val font = minecraft.renderManager.fontRenderer ?: return
-        val resolution = ScaledResolution(minecraft)
-        val lineHeight = font.FONT_HEIGHT + ConfigUtils.globalGuiSettings.paddingInPixels
-        for (itemIndex in iconStacks.indices) {
-            val stack = iconStacks[itemIndex] ?: continue
-            val lineIndex = itemIndex + 1
-            val line = lines[lineIndex]
-            val iconX = when (anchor) {
-                1, 3, 5 -> resolution.scaledWidth - x - font.getStringWidth(line)
-                6, 7, 8 -> (resolution.scaledWidth - x - font.getStringWidth(line)) / 2
-                else -> x
-            }.toInt()
-            val requestedY = when (anchor) {
-                4, 5, 8 -> y + lineHeight * (lines.size - 1) - lineHeight * lineIndex * 2
-                2, 3, 7 -> y + lineHeight * (lines.size - 1 - lineIndex)
-                else -> y + lineHeight * lineIndex
-            }
-            val iconY = when (anchor) {
-                2, 3, 7 -> resolution.scaledHeight - requestedY - 16
-                4, 5, 8 -> (resolution.scaledHeight - requestedY - 16) / 2
-                else -> requestedY
-            }.toInt()
+        val font = minecraft.fontRendererObj ?: return
+        var previousSource = -1
+        for (line in placedLines) {
+            // a wrapped line continues its item; only its first part carries the icon
+            if (line.sourceIndex == previousSource) continue
+            previousSource = line.sourceIndex
+            // line 0 is the header
+            val stack = iconStacks.getOrNull(line.sourceIndex - 1) ?: continue
+            val iconY = line.y + (font.FONT_HEIGHT - ICON_SIZE) / 2
             GlStateManager.pushMatrix()
             GlStateManager.enableDepth()
-            minecraft.renderItem.renderItemAndEffectIntoGUI(stack, iconX, iconY)
+            minecraft.renderItem.renderItemAndEffectIntoGUI(stack, line.x, iconY)
             if (ConfigUtils.inventoryTrackers.equipmentTracker.displayDurabilityBar) {
-                minecraft.renderItem.renderItemOverlayIntoGUI(font, stack, iconX, iconY, null)
+                minecraft.renderItem.renderItemOverlayIntoGUI(font, stack, line.x, iconY, null)
             }
             GlStateManager.popMatrix()
         }
     }
+
+    private const val ICON_SIZE = 16
 }

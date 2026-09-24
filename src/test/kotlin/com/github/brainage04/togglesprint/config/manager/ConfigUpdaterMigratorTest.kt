@@ -23,7 +23,7 @@ class ConfigUpdaterMigratorTest {
         val fullbright = migratedParity.getAsJsonPrimitive("fullbright")
         val cpsFormat = migratedParity.getAsJsonObject("keystrokes").getAsJsonPrimitive("clicksPerSecondFormat")
 
-        assertEquals(3, migrated.get("lastVersion").asInt)
+        assertEquals(ConfigUpdaterMigrator.CONFIG_VERSION, migrated.get("lastVersion").asInt)
         assertTrue(fullbright.isNumber)
         assertEquals(1.0f, fullbright.asFloat)
         assertEquals(3, cpsFormat.asInt)
@@ -41,7 +41,20 @@ class ConfigUpdaterMigratorTest {
         val migrated = ConfigUpdaterMigrator.fixConfig(config)
         val migratedPosition = migrated.getAsJsonObject("guiElements").getAsJsonObject("positionTracker")
 
-        assertEquals(3, migrated.get("lastVersion").asInt)
+        assertEquals(ConfigUpdaterMigrator.CONFIG_VERSION, migrated.get("lastVersion").asInt)
         assertTrue(migratedPosition.get("showChunkPosition").asBoolean)
+    }
+
+    @Test
+    fun `version three primary colour dropdown migrates to the same RGB text colour`() {
+        val globalGuiSettings = JsonObject().apply { addProperty("primaryColour", 6) } // Aqua, §b
+        val config = JsonObject().apply {
+            addProperty("lastVersion", 3)
+            add("globalGuiSettings", globalGuiSettings)
+        }
+
+        val migrated = ConfigUpdaterMigrator.fixConfig(config)
+
+        assertEquals("0:255:85:255:255", migrated.getAsJsonObject("globalGuiSettings").get("textColour").asString)
     }
 }

@@ -1,92 +1,201 @@
 package com.github.brainage04.togglesprint.gui.core
 
-import com.github.brainage04.togglesprint.gui.EntityTracker.entityTracker
-import com.github.brainage04.togglesprint.gui.FishingHud.fishingHud
-import com.github.brainage04.togglesprint.gui.KeystrokesHud.keystrokesHud
-import com.github.brainage04.togglesprint.gui.PerformanceHud.performanceHud
-import com.github.brainage04.togglesprint.gui.ReachHud.reachHud
-import com.github.brainage04.togglesprint.gui.WaypointHud
-import com.github.brainage04.togglesprint.gui.TPSTracker.Companion.tpsTracker
-import com.github.brainage04.togglesprint.gui.PingTracker.pingTracker
-import com.github.brainage04.togglesprint.gui.PlayerMotionTracker.playerMotionTracker
-import com.github.brainage04.togglesprint.gui.PlayerPositionTracker.playerPositionTracker
-import com.github.brainage04.togglesprint.gui.PlayerRotationTracker.playerRotationTracker
-import com.github.brainage04.togglesprint.gui.RealTimeTracker.realTimeTracker
-import com.github.brainage04.togglesprint.gui.ToggleSprintTracker.toggleSprintTracker
-import com.github.brainage04.togglesprint.gui.inventory_trackers.EquipmentTracker.equipmentTracker
-import com.github.brainage04.togglesprint.gui.inventory_trackers.FoodTracker.foodTracker
-import com.github.brainage04.togglesprint.gui.inventory_trackers.ProjectileTracker.projectileTracker
+import com.github.brainage04.togglesprint.config.categories.GUIElements
+import com.github.brainage04.togglesprint.gui.EnchantInfoHud
+import com.github.brainage04.togglesprint.gui.EntityTracker
+import com.github.brainage04.togglesprint.gui.FishingHud
+import com.github.brainage04.togglesprint.gui.KeystrokesHud
+import com.github.brainage04.togglesprint.gui.PerformanceHud
+import com.github.brainage04.togglesprint.gui.PingTracker
+import com.github.brainage04.togglesprint.gui.PlayerMotionTracker
+import com.github.brainage04.togglesprint.gui.PlayerPositionTracker
+import com.github.brainage04.togglesprint.gui.PlayerRotationTracker
+import com.github.brainage04.togglesprint.gui.ReachHud
+import com.github.brainage04.togglesprint.gui.RealTimeTracker
+import com.github.brainage04.togglesprint.gui.TPSTracker
+import com.github.brainage04.togglesprint.gui.ToggleSprintTracker
+import com.github.brainage04.togglesprint.gui.inventory_trackers.EquipmentTracker
+import com.github.brainage04.togglesprint.gui.inventory_trackers.FoodTracker
+import com.github.brainage04.togglesprint.gui.inventory_trackers.ProjectileTracker
 import com.github.brainage04.togglesprint.utils.ConfigUtils
+import io.github.moulberry.moulconfig.ChromaColour
 import net.minecraft.client.Minecraft
+import net.minecraft.client.gui.Gui
 import net.minecraft.client.gui.ScaledResolution
 import net.minecraft.client.renderer.GlStateManager
 import net.minecraftforge.client.event.RenderGameOverlayEvent
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
+import java.util.IdentityHashMap
 
 class RenderGuiData {
     @SubscribeEvent
     fun onRenderOverlay(event: RenderGameOverlayEvent.Pre) {
         if (event.type != RenderGameOverlayEvent.ElementType.HOTBAR) return
-        //if (Minecraft.getMinecraft().thePlayer == null) return
+
+        placedBounds.clear()
+        val editing = Minecraft.getMinecraft().currentScreen is HudElementEditor
 
         GlStateManager.pushMatrix()
-
-        toggleSprintTracker()
-        playerPositionTracker()
-        playerMotionTracker()
-        playerRotationTracker()
-        equipmentTracker()
-        projectileTracker()
-        foodTracker()
-        realTimeTracker()
-        pingTracker()
-        tpsTracker()
-        entityTracker()
-        fishingHud()
-        performanceHud()
-        reachHud()
-        keystrokesHud()
-        WaypointHud.render()
-
+        for (element in elements) {
+            val coreSettings = element.coreSettings
+            if (coreSettings.isEnabled) element.render(coreSettings, editing)
+        }
         GlStateManager.popMatrix()
     }
 
+    /** The screen rectangle an element occupied on the last frame, backdrop and padding included. */
+    data class ElementBounds(val left: Int, val top: Int, val right: Int, val bottom: Int) {
+        val width get() = right - left
+        val height get() = bottom - top
+
+        fun contains(x: Int, y: Int) = x in left until right && y in top until bottom
+    }
+
+    /** Where [RenderGuiData.renderElement] drew one (possibly wrapped) line of an element. */
+    data class PlacedLine(val text: String, val sourceIndex: Int, val width: Int, val x: Int, val y: Int)
+
     companion object {
-        fun renderElement(x: Double, y: Double, anchorCorner: Int, text: String) {
-            val minecraft = Minecraft.getMinecraft() ?: return
-            val renderer = minecraft.renderManager.fontRenderer ?: return
+        /**
+         * Every HUD element, drawn in this order each frame; this is also the list the element editor moves.
+         *
+         * To add a text element, append one entry:
+         * `HudElement("Name", { ConfigUtils.<category>.<element>.coreSettings }) { MyHud.lines() }`,
+         * where `lines()` returns plain text (inline § codes only for per-value colours, `§l` for headers) and
+         * an empty list when there is nothing to show. Do not check `isEnabled`; disabled elements are skipped.
+         * Elements that draw more than text subclass [HudElement] and override [HudElement.render].
+         */
+        val elements: List<HudElement> = listOf(
+            HudElement("Toggle Sprint/Sneak", { ConfigUtils.guiElements.toggleSprintElement.coreSettings }) { ToggleSprintTracker.lines() },
+            HudElement("Position", { ConfigUtils.guiElements.positionTracker.coreSettings }) { PlayerPositionTracker.lines() },
+            HudElement("Motion", { ConfigUtils.guiElements.motionTracker.coreSettings }) { PlayerMotionTracker.lines() },
+            HudElement("Rotation", { ConfigUtils.guiElements.rotationTracker.coreSettings }) { PlayerRotationTracker.lines() },
+            object : HudElement("Equipment", { ConfigUtils.inventoryTrackers.equipmentTracker.coreSettings }) {
+                override fun render(coreSettings: GUIElements.CoreSettings, editing: Boolean) = EquipmentTracker.render(coreSettings)
+            },
+            HudElement("Projectiles", { ConfigUtils.inventoryTrackers.projectileTracker.coreSettings }) { ProjectileTracker.lines() },
+            HudElement("Food", { ConfigUtils.inventoryTrackers.foodTracker.coreSettings }) { FoodTracker.lines() },
+            HudElement("Date/Time", { ConfigUtils.guiElements.realTimeTracker.coreSettings }) { RealTimeTracker.lines() },
+            HudElement("Ping", { ConfigUtils.guiElements.pingTracker.coreSettings }) { PingTracker.lines() },
+            HudElement("TPS", { ConfigUtils.guiElements.tpsTracker.coreSettings }) { TPSTracker.lines() },
+            HudElement("Entities", { ConfigUtils.guiElements.entityTracker.coreSettings }) { EntityTracker.lines() },
+            HudElement("Fishing", { ConfigUtils.brainageHudParity.fishing.coreSettings }) { FishingHud.lines() },
+            HudElement("Performance", { ConfigUtils.brainageHudParity.performance.coreSettings }) { PerformanceHud.lines() },
+            HudElement("Reach", { ConfigUtils.brainageHudParity.reach.coreSettings }) { ReachHud.lines() },
+            object : HudElement("Keystrokes", { ConfigUtils.brainageHudParity.keystrokes.coreSettings }) {
+                override fun render(coreSettings: GUIElements.CoreSettings, editing: Boolean) = KeystrokesHud.render(coreSettings)
+            },
+            HudElement("Enchant Info", { ConfigUtils.brainageHudParity.enchantInfoHud.coreSettings }) { EnchantInfoHud.lines() },
+        )
 
-            val scaledResolution = ScaledResolution(minecraft)
-            val widthInPixels = renderer.getStringWidth(text)
+        private val placedBounds = IdentityHashMap<GUIElements.CoreSettings, ElementBounds>()
 
-            val posX = when (anchorCorner) {
-                1, 3, 5 -> scaledResolution.scaledWidth - x - widthInPixels // top/bottom/center right
-                6, 7, 8 -> (scaledResolution.scaledWidth - x - widthInPixels) / 2 // center top/bottom, center
-                else -> x
-            }
-            val posY = when (anchorCorner) {
-                2, 3, 7 -> scaledResolution.scaledHeight - y - renderer.FONT_HEIGHT // bottom left/right/center
-                4, 5, 8 -> (scaledResolution.scaledHeight - y - renderer.FONT_HEIGHT) / 2 // center left/right, center
-                else -> y
-            }
+        /** Where the element drew itself on the last frame, or null if it drew nothing. */
+        fun boundsOf(coreSettings: GUIElements.CoreSettings): ElementBounds? = placedBounds[coreSettings]
 
-            GlStateManager.pushMatrix()
-            GlStateManager.enableDepth()
-            GlStateManager.translate(posX, posY, 0.0)
-            renderer.drawStringWithShadow(text, 0f, 0f, 0)
-            GlStateManager.popMatrix()
+        /**
+         * Draws [lines] as one element: positioned by its anchor and offsets, wrapped to its max width, on its
+         * backdrop, in its text colour (lines without a § code) with or without shadows. Nothing is drawn for
+         * an empty list.
+         */
+        fun renderElement(coreSettings: GUIElements.CoreSettings, lines: List<String>) {
+            drawElement(coreSettings, lines)
         }
 
-        fun renderElement(x: Double, y: Double, anchorCorner: Int, textArray: ArrayList<String>) {
-            val renderer = Minecraft.getMinecraft().renderManager.fontRenderer ?: return
+        /** [renderElement], returning where each line was drawn so callers can decorate lines (e.g. item icons). */
+        fun drawElement(coreSettings: GUIElements.CoreSettings, lines: List<String>): List<PlacedLine> {
+            if (lines.isEmpty()) return emptyList()
+            val font = Minecraft.getMinecraft().fontRendererObj ?: return emptyList()
 
-            val heightInPixels = (renderer.FONT_HEIGHT + ConfigUtils.globalGuiSettings.paddingInPixels)
-
-            when (anchorCorner) {
-                0, 1, 6 -> for (i in textArray.indices) renderElement(x, y + (heightInPixels * i), anchorCorner, textArray[i]) // top left/right/center
-                4, 5, 8 -> for (i in textArray.indices) renderElement(x, y + (heightInPixels * (textArray.size - 1)) - (heightInPixels * i * 2), anchorCorner, textArray[i]) // center left/right/center
-                2, 3, 7 -> for (i in textArray.indices) renderElement(x, y + (heightInPixels * i), anchorCorner, textArray[textArray.indices.last - i]) // bottom left/right/center
+            val padding = padding(coreSettings)
+            val maxWidth = maxWidth(coreSettings)
+            val wrapped = ArrayList<String>(lines.size)
+            val sources = ArrayList<Int>(lines.size)
+            for (index in lines.indices) {
+                val parts = if (maxWidth > 0) font.listFormattedStringToWidth(lines[index], maxWidth) else null
+                if (parts.isNullOrEmpty()) {
+                    wrapped.add(lines[index])
+                    sources.add(index)
+                } else {
+                    for (part in parts) {
+                        wrapped.add(part)
+                        sources.add(index)
+                    }
+                }
             }
+
+            val widths = IntArray(wrapped.size) { font.getStringWidth(wrapped[it]) }
+            val contentWidth = widths.maxOrNull() ?: 0
+            val lineHeight = font.FONT_HEIGHT + padding
+            val contentHeight = lineHeight * wrapped.size - padding
+            val inset = padding * 2
+            val bounds = placeElement(coreSettings, contentWidth + inset * 2, contentHeight + inset * 2)
+
+            val opacity = backdropOpacity(coreSettings)
+            if (opacity > 0) Gui.drawRect(bounds.left, bounds.top, bounds.right, bounds.bottom, opacity shl 24)
+
+            val colour = textColour(coreSettings)
+            val shadows = textShadows(coreSettings)
+            val axis = ElementPlacement.horizontalAxis(coreSettings.anchorCorner)
+            val placed = ArrayList<PlacedLine>(wrapped.size)
+            for (i in wrapped.indices) {
+                // lines hug the anchored side of the element, like the element hugs that side of the screen
+                val x = when (axis) {
+                    ElementPlacement.Axis.START -> bounds.left + inset
+                    ElementPlacement.Axis.END -> bounds.right - inset - widths[i]
+                    ElementPlacement.Axis.CENTRE -> bounds.left + inset + (contentWidth - widths[i]) / 2
+                }
+                val y = bounds.top + inset + lineHeight * i
+                font.drawString(wrapped[i], x.toFloat(), y.toFloat(), colour, shadows)
+                placed.add(PlacedLine(wrapped[i], sources[i], widths[i], x, y))
+            }
+            return placed
         }
+
+        /**
+         * Positions an element of the given size by its anchor and offsets and records its bounds for the
+         * element editor. Elements with their own layout call this and draw inside the returned bounds.
+         */
+        fun placeElement(coreSettings: GUIElements.CoreSettings, width: Int, height: Int): ElementBounds {
+            val resolution = ScaledResolution(Minecraft.getMinecraft())
+            val left = ElementPlacement.position(ElementPlacement.horizontalAxis(coreSettings.anchorCorner), resolution.scaledWidth, width, coreSettings.x)
+            val top = ElementPlacement.position(ElementPlacement.verticalAxis(coreSettings.anchorCorner), resolution.scaledHeight, height, coreSettings.y)
+            val bounds = ElementBounds(left, top, left + width, top + height)
+            placedBounds[coreSettings] = bounds
+            return bounds
+        }
+
+        /** Opaque ARGB text colour for lines without their own colour code. */
+        fun textColour(coreSettings: GUIElements.CoreSettings): Int {
+            val overrides = coreSettings.elementOverrides
+            val colour = if (overrides.overrideTextColour) overrides.textColour else ConfigUtils.globalGuiSettings.textColour
+            return ChromaColour.specialToChromaRGB(colour) or OPAQUE
+        }
+
+        fun textShadows(coreSettings: GUIElements.CoreSettings): Boolean {
+            val overrides = coreSettings.elementOverrides
+            return if (overrides.overrideTextShadows) overrides.textShadows else ConfigUtils.globalGuiSettings.textShadows
+        }
+
+        /** Backdrop alpha from 0 (none) to 255. */
+        fun backdropOpacity(coreSettings: GUIElements.CoreSettings): Int {
+            val overrides = coreSettings.elementOverrides
+            val opacity = if (overrides.overrideBackdropOpacity) overrides.backdropOpacity else ConfigUtils.globalGuiSettings.backdropOpacity
+            return opacity.coerceIn(0, 255)
+        }
+
+        fun padding(coreSettings: GUIElements.CoreSettings): Int {
+            val overrides = coreSettings.elementOverrides
+            val padding = if (overrides.overridePadding) overrides.padding else ConfigUtils.globalGuiSettings.paddingInPixels
+            return padding.coerceAtLeast(0)
+        }
+
+        /** Maximum line width in pixels before wrapping, or 0 for no limit. */
+        fun maxWidth(coreSettings: GUIElements.CoreSettings): Int {
+            val overrides = coreSettings.elementOverrides
+            val maxWidth = if (overrides.overrideMaxWidth) overrides.maxWidth else ConfigUtils.globalGuiSettings.maxElementWidth
+            return maxWidth.coerceAtLeast(0)
+        }
+
+        private const val OPAQUE = 0xFF000000.toInt()
     }
 }

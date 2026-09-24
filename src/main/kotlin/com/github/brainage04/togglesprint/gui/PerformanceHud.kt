@@ -1,6 +1,5 @@
 package com.github.brainage04.togglesprint.gui
 
-import com.github.brainage04.togglesprint.gui.core.RenderGuiData
 import com.github.brainage04.togglesprint.utils.ConfigUtils
 import com.github.brainage04.togglesprint.utils.PerformanceTiming
 import net.minecraft.client.Minecraft
@@ -31,36 +30,27 @@ object PerformanceHud {
         }
     }
 
-    /** Renders the configured performance measurements. */
-    fun performanceHud() {
+    /** The configured performance measurements. */
+    fun lines(): List<String> {
         val performance = ConfigUtils.brainageHudParity.performance
-        if (!performance.coreSettings.isEnabled) return
-
-        val minecraft = Minecraft.getMinecraft() ?: return
-        if (minecraft.theWorld == null || minecraft.thePlayer == null) return
+        val minecraft = Minecraft.getMinecraft() ?: return emptyList()
+        if (minecraft.theWorld == null || minecraft.thePlayer == null) return emptyList()
 
         update()
         sampleText(minecraft)
 
         val lines = ArrayList<String>(4)
-        if (performance.showFps) lines.add("${ConfigUtils.primaryChars}FPS: $cachedFps")
-        if (performance.showRamUsage) lines.add("${ConfigUtils.primaryChars}RAM: $cachedRamUsedMiB / $cachedRamMaxMiB MiB")
+        if (performance.showFps) lines.add("FPS: $cachedFps")
+        if (performance.showRamUsage) lines.add("RAM: $cachedRamUsedMiB / $cachedRamMaxMiB MiB")
         if (performance.showCpuUsage) {
             val cpu = cachedCpuPercent
-            lines.add(if (cpu == null) "${ConfigUtils.primaryChars}CPU: --" else "${ConfigUtils.primaryChars}CPU: ${formatOneDecimal(cpu)}%")
+            lines.add(if (cpu == null) "CPU: --" else "CPU: ${formatOneDecimal(cpu)}%")
         }
         if (performance.showGpuUsage) {
             val frameTime = cachedGpuFrameMillis
-            lines.add(if (frameTime == null) "${ConfigUtils.primaryChars}GPU: --" else "${ConfigUtils.primaryChars}GPU: ${formatOneDecimal(frameTime)} ms")
+            lines.add(if (frameTime == null) "GPU: --" else "GPU: ${formatOneDecimal(frameTime)} ms")
         }
-        if (lines.isEmpty()) return
-
-        RenderGuiData.renderElement(
-            performance.coreSettings.x,
-            performance.coreSettings.y,
-            performance.coreSettings.anchorCorner,
-            lines,
-        )
+        return lines
     }
 
     /** Releases GPU query objects while the render context is still current. */

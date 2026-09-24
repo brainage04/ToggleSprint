@@ -6,8 +6,10 @@ import io.github.moulberry.moulconfig.annotations.ConfigEditorBoolean;
 import io.github.moulberry.moulconfig.annotations.ConfigEditorDropdown;
 import io.github.moulberry.moulconfig.annotations.ConfigEditorSlider;
 import io.github.moulberry.moulconfig.annotations.ConfigOption;
+import io.github.moulberry.moulconfig.annotations.ConfigEditorColour;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class BrainageHudParity {
@@ -37,15 +39,59 @@ public class BrainageHudParity {
     public float fullbright = 0.0F;
 
     @Expose
-    @ConfigOption(name = "Waypoint HUD", desc = "Shows locally saved waypoints in the current dimension.")
+    @ConfigOption(name = "Waypoints", desc = "Draws your waypoints in the world. Manage them with the Manage Waypoints key or /waypoints.")
     @Accordion
     public Waypoints waypoints = new Waypoints();
+
+    @Expose
+    @ConfigOption(name = "Enchant Info HUD", desc = "Shows the held item's enchantments and the enchantments it could still get.")
+    @Accordion
+    public EnchantInfoHud enchantInfoHud = new EnchantInfoHud();
+
+    @Expose
+    @ConfigOption(name = "Enchant Info", desc = "Tooltip highlighting and the enchantment blacklist used by the Enchant Info HUD and /getenchants.")
+    @Accordion
+    public EnchantInfo enchantInfo = new EnchantInfo();
 
     public static class Fishing {
         @Expose
         @ConfigOption(name = "Core Settings", desc = "")
         @Accordion
         public GUIElements.CoreSettings coreSettings = new GUIElements.CoreSettings(false, 0, 60, 8);
+    }
+
+    public static class EnchantInfoHud {
+        @Expose
+        @ConfigOption(name = "Core Settings", desc = "")
+        @Accordion
+        public GUIElements.CoreSettings coreSettings = new GUIElements.CoreSettings(true, 10, 20, 2);
+
+        @Expose @ConfigOption(name = "Show Item Name", desc = "") @ConfigEditorBoolean
+        public boolean showItemName = true;
+        @Expose @ConfigOption(name = "Show Enchantments", desc = "Lists the enchantments already on the item.") @ConfigEditorBoolean
+        public boolean showEnchantments = true;
+        @Expose @ConfigOption(name = "Show Max Levels", desc = "Shows the maximum level after enchantments below it.") @ConfigEditorBoolean
+        public boolean showMaxLevels = true;
+        @Expose @ConfigOption(name = "Show Missing Enchantments", desc = "Lists the enchantments the item could still get.") @ConfigEditorBoolean
+        public boolean showMissingEnchantments = true;
+        @Expose @ConfigOption(name = "Show Missing Header", desc = "Shows a \"Missing:\" line above the missing enchantments.") @ConfigEditorBoolean
+        public boolean showMissingHeader = true;
+    }
+
+    public static class EnchantInfo {
+        @Expose @ConfigOption(name = "Highlight Max Level Enchants", desc = "Makes enchantments at their maximum level bold in item tooltips.") @ConfigEditorBoolean
+        public boolean highlightMaxLevelEnchants = true;
+
+        /** Enchantment IDs (e.g. {@code minecraft:smite}) never listed as missing; edited with /blacklistedenchants. */
+        @Expose
+        public List<String> blacklistedEnchantmentIds = new ArrayList<>(Arrays.asList(
+                "minecraft:blast_protection",
+                "minecraft:projectile_protection",
+                "minecraft:fire_protection",
+                "minecraft:thorns",
+                "minecraft:bane_of_arthropods",
+                "minecraft:smite",
+                "minecraft:knockback"));
     }
 
     public static class Performance {
@@ -99,33 +145,34 @@ public class BrainageHudParity {
     }
 
     public static class Waypoints {
-        @Expose
-        @ConfigOption(name = "Core Settings", desc = "")
-        @Accordion
-        public GUIElements.CoreSettings coreSettings = new GUIElements.CoreSettings(false, 5, 140, 0);
+        @Expose @ConfigOption(name = "Show In World", desc = "Draws the current dimension's visible waypoints in the world.") @ConfigEditorBoolean
+        public boolean showInWorld = true;
+        @Expose @ConfigOption(name = "Show World Centre", desc = "A built-in waypoint at 0, 64, 0 in every dimension.") @ConfigEditorBoolean
+        public boolean showWorldCentre = true;
+        @Expose @ConfigOption(name = "World Centre Colour", desc = "") @ConfigEditorColour
+        public String worldCentreColour = "0:255:255:255:255";
+        @Expose @ConfigOption(name = "Show Beams", desc = "A beam through the whole height of the world, visible from far away.") @ConfigEditorBoolean
+        public boolean showBeams = true;
+        @Expose @ConfigOption(name = "Show Markers", desc = "A floating, spinning gem above the waypoint, with a pulse on the ground below it when near.") @ConfigEditorBoolean
+        public boolean showMarkers = true;
+        @Expose @ConfigOption(name = "Show Labels", desc = "The name and distance above the waypoint, readable through walls.") @ConfigEditorBoolean
+        public boolean showLabels = true;
+        @Expose @ConfigOption(name = "Always Show Names", desc = "Shows every waypoint's name. Otherwise only the waypoint you look towards and waypoints nearby show their names; the rest show just their distance.") @ConfigEditorBoolean
+        public boolean alwaysShowNames = false;
+        @Expose @ConfigOption(name = "Label Scale", desc = "In percent.") @ConfigEditorSlider(minValue = 50, maxValue = 200, minStep = 1)
+        public int labelScalePercent = 100;
 
-        @Expose @ConfigOption(name = "Maximum Entries", desc = "") @ConfigEditorSlider(minValue = 1, maxValue = 20, minStep = 1)
-        public int maximumEntries = 5;
+        /** The old waypoint list, which had no world. Moved into the first world joined, then emptied. */
         @Expose
         public List<Waypoint> entries = new ArrayList<>();
     }
 
+    /** A waypoint of the old list; see {@link Waypoints#entries}. */
     public static class Waypoint {
         @Expose public String name = "Waypoint";
         @Expose public double x;
         @Expose public double y;
         @Expose public double z;
         @Expose public int dimension;
-
-        public Waypoint() {
-        }
-
-        public Waypoint(String name, double x, double y, double z, int dimension) {
-            this.name = name;
-            this.x = x;
-            this.y = y;
-            this.z = z;
-            this.dimension = dimension;
-        }
     }
 }
