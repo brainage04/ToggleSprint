@@ -71,7 +71,10 @@ dependencies {
     shadowModImpl(libs.moulconfig)
     devenvMod(variantOf(libs.moulconfig) { classifier("test") })
 
-    shadowImpl("org.jetbrains.kotlin:kotlin-reflect:2.3.10")
+    // bundled and relocated (see shadowJar) so it cannot clash with other mods' Kotlin
+    shadowImpl("org.jetbrains.kotlin:kotlin-stdlib:2.3.10") {
+        exclude(group = "org.jetbrains", module = "annotations")
+    }
     testImplementation(kotlin("test-junit5"))
 }
 
@@ -153,6 +156,7 @@ tasks.shadowJar {
 
     // If you want to include other dependencies and shadow them, you can relocate them in here
     relocate("io.github.moulberry.moulconfig", "$baseGroup.deps.moulconfig")
+    relocate("kotlin", "$baseGroup.deps.kotlin")
 }
 
 tasks.jar {
