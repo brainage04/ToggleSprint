@@ -104,7 +104,7 @@ public class BrainageHudParity {
         @Expose @ConfigOption(name = "Show Durations", desc = "Also show how long each effect has left.") @ConfigEditorBoolean
         public boolean showDurations = true;
 
-        @Expose @ConfigOption(name = "Show Icons", desc = "Draw each effect's icon next to its line.") @ConfigEditorBoolean
+        @Expose @ConfigOption(name = "Show Icons", desc = "Draw each effect's icon, with its name and duration on two lines beside it.") @ConfigEditorBoolean
         public boolean showIcons = true;
     }
 
