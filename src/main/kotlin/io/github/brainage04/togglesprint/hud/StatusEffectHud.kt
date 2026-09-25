@@ -139,7 +139,7 @@ object StatusEffectHud {
 
     /** The inventory's status icon cells, drawn at full size: two text lines tall. */
     private const val ICON_SIZE = 18
-    private const val ICON_GAP = 2
+    private const val ICON_GAP = 4
     private const val LINE_HEIGHT = 9
 
     /**
