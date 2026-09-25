@@ -11,6 +11,7 @@ import io.github.brainage04.togglesprint.hud.PlayerMotionTracker
 import io.github.brainage04.togglesprint.hud.PlayerPositionTracker
 import io.github.brainage04.togglesprint.hud.ReachHud
 import io.github.brainage04.togglesprint.hud.RealTimeTracker
+import io.github.brainage04.togglesprint.hud.StatusEffectHud
 import io.github.brainage04.togglesprint.hud.ToggleSprintTracker
 import io.github.brainage04.togglesprint.hud.inventory_trackers.EquipmentTracker
 import io.github.brainage04.togglesprint.hud.inventory_trackers.FoodTracker
@@ -81,6 +82,9 @@ class RenderGuiData {
                 override fun render(coreSettings: GUIElements.CoreSettings, editing: Boolean) = KeystrokesHud.render(coreSettings)
             },
             HudElement("Enchant Info HUD", { ConfigUtils.brainageHudParity.enchantInfoHud.coreSettings }) { EnchantInfoHud.lines() },
+            object : HudElement("Status Effect HUD", { ConfigUtils.brainageHudParity.statusEffectHud.coreSettings }) {
+                override fun render(coreSettings: GUIElements.CoreSettings, editing: Boolean) = StatusEffectHud.render(coreSettings)
+            },
         )
 
         private val placedBounds = IdentityHashMap<GUIElements.CoreSettings, ElementBounds>()

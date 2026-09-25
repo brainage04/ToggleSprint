@@ -53,6 +53,11 @@ public class BrainageHudParity {
     @Accordion
     public EnchantInfo enchantInfo = new EnchantInfo();
 
+    @Expose
+    @ConfigOption(name = "Status Effect HUD", desc = "Shows your active status effects.")
+    @Accordion
+    public StatusEffectHud statusEffectHud = new StatusEffectHud();
+
     public static class Fishing {
         @Expose
         @ConfigOption(name = "Core Settings", desc = "")
@@ -64,7 +69,7 @@ public class BrainageHudParity {
         @Expose
         @ConfigOption(name = "Core Settings", desc = "")
         @Accordion
-        public GUIElements.CoreSettings coreSettings = new GUIElements.CoreSettings(true, 5, 0, 4);
+        public GUIElements.CoreSettings coreSettings = new GUIElements.CoreSettings(true, 150, 5, 0);
 
         @Expose @ConfigOption(name = "Show Item Name", desc = "") @ConfigEditorBoolean
         public boolean showItemName = true;
@@ -88,6 +93,19 @@ public class BrainageHudParity {
         @ConfigEditorText
         public String blacklistedEnchantmentIds = "minecraft:blast_protection, minecraft:projectile_protection, minecraft:fire_protection, "
                 + "minecraft:thorns, minecraft:bane_of_arthropods, minecraft:smite, minecraft:knockback";
+    }
+
+    public static class StatusEffectHud {
+        @Expose
+        @ConfigOption(name = "Core Settings", desc = "")
+        @Accordion
+        public GUIElements.CoreSettings coreSettings = new GUIElements.CoreSettings(true, 5, 0, 4);
+
+        @Expose @ConfigOption(name = "Show Durations", desc = "Also show how long each effect has left.") @ConfigEditorBoolean
+        public boolean showDurations = true;
+
+        @Expose @ConfigOption(name = "Show Icons", desc = "Draw each effect's icon next to its line.") @ConfigEditorBoolean
+        public boolean showIcons = true;
     }
 
     public static class Performance {

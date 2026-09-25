@@ -13,7 +13,7 @@ object EquipmentTracker {
     fun render(coreSettings: GUIElements.CoreSettings) {
         val thePlayer = Minecraft.getMinecraft().thePlayer ?: return
 
-        val textArray = arrayListOf("${ChatUtils.boldChar}Equipment:")
+        val textArray = arrayListOf<String>()
         val iconStacks = arrayListOf<ItemStack?>()
 
         val equipmentList = arrayListOf(
@@ -62,8 +62,6 @@ object EquipmentTracker {
             iconStacks.add(if (ConfigUtils.inventoryTrackers.equipmentTracker.prefixFormat == 0) equipmentList[i] else null)
         }
 
-        if (textArray.size < 2) textArray[0] += "${ChatUtils.redChar} N/A"
-
         val placedLines = RenderGuiData.drawElement(coreSettings, textArray)
         renderIcons(iconStacks, placedLines)
     }
@@ -78,8 +76,7 @@ object EquipmentTracker {
             // a wrapped line continues its item; only its first part carries the icon
             if (line.sourceIndex == previousSource) continue
             previousSource = line.sourceIndex
-            // line 0 is the header
-            val stack = iconStacks.getOrNull(line.sourceIndex - 1) ?: continue
+            val stack = iconStacks.getOrNull(line.sourceIndex) ?: continue
             val iconY = line.y + (font.FONT_HEIGHT - ICON_SIZE) / 2
             GlStateManager.pushMatrix()
             GlStateManager.enableDepth()

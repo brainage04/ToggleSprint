@@ -14,7 +14,7 @@ object PerformanceHud {
     private const val SAMPLE_INTERVAL_NANOS = 250_000_000L
     private const val BYTES_PER_MEGABYTE = 1_048_576L
 
-    private var lastTextSampleNanos = Long.MIN_VALUE
+    private var lastTextSampleNanos: Long? = null
     private var cachedFps = 0
     private var cachedRamLine = ""
     private var cachedCpuPercent = 0L
@@ -56,7 +56,7 @@ object PerformanceHud {
     /** Releases GPU query objects while the render context is still current. */
     fun cleanup() {
         PerformanceTiming.cleanupGpuQueries()
-        lastTextSampleNanos = Long.MIN_VALUE
+        lastTextSampleNanos = null
         cachedGpuFrameMillis = null
         cachedGpuPercent = null
     }
@@ -68,7 +68,8 @@ object PerformanceHud {
 
     private fun sampleText() {
         val now = System.nanoTime()
-        if (now - lastTextSampleNanos < SAMPLE_INTERVAL_NANOS) return
+        val last = lastTextSampleNanos
+        if (last != null && now - last < SAMPLE_INTERVAL_NANOS) return
         lastTextSampleNanos = now
 
         cachedFps = Minecraft.getDebugFPS()
