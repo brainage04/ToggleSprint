@@ -18,7 +18,7 @@ Toggle Sprint is a client-side Forge mod for Minecraft 1.8.9 that adds toggle sp
 - **Keystrokes HUD**: WASD, Space and the mouse buttons as they are pressed, and your clicks per second.
 - **Enchant Info HUD**: the held item's enchantments and the enchantments it could still get (see [Enchant Info](#enchant-info)).
 - **Status Effect HUD**: your active status effects with their icons, levels and how long each has left.
-- **Fishing HUD**: while your bobber is out, whether it is in open water, which decides whether treasure can be caught.
+- **Fishing HUD**: while your bobber is out, the chance of catching a fish, treasure or junk with the rod you hold.
 
 Motion, Entity and Fishing are off by default; turn them on in the config editor. Every element can be configured to show as little or as much as you like.
 

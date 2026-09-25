@@ -70,7 +70,9 @@ object StatusEffectHud {
         val contentWidth = entries.maxOf { it.width }
         val contentHeight = entries.sumOf { it.height } + padding * (entries.size - 1)
         val inset = padding * 2
-        val bounds = RenderGuiData.placeElement(coreSettings, contentWidth + inset * 2, contentHeight + inset * 2)
+        // the raised icon needs a row above the first entry; with no padding the element grows to cover it
+        val topExtra = (ICON_RAISE - inset).coerceAtLeast(0)
+        val bounds = RenderGuiData.placeElement(coreSettings, contentWidth + inset * 2, contentHeight + inset * 2 + topExtra)
 
         val opacity = RenderGuiData.backdropOpacity(coreSettings)
         if (opacity > 0) Gui.drawRect(bounds.left, bounds.top, bounds.right, bounds.bottom, opacity shl 24)
@@ -78,7 +80,7 @@ object StatusEffectHud {
         val colour = RenderGuiData.textColour(coreSettings)
         val shadows = RenderGuiData.textShadows(coreSettings)
         val axis = ElementPlacement.horizontalAxis(coreSettings.anchorCorner)
-        var y = bounds.top + inset
+        var y = bounds.top + inset + topExtra
         for (entry in entries) {
             // entries hug the anchored side of the element; within one, the text sits beside the icon
             val x = when (axis) {
@@ -91,7 +93,8 @@ object StatusEffectHud {
                 GlStateManager.color(1f, 1f, 1f, 1f)
                 GlStateManager.enableBlend()
                 minecraft.textureManager.bindTexture(INVENTORY_TEXTURE)
-                minecraft.ingameGUI.drawTexturedModalRect(x, y, index % 8 * ICON_SIZE, 198 + index / 8 * ICON_SIZE, ICON_SIZE, ICON_SIZE)
+                val iconY = y - ICON_RAISE
+                minecraft.ingameGUI.drawTexturedModalRect(x, iconY, index % 8 * ICON_SIZE, 198 + index / 8 * ICON_SIZE, ICON_SIZE, ICON_SIZE)
             }
             val textX = x + ICON_SIZE + ICON_GAP
             val textY = if (entry.lines.size == 1) y + SINGLE_LINE_OFFSET else y
@@ -140,8 +143,14 @@ object StatusEffectHud {
     private const val LINE_HEIGHT = 9
 
     /**
-     * A lone line's offset below the icon's top that centres it on the icon: capitals fill glyph rows 0-6
-     * and their shadow row 7, so rows 5-12 share the icon's 0-17 centre.
+     * How far the icon sits above its entry: most icons' art sits low in its 18px cell, so raising the cell
+     * one row centres the art on the entry's 18 text rows.
+     */
+    private const val ICON_RAISE = 1
+
+    /**
+     * A lone line's offset below the entry's top that centres it on the entry: capitals fill glyph rows 0-6
+     * and their shadow row 7, so rows 5-12 share the entry's 0-17 centre.
      */
     private const val SINGLE_LINE_OFFSET = 5
 }

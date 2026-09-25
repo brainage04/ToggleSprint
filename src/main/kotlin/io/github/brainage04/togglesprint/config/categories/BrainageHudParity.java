@@ -14,7 +14,7 @@ import java.util.List;
 
 public class BrainageHudParity {
     @Expose
-    @ConfigOption(name = "Fishing HUD", desc = "Shows whether the active cast can catch treasure.")
+    @ConfigOption(name = "Fishing HUD", desc = "Shows the active cast's fish, treasure and junk chances.")
     @Accordion
     public Fishing fishing = new Fishing();
 
