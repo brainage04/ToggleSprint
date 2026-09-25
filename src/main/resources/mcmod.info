@@ -2,11 +2,11 @@
   {
     "modid": "${modid}",
     "name": "Toggle Sprint",
-    "description": "A simple toggle sprint/sneak mod that is allowed on Hypixel. Made with MoulConfig.",
+    "description": "A Forge mod that adds toggle sprint/sneak and useful HUD elements to Minecraft.",
     "version": "${version}",
     "mcversion": "${mcversion}",
-    "url": "https://github.com/brainage/ToggleSprint/",
-    "updateUrl": "https://github.com/brainage/ToggleSprint/latest/releases",
+    "url": "https://github.com/brainage04/ToggleSprint",
+    "updateUrl": "https://github.com/brainage04/ToggleSprint/releases/latest",
     "authorList": [
       "brainage04"
     ],
