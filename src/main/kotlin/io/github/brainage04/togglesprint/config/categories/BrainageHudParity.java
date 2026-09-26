@@ -62,7 +62,7 @@ public class BrainageHudParity {
         @Expose
         @ConfigOption(name = "Core Settings", desc = "")
         @Accordion
-        public GUIElements.CoreSettings coreSettings = new GUIElements.CoreSettings(false, 0, -120, 8);
+        public GUIElements.CoreSettings coreSettings = new GUIElements.CoreSettings(true, 0, -120, 8);
     }
 
     public static class EnchantInfoHud {

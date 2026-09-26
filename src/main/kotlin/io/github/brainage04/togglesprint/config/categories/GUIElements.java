@@ -121,7 +121,7 @@ public class GUIElements {
         @Expose
         @ConfigOption(name = "Core Settings", desc = "")
         @Accordion
-        public CoreSettings coreSettings = new CoreSettings(false, 5, 140, 0);
+        public CoreSettings coreSettings = new CoreSettings(false, 5, 200, 1);
 
         @Expose
         @ConfigOption(name = "Decimal Places", desc = "The number of decimal places displayed.")
