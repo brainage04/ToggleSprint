@@ -24,20 +24,17 @@ class InventoryStatsKeybind : KeyBinding("Inventory Stats", Keyboard.KEY_NONE, T
     }
 
     private fun printInventoryStats(player: EntityPlayerSP) {
-        // the hotbar from left to right, then the three inventory rows
-        val slots = player.inventory.mainInventory
-        if (slots.all { it == null }) {
-            ChatFeedback.warning("Your inventory is empty.")
-            return
-        }
-
-        ChatFeedback.info("Inventory stats:")
-        for ((slot, stack) in slots.withIndex()) {
-            if (stack == null) continue
+        val inventory = player.inventory
+        var foundItem = false
+        for (slot in 0 until inventory.sizeInventory) {
+            val stack = inventory.getStackInSlot(slot) ?: continue
+            if (!foundItem) ChatFeedback.info("Inventory stats:")
+            foundItem = true
             var line = "Slot $slot: ${stack.stackSize} × ${Item.itemRegistry.getNameForObject(stack.item)}"
             if (stack.itemDamage != 0) line += " {Damage:${stack.itemDamage}}"
             stack.tagCompound?.let { line += " $it" }
             ChatFeedback.detail(line)
         }
+        if (!foundItem) ChatFeedback.warning("Your inventory is empty.")
     }
 }

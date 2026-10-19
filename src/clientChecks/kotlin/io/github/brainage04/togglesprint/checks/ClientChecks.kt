@@ -69,6 +69,7 @@ class ClientChecks {
                     inputChecks()
                     commandChecks()
                     enchantCommandChecks()
+                    for (name in ClientRegressions.inWorld()) pass(name)
                     firstWorldLight = minecraft.theWorld.provider.lightBrightnessTable
                     originalLight = firstWorldLight.clone()
                     command("/fullbright 1")
@@ -107,6 +108,7 @@ class ClientChecks {
                 }
                 5 -> if (stageTicks > 10) {
                     check(firstWorldLight.all { it == 1.0f })
+                    ClientRegressions.prepareReachCache()
                     minecraft.loadWorld(null)
                     check(firstWorldLight.contentEquals(originalLight)) { "World unload left the light override applied" }
                     pass("World unload restores the old dimension light table")
@@ -122,6 +124,8 @@ class ClientChecks {
                 7 -> if (minecraft.thePlayer != null && stageTicks > 40) {
                     check(WaypointStore.find(WaypointStore.current().orEmpty(), "First World") == null)
                     pass("Joining another world does not expose the first world's waypoints")
+                    ClientRegressions.reachAfterWorldChange()
+                    pass("Reach click mode drops its cached target when changing worlds")
                     finish(null)
                 }
             }
@@ -149,11 +153,9 @@ class ClientChecks {
         press(ToggleSprintMain.toggleSprintKeybind)
         check(!ToggleSprintTracker.isSprintToggled)
         ToggleSprintMain.config.toggleMovementKeys.toggleSprint.isEnabled = true
-        // Consume any queued press while the key is enabled before continuing.
         MinecraftForge.EVENT_BUS.post(InputEvent.KeyInputEvent())
-        ToggleSprintTracker.isSprintToggled = false
-        KeyBinding.setKeyBindState(minecraft.gameSettings.keyBindSprint.keyCode, false)
-        pass("Disabling the toggle key prevents a press from changing movement")
+        check(!ToggleSprintTracker.isSprintToggled && !minecraft.gameSettings.keyBindSprint.isKeyDown)
+        pass("Disabled toggle presses do not replay after re-enabling the key")
     }
 
     private fun commandChecks() {

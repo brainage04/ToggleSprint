@@ -128,3 +128,14 @@ Added three unit tests for waypoint name boundaries, forbidden characters/Unicod
 No gamerules or server installation are involved. There is one supported loader, Forge 1.8.9; Fabric and NeoForge parity is not applicable.
 
 Remaining coverage limits: no pixel-perfect assertions for each HUD or waypoint effect, no GPU-vendor matrix, no real remote-server packet jitter/disconnect test, and no full mouse-driven walkthrough of every MoulConfig or waypoint form. Inventory Stats and input edge cases are reviewed separately with regression scenarios when bugs are found. These limits are not represented as passing tests.
+
+## Code-review regressions
+
+- Disabled toggle keys left queued presses unread, which could replay after re-enabling the key. Input handling now consumes the press before checking the enable flag; the client scenario re-enables the key and posts another input event.
+- Toggling off a sprint/sneak binding assigned to a mouse button used a keyboard-only lookup with a negative key code. It now uses vanilla's keyboard/mouse-aware lookup; a scenario remaps both movement bindings to mouse buttons and releases them.
+- Inventory Stats ignored armour and could call an armour-only inventory empty. It now visits all player inventory slots; the regression equips boots with an empty main inventory and checks the resulting chat.
+- Config loading did not close its reader. Loading now uses a scoped reader; a Linux client scenario inspects the actual config file descriptors after a load.
+- Autosave and the JVM shutdown hook could write the same temporary config file concurrently. Saving is synchronized; four test workers exercise concurrent saves and parse the final file.
+- Reach HUD's attack-click cache survived world changes. The HUD now clears its state on client-world unload; a scenario seeds an old target, changes worlds and checks that it is not reused.
+
+Review judgement calls left unchanged: the main config fails explicitly when unreadable, whereas waypoints back up unreadable JSON; choosing a common recovery policy needs an owner decision. Waypoint write failures are logged while edits remain in memory; rolling edits back or retaining them for a later save is also a policy choice. The UI and feedback are English literals rather than a localisation system.

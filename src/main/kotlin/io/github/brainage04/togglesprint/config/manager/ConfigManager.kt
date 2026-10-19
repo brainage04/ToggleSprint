@@ -19,13 +19,10 @@ import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiScreen
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.fml.common.gameevent.TickEvent
-import java.io.BufferedReader
 import java.io.BufferedWriter
 import java.io.File
-import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.io.IOException
-import java.io.InputStreamReader
 import java.io.OutputStreamWriter
 import java.nio.charset.StandardCharsets
 import java.nio.file.Files
@@ -101,16 +98,9 @@ class ConfigManager {
 
     private fun tryReadConfig() {
         try {
-            val inputStreamReader = InputStreamReader(FileInputStream(configFile), StandardCharsets.UTF_8)
-            val bufferedReader = BufferedReader(inputStreamReader)
-
-            val builder = StringBuilder()
-            for (line in bufferedReader.lines()) {
-                builder.append(line)
-                builder.append("\n")
+            val jsonObject = Files.newBufferedReader(configFile.toPath(), StandardCharsets.UTF_8).use { reader ->
+                gson.fromJson(reader, JsonObject::class.java)
             }
-
-            val jsonObject = gson.fromJson(builder.toString(), JsonObject::class.java)
             val newJsonObject = ConfigUpdaterMigrator.fixConfig(jsonObject)
             config = gson.fromJson(newJsonObject, ToggleSprintConfig::class.java)
 
@@ -120,6 +110,7 @@ class ConfigManager {
         }
     }
 
+    @Synchronized
     fun save() {
         lastSaveTime = System.currentTimeMillis()
         val config = config ?: error("Can not save null config.")
@@ -131,7 +122,7 @@ class ConfigManager {
             BufferedWriter(OutputStreamWriter(FileOutputStream(unit), StandardCharsets.UTF_8)).use { writer ->
                 writer.write(gson.toJson(config))
             }
-            // Perform move — which is atomic, unlike writing — after writing is done.
+            // Move atomically after writing is done.
             Files.move(
                 unit.toPath(),
                 configFile.toPath(),

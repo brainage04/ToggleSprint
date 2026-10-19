@@ -13,6 +13,7 @@ import io.github.brainage04.togglesprint.event.FullbrightHandler
 import io.github.brainage04.togglesprint.event.NetworkPacketMonitor
 import io.github.brainage04.togglesprint.event.EnchantTooltipHandler
 import io.github.brainage04.togglesprint.hud.PerformanceHud
+import io.github.brainage04.togglesprint.hud.ReachHud
 import io.github.brainage04.togglesprint.hud.NetworkTracker
 import io.github.brainage04.togglesprint.hud.core.RenderGuiData
 import io.github.brainage04.togglesprint.keys.ConfigKeybind
@@ -88,6 +89,7 @@ class ToggleSprintMain {
             FullbrightHandler(),
             EnchantTooltipHandler(),
             PerformanceHud,
+            ReachHud,
             WaypointRenderer,
             WaypointsCommand,
             WaypointStore,

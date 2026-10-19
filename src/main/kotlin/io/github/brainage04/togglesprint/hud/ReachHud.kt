@@ -4,11 +4,21 @@ import io.github.brainage04.togglesprint.util.ConfigUtils
 import io.github.brainage04.togglesprint.util.MathUtils.roundDecimalPlaces
 import net.minecraft.client.Minecraft
 import net.minecraft.util.MovingObjectPosition
+import net.minecraftforge.event.world.WorldEvent
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 
 object ReachHud {
     private var cachedLines = arrayListOf<String>()
     private var attackWasDown = false
     private var wasClickMode = false
+
+    @SubscribeEvent
+    fun onWorldUnload(event: WorldEvent.Unload) {
+        if (!event.world.isRemote) return
+        cachedLines.clear()
+        attackWasDown = false
+        wasClickMode = false
+    }
 
     fun lines(): List<String> {
         val config = ConfigUtils.brainageHudParity.reach
