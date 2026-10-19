@@ -85,6 +85,7 @@ No known incompatibilities.
 ## Documentation
 
 - [Development](docs/DEVELOPMENT.md) - building and real-client checks.
+- [Test review](docs/TESTS.md) - pruning rubric and classifications.
 - [Icon](docs/icon/README.md) - icon sources and provenance.
 - Sister mod for modern Minecraft (Fabric and NeoForge): [BrainageHUD](https://github.com/brainage04/BrainageHUD).
 - Source and issues: [github.com/brainage04/ToggleSprint](https://github.com/brainage04/ToggleSprint).
