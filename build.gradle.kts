@@ -1,3 +1,4 @@
+import java.time.Duration
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
@@ -85,7 +86,7 @@ loom {
         create("clientChecks") {
             client()
             runDir("build/client-checks")
-            programArgs("--mods", (devenvMod.files + clientChecksJar.get().archiveFile.get().asFile).joinToString(",") { it.absolutePath })
+            programArgs("--mods", (devenvMod.files + clientChecksJar.get().archiveFile.get().asFile).joinToString(",") { it.relativeTo(file("build/client-checks")).path })
             vmArgs("-Xmx2G")
         }
     }
@@ -101,6 +102,7 @@ tasks.withType<net.fabricmc.loom.task.AbstractRunTask>().configureEach {
 
 tasks.named("runClientChecks") {
     dependsOn(clientChecksJar)
+    timeout.set(Duration.ofMinutes(5))
     val result = layout.buildDirectory.file("client-checks/result.txt")
     doFirst {
         result.get().asFile.delete()
