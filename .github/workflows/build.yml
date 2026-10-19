@@ -13,6 +13,10 @@ jobs:
           java-version: 21
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v6
+      - name: Install LWJGL display query tool
+        run: |
+          sudo apt-get update
+          sudo apt-get install --no-install-recommends -y x11-xserver-utils
       - name: Build and run Forge client checks
         run: ALSOFT_DRIVERS=null xvfb-run -a ./gradlew --no-daemon build runClientChecks -Pfabricmoddingconventions.devClientOptions=/nonexistent
       - uses: actions/upload-artifact@v7

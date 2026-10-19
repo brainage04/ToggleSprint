@@ -20,4 +20,6 @@ heavy --mem 7G -- env JAVA_TOOL_OPTIONS=-XX:MaxRAMPercentage=60.0 ALSOFT_DRIVERS
 
 Essential Loom's built-in Xvfb wrapper loses the classpath, so the build disables that wrapper for every run task. Use the outer `xvfb-run` command above for headless runs; no temporary Gradle init script is needed.
 
+Headless Linux runs need Xvfb and the `xrandr` command (`x11-xserver-utils` on Ubuntu). LWJGL 2 queries display modes through `xrandr`, even when the game is windowed.
+
 For an interactive development client, use `runClient`. Never copy a personal `options.txt` into an automated run.
