@@ -72,6 +72,7 @@ val clientChecks by sourceSets.creating {
     runtimeClasspath += sourceSets.main.get().output + configurations.runtimeClasspath.get()
 }
 val clientChecksJar by tasks.registering(Jar::class) {
+    archiveBaseName.set(modid)
     archiveClassifier.set("client-checks")
     destinationDirectory.set(layout.buildDirectory.dir("client-check-mod"))
     from(clientChecks.output)
