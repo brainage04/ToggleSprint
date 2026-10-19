@@ -12,7 +12,7 @@ Java 8 requires a decimal value for `MaxRAMPercentage`; the explicit option over
 
 ## Real client checks
 
-Minecraft 1.8.9 has no GameTest framework. `runClientChecks` instead loads a separate test-only Forge mod in a real client, creates a flat singleplayer world, and exits after assertions on config navigation, input, commands and HUD rendering. The test mod is not included in the distribution jar. Its world, config and muted options stay under `build/client-checks/`; results are written to `build/client-checks/result.txt`. A failed or missing result fails Gradle.
+Minecraft 1.8.9 has no GameTest framework. `runClientChecks` instead loads a separate test-only Forge mod in a real client, creates two flat singleplayer worlds, and exits after assertions on config navigation, input, commands, HUD rendering and world changes. The test mod is not included in the distribution jar. Its worlds, config and muted options stay under `build/client-checks/`; results are written to `build/client-checks/result.txt`. A failed or missing result fails Gradle; the client task times out after five minutes.
 
 ```sh
 heavy --mem 7G -- env JAVA_TOOL_OPTIONS=-XX:MaxRAMPercentage=60.0 ALSOFT_DRIVERS=null xvfb-run -a ./gradlew --no-daemon build runClientChecks -Pfabricmoddingconventions.devClientOptions=/nonexistent
