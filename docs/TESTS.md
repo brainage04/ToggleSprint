@@ -118,3 +118,13 @@ All six original `ClientChecks` scenarios are **keep**:
 - Config command opens and closes in-world: deferred opening and return to the game.
 
 The mod is client-only Forge 1.8.9, which predates Minecraft's GameTest framework. There are no Fabric, NeoForge or server GameTest suites to prune. See [DEVELOPMENT.md](DEVELOPMENT.md) for the real-client runner.
+
+## Coverage assessment and additions
+
+Before coverage work, gaps included disabled-key behavior, command persistence and actual enchantment registry output, live light-table restoration, HUD disable behavior, element-editor undo, waypoint validation and world isolation. These matter because they affect movement, saved settings and data, screen navigation and what the player sees.
+
+Added three unit tests for waypoint name boundaries, forbidden characters/Unicode and nearest chat colours. Extended the real-client suite to exercise disabled toggle input, command config persistence, all three enchant command families with chat assertions, applying/disabling fullbright and unloading its world, disabling a HUD element, persisted editor undo, and joining a second world without leaking the first world's waypoints. Each run resets only its own test config and saves under `build/client-checks`.
+
+No gamerules or server installation are involved. There is one supported loader, Forge 1.8.9; Fabric and NeoForge parity is not applicable.
+
+Remaining coverage limits: no pixel-perfect assertions for each HUD or waypoint effect, no GPU-vendor matrix, no real remote-server packet jitter/disconnect test, and no full mouse-driven walkthrough of every MoulConfig or waypoint form. Inventory Stats and input edge cases are reviewed separately with regression scenarios when bugs are found. These limits are not represented as passing tests.

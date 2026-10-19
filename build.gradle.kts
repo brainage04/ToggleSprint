@@ -104,6 +104,7 @@ tasks.named("runClientChecks") {
     val result = layout.buildDirectory.file("client-checks/result.txt")
     doFirst {
         result.get().asFile.delete()
+        delete("build/client-checks/config", "build/client-checks/saves")
         val options = layout.buildDirectory.file("client-checks/options.txt").get().asFile
         options.parentFile.mkdirs()
         options.writeText("soundCategory_master:0.0\npauseOnLostFocus:false\n")
