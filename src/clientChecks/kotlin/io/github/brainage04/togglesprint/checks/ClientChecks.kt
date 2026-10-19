@@ -109,11 +109,12 @@ class ClientChecks {
                 5 -> if (stageTicks > 10) {
                     check(firstWorldLight.all { it == 1.0f })
                     ClientRegressions.prepareReachCache()
-                    minecraft.theWorld.sendQuittingDisconnectingPacket()
+                    minecraft.netHandler.networkManager.disableAutoRead()
                     advance()
                 }
                 6 -> if (stageTicks > 2) {
-                    // Let already-scheduled chunk packets drain before detaching the old world.
+                    // Drain scheduled packets while the integrated server is still running.
+                    minecraft.theWorld.sendQuittingDisconnectingPacket()
                     minecraft.loadWorld(null)
                     check(firstWorldLight.contentEquals(originalLight)) { "World unload left the light override applied" }
                     pass("World unload restores the old dimension light table")
@@ -132,7 +133,7 @@ class ClientChecks {
                     pass("Joining another world does not expose the first world's waypoints")
                     ClientRegressions.reachAfterWorldChange()
                     pass("Reach click mode drops its cached target when changing worlds")
-                    minecraft.theWorld.sendQuittingDisconnectingPacket()
+                    minecraft.netHandler.networkManager.disableAutoRead()
                     advance()
                 }
                 9 -> if (stageTicks > 2) {
