@@ -15,7 +15,6 @@ plugins {
 val baseGroup: String by project
 val mcVersion: String by project
 val version: String by project
-val mixinGroup = "$baseGroup.mixin"
 val modid: String by project
 
 // Toolchains:
@@ -32,8 +31,6 @@ sourceSets.main {
 repositories {
     mavenCentral()
     mavenLocal()
-
-    maven("https://repo.spongepowered.org/maven/")
 
     maven("https://maven.notenoughupdates.org/releases")
 }
@@ -57,16 +54,6 @@ dependencies {
 
     implementation(kotlin("stdlib-jdk8"))
 
-    // If you don't want mixin, remove these lines
-    shadowImpl("org.spongepowered:mixin:0.7.11-SNAPSHOT") {
-        isTransitive = false
-    }
-    annotationProcessor("org.spongepowered:mixin:0.8.5-SNAPSHOT")
-    annotationProcessor("com.google.code.gson:gson:2.14.0")
-    annotationProcessor("com.google.guava:guava:33.6.0-jre")
-    annotationProcessor("org.ow2.asm:asm-tree:9.10.1")
-    annotationProcessor("org.ow2.asm:asm-commons:9.10.1")
-
 
     shadowModImpl(libs.moulconfig)
     devenvMod(variantOf(libs.moulconfig) { classifier("test") })
@@ -78,25 +65,51 @@ dependencies {
     testImplementation(kotlin("test-junit5"))
 }
 
+// This Forge version predates GameTest. A separate development-only mod checks a real client.
+val clientChecks by sourceSets.creating {
+    compileClasspath += sourceSets.main.get().output + configurations.compileClasspath.get()
+    runtimeClasspath += sourceSets.main.get().output + configurations.runtimeClasspath.get()
+}
+val clientChecksJar by tasks.registering(Jar::class) {
+    archiveClassifier.set("client-checks")
+    destinationDirectory.set(layout.buildDirectory.dir("client-check-mod"))
+    from(clientChecks.output)
+}
+
 // Minecraft configuration:
 loom {
     runs {
         named("client") {
-            property("mixin.debug", "true")
-            property("asmhelper.verbose", "true")
-            programArgs("--tweakClass", "org.spongepowered.asm.launch.MixinTweaker")
             programArgs("--mods", devenvMod.resolve().joinToString(",") { it.relativeTo(file("run")).path })
+        }
+        create("clientChecks") {
+            client()
+            runDir("build/client-checks")
+            programArgs("--mods", (devenvMod.files + clientChecksJar.get().archiveFile.get().asFile).joinToString(",") { it.absolutePath })
+            vmArgs("-Xmx2G")
         }
     }
     forge {
         pack200Provider.set(dev.architectury.pack200.java.Pack200Adapter())
-        // If you don't want mixin, remove this lines
-        mixinConfig("mixin.$modid.json")
     }
-    // If you don't want mixin, remove these lines
-    @Suppress("UnstableApiUsage")
-    mixin {
-        defaultRefmapName.set("mixin.$modid.refmap.json")
+}
+
+// Essential Loom's xvfb wrapper drops the Java classpath. Wrap Gradle with xvfb-run instead.
+tasks.withType<net.fabricmc.loom.task.AbstractRunTask>().configureEach {
+    useXvfb.set(false)
+}
+
+tasks.named("runClientChecks") {
+    dependsOn(clientChecksJar)
+    val result = layout.buildDirectory.file("client-checks/result.txt")
+    doFirst {
+        result.get().asFile.delete()
+        val options = layout.buildDirectory.file("client-checks/options.txt").get().asFile
+        options.parentFile.mkdirs()
+        options.writeText("soundCategory_master:0.0\npauseOnLostFocus:false\n")
+    }
+    doLast {
+        check(result.get().asFile.readText().startsWith("PASS")) { "Client checks failed: ${result.get().asFile.readText()}" }
     }
 }
 
@@ -118,23 +131,14 @@ tasks.test {
 tasks.withType(Jar::class) {
     archiveBaseName.set(modid)
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-    manifest.attributes.run {
-        this["FMLCorePluginContainsFMLMod"] = "true"
-        this["ForceLoadAsMod"] = "true"
-
-        // If you don't want mixin, remove these lines
-        this["TweakClass"] = "org.spongepowered.asm.launch.MixinTweaker"
-        this["MixinConfigs"] = "mixin.$modid.json"
-    }
 }
 
 tasks.processResources {
     inputs.property("version", project.version)
     inputs.property("mcversion", mcVersion)
     inputs.property("modid", modid)
-    inputs.property("mixinGroup", mixinGroup)
 
-    filesMatching(listOf("mcmod.info", "mixin.$modid.json")) {
+    filesMatching("mcmod.info") {
         expand(inputs.properties)
     }
 

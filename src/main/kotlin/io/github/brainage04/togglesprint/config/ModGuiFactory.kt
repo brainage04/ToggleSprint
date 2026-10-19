@@ -16,9 +16,9 @@ class ModGuiFactory : IModGuiFactory {
     override fun getHandlerFor(element: IModGuiFactory.RuntimeOptionCategoryElement): IModGuiFactory.RuntimeOptionGuiHandler? = null
 
     /** Forge instantiates this with the Mods list as [parent]; it hands straight over to the MoulConfig editor. */
-    class ConfigGuiScreen(@Suppress("unused") private val parent: GuiScreen) : GuiScreen() {
+    class ConfigGuiScreen(private val parent: GuiScreen) : GuiScreen() {
         override fun initGui() {
-            mc.displayGuiScreen(ToggleSprintMain.configManager.configScreen())
+            mc.displayGuiScreen(ToggleSprintMain.configManager.configScreen(parent))
         }
     }
 }

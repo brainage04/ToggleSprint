@@ -2,6 +2,7 @@ package io.github.brainage04.togglesprint.config.manager
 
 import io.github.brainage04.togglesprint.ToggleSprintMain
 import io.github.brainage04.togglesprint.config.ToggleSprintConfig
+import io.github.brainage04.togglesprint.config.ConfigEditorScreen
 import io.github.brainage04.togglesprint.errors.ConfigError
 import io.github.brainage04.togglesprint.hud.core.HudElementEditor
 import com.google.gson.GsonBuilder
@@ -9,7 +10,6 @@ import com.google.gson.JsonObject
 import com.google.gson.TypeAdapter
 import com.google.gson.stream.JsonReader
 import com.google.gson.stream.JsonWriter
-import io.github.moulberry.moulconfig.gui.GuiScreenElementWrapper
 import io.github.moulberry.moulconfig.gui.MoulConfigEditor
 import io.github.moulberry.moulconfig.observer.PropertyTypeAdapterFactory
 import io.github.moulberry.moulconfig.processor.BuiltinMoulConfigGuis
@@ -93,7 +93,7 @@ class ConfigManager {
     }
 
     /** A new MoulConfig editor screen for the whole config. */
-    fun configScreen(): GuiScreen = GuiScreenElementWrapper(editor)
+    fun configScreen(parent: GuiScreen? = null): GuiScreen = ConfigEditorScreen(editor, parent)
 
     fun openElementEditor() {
         screenToOpen = HudElementEditor()

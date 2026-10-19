@@ -13,8 +13,8 @@ jobs:
           java-version: 21
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v6
-      - name: Execute Gradle build
-        run: ./gradlew --no-daemon build
+      - name: Build and run Forge client checks
+        run: ALSOFT_DRIVERS=null xvfb-run -a ./gradlew --no-daemon build runClientChecks -Pfabricmoddingconventions.devClientOptions=/nonexistent
       - uses: actions/upload-artifact@v7
         name: Upload built mod JAR
         with:
