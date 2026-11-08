@@ -283,7 +283,6 @@ public class GUIElements {
         }
     }
 
-    /** Per-element replacements for the global GUI style; each value applies only while its toggle is on. */
     public static class ElementOverrides {
         @Expose
         @ConfigOption(name = "Override Text Colour", desc = "Use the text colour below instead of the global one.")

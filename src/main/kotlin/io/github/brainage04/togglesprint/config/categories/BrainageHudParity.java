@@ -87,7 +87,6 @@ public class BrainageHudParity {
         @Expose @ConfigOption(name = "Highlight Max Level Enchants", desc = "Makes enchantments at their maximum level bold in item tooltips.") @ConfigEditorBoolean
         public boolean highlightMaxLevelEnchants = true;
 
-        /** Comma-separated enchantment IDs (e.g. {@code minecraft:smite}) never listed as missing; also edited with /blacklistedenchants. */
         @Expose
         @ConfigOption(name = "Blacklisted Enchantment IDs", desc = "Comma-separated enchantment IDs (e.g. minecraft:smite) that are never listed as missing. Also edited with /blacklistedenchants.")
         @ConfigEditorText
@@ -183,7 +182,6 @@ public class BrainageHudParity {
         public List<Waypoint> entries = new ArrayList<>();
     }
 
-    /** A waypoint of the old list; see {@link Waypoints#entries}. */
     public static class Waypoint {
         @Expose public String name = "Waypoint";
         @Expose public double x;

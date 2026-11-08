@@ -3,7 +3,6 @@ package io.github.brainage04.togglesprint.config.categories;
 import com.google.gson.annotations.Expose;
 import io.github.moulberry.moulconfig.annotations.*;
 
-/** Style defaults for every GUI element; an element's Style Overrides replace individual values. */
 public class GlobalGUISettings {
     @Expose
     @ConfigOption(name = "Text Colour", desc = "The colour of text without its own colour code.")
