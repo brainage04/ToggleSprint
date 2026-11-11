@@ -1,8 +1,8 @@
 # ToggleSprint icon
 
-## What this is
+## The icon file
 
-`icon.png` — the ToggleSprint mod icon, 1024 x 1024 PNG, SHA-256
+`icon.png` is the ToggleSprint mod icon, 1024 x 1024 PNG, SHA-256
 `6c082fede726e89e94eb1200fc338d07aed7961aa161ac91ea7de763e70aafc0`.
 
 Copied byte-identically from `.local-icon-variants/provenance/from-round3/blender-h/toggle-sprint-2.png`
@@ -23,28 +23,28 @@ Blender render of real vanilla client assets, not a screenshot.
   fixed. Canonical vertices are preserved to within ~8e-8 (`max_canonical_vertex_error` in the metadata).
   The Speed symbol mesh, its UVs and its material are untouched, as are the camera transform and the
   orthographic scale of 1.65.
-* Imagery — **extracted from the real Minecraft 26.2 client**, unmodified: the lever blockstate and models
+* Imagery is **extracted from the real Minecraft 26.2 client**, unmodified: the lever blockstate and models
   (`assets/minecraft/blockstates/lever.json`, `models/block/lever.json`, `models/block/lever_on.json`),
   `textures/block/lever.png`, `textures/block/cobblestone.png` and `textures/mob_effect/speed.png`,
   taken from `~/.gradle/caches/fabric-loom/26.2/minecraft-merged.jar`. `asset-provenance.json` lists every
   asset with its jar member and SHA-256; the scene packs three textures and they are the unmodified
-  originals. The jar itself and the extracted asset tree are not shipped — the packed scene carries what
+  originals. The jar itself and the extracted asset tree are not shipped. The packed scene carries what
   it needs, and the originals can be re-extracted from the jar with the recorded members.
 
 ## Provenance files
 
-* `toggle-sprint-2.py` — entry point (`recreate.render('toggle-sprint-2')`); `recreate.py` — the shared
+* `toggle-sprint-2.py`: entry point (`recreate.render('toggle-sprint-2')`); `recreate.py`: the shared
   author that opens the source scene, rotates/scales the lever, renders, packs and measures.
 * `toggle-sprint-2.blend` (packed, embeds `recreate.py` and the entry point),
   `toggle-sprint-2-metadata.json` (per-object rotation/scale proof, pivot, ortho scale, packed textures).
-* `sources/toggle-sprint-01.blend` — the immutable input scene.
-* `asset-provenance.json` — this mod's source scene plus the complete vanilla lever / Speed asset
-  inventory with SHA-256 values; `resources.json` — the recorded render environment.
-* `verify.py` — reopens the saved scene and re-checks geometry, packed textures and the decoded PNG;
-  `assemble.py` — the batch script that produced `png-verification.json` and `measurements.json`.
+* `sources/toggle-sprint-01.blend`: the immutable input scene.
+* `asset-provenance.json`: this mod's source scene plus the complete vanilla lever / Speed asset
+  inventory with SHA-256 values; `resources.json`: the recorded render environment.
+* `verify.py`: reopens the saved scene and re-checks geometry, packed textures and the decoded PNG;
+  `assemble.py`: the batch script that produced `png-verification.json` and `measurements.json`.
 * `manifest.json`, `png-verification.json`, `saved-scene-verification.json`, `measurements.json`,
-  `visual-review.json` — curated to this candidate only (`CURATION.json` lists the dropped rows).
-* `CURATION.json` — what was copied, what was filtered out, and what was left in round-3.
+  `visual-review.json`: curated to this candidate only (`CURATION.json` lists the dropped rows).
+* `CURATION.json`: what was copied, what was filtered out, and what was left in round-3.
 
 ## How to regenerate
 
@@ -61,7 +61,7 @@ nix shell nixpkgs#blender --command blender --background -noaudio --python verif
 source-blend hash. Re-running overwrites those files in place.
 
 If the lever/speed source assets are ever needed as loose files again, extract the members listed in
-`asset-provenance.json` from `minecraft-merged.jar` (Minecraft 26.2) into a scratch directory — the
+`asset-provenance.json` from `minecraft-merged.jar` (Minecraft 26.2) into a scratch directory; the
 render itself does not need them.
 
 ## Notes

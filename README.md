@@ -22,7 +22,7 @@ Toggle Sprint is a client-side Forge mod for Minecraft 1.8.9 that adds toggle sp
 - **Status Effect HUD**: your active status effects with their icons, levels and how long each has left.
 - **Fishing HUD**: while your bobber is out, the chance of catching a fish, treasure or junk with the rod you hold.
 
-Motion and Entity are off by default; turn them on in the config editor. Every element can be configured to show as little or as much as you like.
+Motion and Entity are off by default; turn them on in the config editor. Every element's content can be configured.
 
 ### Waypoints
 
