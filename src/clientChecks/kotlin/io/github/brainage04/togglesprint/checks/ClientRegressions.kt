@@ -30,12 +30,14 @@ object ClientRegressions {
     fun inWorld(): List<String> {
         mouseMovementBinding()
         disabledToggleReleasesKeys()
+        unboundKeysStillToggle()
         inventoryStatsIncludesArmour()
         configReadersClose()
         concurrentSaves()
         return listOf(
             "Mouse-bound sprint and sneak can be toggled off without a keyboard-index error",
             "Turning a toggle key off in the config stops it holding sprint or sneak",
+            "Toggles hold sprint and sneak even when their keys are unbound",
             "Inventory Stats includes armour even when the main inventory is empty",
             "Loading config closes the actual config file descriptor",
             "Concurrent config saves finish with valid persisted settings",
@@ -85,6 +87,37 @@ object ClientRegressions {
         } finally {
             keys.toggleSprint.isEnabled = true
             keys.toggleSneak.isEnabled = true
+            ToggleSprintTracker.isSprintToggled = false
+            ToggleSprintTracker.isSneakToggled = false
+            KeyBinding.unPressAllKeys()
+        }
+    }
+
+    private fun unboundKeysStillToggle() {
+        val minecraft = Minecraft.getMinecraft()
+        val sprint = minecraft.gameSettings.keyBindSprint
+        val sneak = minecraft.gameSettings.keyBindSneak
+        val sprintCode = sprint.keyCode
+        val sneakCode = sneak.keyCode
+        try {
+            sprint.keyCode = Keyboard.KEY_NONE
+            sneak.keyCode = Keyboard.KEY_NONE
+            KeyBinding.resetKeyBindingArrayAndHash()
+            KeyBinding.unPressAllKeys()
+            ToggleSprintTracker.isSprintToggled = true
+            ToggleSprintTracker.isSneakToggled = true
+            MinecraftForge.EVENT_BUS.post(TickEvent.ClientTickEvent(TickEvent.Phase.START))
+            check(sprint.isKeyDown) { "Toggle sprint does not hold an unbound sprint key" }
+            check(sneak.isKeyDown) { "Toggle sneak does not hold an unbound sneak key" }
+            KeyBinding.onTick(ToggleSprintMain.toggleSprintKeybind.keyCode)
+            KeyBinding.onTick(ToggleSprintMain.toggleSneakKeybind.keyCode)
+            MinecraftForge.EVENT_BUS.post(InputEvent.KeyInputEvent())
+            check(!ToggleSprintTracker.isSprintToggled && !sprint.isKeyDown) { "Toggling sprint off left an unbound sprint key held" }
+            check(!ToggleSprintTracker.isSneakToggled && !sneak.isKeyDown) { "Toggling sneak off left an unbound sneak key held" }
+        } finally {
+            sprint.keyCode = sprintCode
+            sneak.keyCode = sneakCode
+            KeyBinding.resetKeyBindingArrayAndHash()
             ToggleSprintTracker.isSprintToggled = false
             ToggleSprintTracker.isSneakToggled = false
             KeyBinding.unPressAllKeys()
