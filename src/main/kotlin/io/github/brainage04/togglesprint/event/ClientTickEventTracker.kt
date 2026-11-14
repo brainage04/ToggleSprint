@@ -2,6 +2,7 @@ package io.github.brainage04.togglesprint.event
 
 import io.github.brainage04.togglesprint.hud.ToggleSprintTracker.isSneakToggled
 import io.github.brainage04.togglesprint.hud.ToggleSprintTracker.isSprintToggled
+import io.github.brainage04.togglesprint.util.ConfigUtils
 import net.minecraft.client.Minecraft
 import net.minecraft.client.settings.KeyBinding
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
@@ -10,6 +11,9 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent
 class ClientTickEventTracker {
     companion object {
         fun updateToggleSprintSneakStates(minecraft: Minecraft) {
+            if (!ConfigUtils.toggleMovementKeys.toggleSprint.isEnabled) isSprintToggled = false
+            if (!ConfigUtils.toggleMovementKeys.toggleSneak.isEnabled) isSneakToggled = false
+
             // sprint handling
             if (isSprintToggled && !minecraft.gameSettings.keyBindSprint.isKeyDown && minecraft.currentScreen == null) KeyBinding.setKeyBindState(minecraft.gameSettings.keyBindSprint.keyCode, true)
 
