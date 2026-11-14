@@ -16,8 +16,13 @@ object ToggleSprintTracker {
                 false -> "[Sneaking (Vanilla)]"
             }
         }
-        else if (isSprintToggled) "[Sprinting (Toggled)]"
-        else if (player.isSprinting) "[Sprinting (Vanilla)]"
+        else if (player.isSprinting) {
+            when (isSprintToggled) {
+                true -> "[Sprinting (Toggled)]"
+                false -> "[Sprinting (Vanilla)]"
+            }
+        }
+        else if (isSprintToggled) "${ChatUtils.grayChar}[Walking (Sprint Toggled)]"
         else "${ChatUtils.grayChar}[Walking (Vanilla)]"
     }
 
