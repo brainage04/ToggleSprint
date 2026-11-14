@@ -114,8 +114,7 @@ class ClientChecks {
                 }
                 6 -> if (stageTicks > 2) {
                     // Drain scheduled packets while the integrated server is still running.
-                    minecraft.theWorld.sendQuittingDisconnectingPacket()
-                    minecraft.loadWorld(null)
+                    quitWorld()
                     check(firstWorldLight.contentEquals(originalLight)) { "World unload left the light override applied" }
                     pass("World unload restores the old dimension light table")
                     ToggleSprintMain.config.brainageHudParity.fullbright = 0f
@@ -262,8 +261,20 @@ class ClientChecks {
         stage = -1
         File(Minecraft.getMinecraft().mcDataDir, "result.txt").writeText(result)
         failure?.printStackTrace()
-        Minecraft.getMinecraft().theWorld?.sendQuittingDisconnectingPacket()
-        Minecraft.getMinecraft().loadWorld(null)
+        quitWorld()
         Minecraft.getMinecraft().shutdown()
+    }
+
+    // The integrated server stops by itself once its owner disconnects. loadWorld(null) calls IntegratedServer.initiateShutdown,
+    // which queues a task with addScheduledTask and blocks on it; a server whose loop has ended but that is not yet marked
+    // stopped queues the task and never runs it (1.8.9 MinecraftServer.addScheduledTask, SRG func_175586_a), which hung CI
+    // run 43605613785. Waiting for the stop makes addScheduledTask run the task inline.
+    private fun quitWorld() {
+        val minecraft = Minecraft.getMinecraft()
+        minecraft.theWorld?.sendQuittingDisconnectingPacket()
+        val server = minecraft.integratedServer
+        val deadline = System.nanoTime() + 30_000_000_000L
+        while (server != null && !server.isServerStopped && System.nanoTime() < deadline) Thread.sleep(10)
+        minecraft.loadWorld(null)
     }
 }
