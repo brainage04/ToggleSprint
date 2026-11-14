@@ -3,8 +3,8 @@ package io.github.brainage04.togglesprint.event
 import io.github.brainage04.togglesprint.hud.ToggleSprintTracker.isSneakToggled
 import io.github.brainage04.togglesprint.hud.ToggleSprintTracker.isSprintToggled
 import io.github.brainage04.togglesprint.util.ConfigUtils
+import io.github.brainage04.togglesprint.util.KeyBindingUtils
 import net.minecraft.client.Minecraft
-import net.minecraft.client.settings.KeyBinding
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent
 
@@ -15,13 +15,13 @@ class ClientTickEventTracker {
             if (!ConfigUtils.toggleMovementKeys.toggleSneak.isEnabled) isSneakToggled = false
 
             // sprint handling
-            if (isSprintToggled && !minecraft.gameSettings.keyBindSprint.isKeyDown && minecraft.currentScreen == null) KeyBinding.setKeyBindState(minecraft.gameSettings.keyBindSprint.keyCode, true)
+            if (isSprintToggled && !minecraft.gameSettings.keyBindSprint.isKeyDown && minecraft.currentScreen == null) KeyBindingUtils.setPressed(minecraft.gameSettings.keyBindSprint, true)
 
             // sneak handling
             if (minecraft.currentScreen == null) {
-                if (isSneakToggled && !minecraft.gameSettings.keyBindSneak.isKeyDown) KeyBinding.setKeyBindState(minecraft.gameSettings.keyBindSneak.keyCode, true)
+                if (isSneakToggled && !minecraft.gameSettings.keyBindSneak.isKeyDown) KeyBindingUtils.setPressed(minecraft.gameSettings.keyBindSneak, true)
             } else {
-                if (minecraft.gameSettings.keyBindSneak.isKeyDown) KeyBinding.setKeyBindState(minecraft.gameSettings.keyBindSneak.keyCode, false)
+                if (minecraft.gameSettings.keyBindSneak.isKeyDown) KeyBindingUtils.setPressed(minecraft.gameSettings.keyBindSneak, false)
             }
         }
     }

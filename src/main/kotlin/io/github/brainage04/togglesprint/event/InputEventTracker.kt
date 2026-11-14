@@ -6,6 +6,7 @@ import io.github.brainage04.togglesprint.event.ClientTickEventTracker.Companion.
 import io.github.brainage04.togglesprint.hud.ToggleSprintTracker.isSneakToggled
 import io.github.brainage04.togglesprint.hud.ToggleSprintTracker.isSprintToggled
 import io.github.brainage04.togglesprint.util.ConfigUtils
+import io.github.brainage04.togglesprint.util.KeyBindingUtils
 import net.minecraft.client.Minecraft
 import net.minecraft.client.settings.GameSettings
 import net.minecraft.client.settings.KeyBinding
@@ -23,7 +24,7 @@ class InputEventTracker {
             isSprintToggled = !isSprintToggled
 
             if (!isSprintToggled) {
-                KeyBinding.setKeyBindState(minecraft.gameSettings.keyBindSprint.keyCode, GameSettings.isKeyDown(minecraft.gameSettings.keyBindSprint))
+                release(minecraft.gameSettings.keyBindSprint)
             }
         }
 
@@ -32,10 +33,16 @@ class InputEventTracker {
             isSneakToggled = !isSneakToggled
 
             if (!isSneakToggled) {
-                KeyBinding.setKeyBindState(minecraft.gameSettings.keyBindSneak.keyCode, GameSettings.isKeyDown(minecraft.gameSettings.keyBindSneak))
+                release(minecraft.gameSettings.keyBindSneak)
             }
         }
 
         updateToggleSprintSneakStates(minecraft)
+    }
+
+    private fun release(binding: KeyBinding) {
+        KeyBindingUtils.setPressed(binding, false)
+        // A physically held key goes back to the binding vanilla's key lookup gives it, which releases it on key up.
+        KeyBinding.setKeyBindState(binding.keyCode, GameSettings.isKeyDown(binding))
     }
 }
