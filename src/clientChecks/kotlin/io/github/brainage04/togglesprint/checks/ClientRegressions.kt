@@ -33,12 +33,14 @@ object ClientRegressions {
         inventoryStatsIncludesArmour()
         configReadersClose()
         concurrentSaves()
+        hudSprintStatusFollowsPlayer()
         return listOf(
             "Mouse-bound sprint and sneak can be toggled off without a keyboard-index error",
             "Turning a toggle key off in the config stops it holding sprint or sneak",
             "Inventory Stats includes armour even when the main inventory is empty",
             "Loading config closes the actual config file descriptor",
             "Concurrent config saves finish with valid persisted settings",
+            "Toggle Sprint HUD says sprinting only while the player sprints",
         )
     }
 
@@ -169,6 +171,27 @@ object ClientRegressions {
         } finally {
             workers.filter { it.isAlive }.forEach { it.interrupt() }
             workers.forEach { it.join(1000) }
+        }
+    }
+
+    private fun hudSprintStatusFollowsPlayer() {
+        val player = Minecraft.getMinecraft().thePlayer
+        val sprinting = player.isSprinting
+        fun status() = ToggleSprintTracker.lines().last()
+        try {
+            ToggleSprintTracker.isSneakToggled = false
+            ToggleSprintTracker.isSprintToggled = true
+            player.isSprinting = false
+            check(status() == "§7[Walking (Sprint Toggled)]") { "Standing still with toggle sprint on shows ${status()}" }
+            player.isSprinting = true
+            check(status() == "[Sprinting (Toggled)]") { "Toggle sprinting shows ${status()}" }
+            ToggleSprintTracker.isSprintToggled = false
+            check(status() == "[Sprinting (Vanilla)]") { "Vanilla sprinting shows ${status()}" }
+            player.isSprinting = false
+            check(status() == "§7[Walking (Vanilla)]") { "Walking shows ${status()}" }
+        } finally {
+            player.isSprinting = sprinting
+            ToggleSprintTracker.isSprintToggled = false
         }
     }
 
