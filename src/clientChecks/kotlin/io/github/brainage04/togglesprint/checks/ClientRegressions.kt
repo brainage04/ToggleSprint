@@ -29,11 +29,13 @@ import java.util.concurrent.TimeUnit
 object ClientRegressions {
     fun inWorld(): List<String> {
         mouseMovementBinding()
+        disabledToggleReleasesKeys()
         inventoryStatsIncludesArmour()
         configReadersClose()
         concurrentSaves()
         return listOf(
             "Mouse-bound sprint and sneak can be toggled off without a keyboard-index error",
+            "Turning a toggle key off in the config stops it holding sprint or sneak",
             "Inventory Stats includes armour even when the main inventory is empty",
             "Loading config closes the actual config file descriptor",
             "Concurrent config saves finish with valid persisted settings",
@@ -63,6 +65,29 @@ object ClientRegressions {
             sprint.keyCode = sprintCode
             sneak.keyCode = sneakCode
             KeyBinding.resetKeyBindingArrayAndHash()
+        }
+    }
+
+    private fun disabledToggleReleasesKeys() {
+        val minecraft = Minecraft.getMinecraft()
+        val keys = ToggleSprintMain.config.toggleMovementKeys
+        try {
+            ToggleSprintTracker.isSprintToggled = true
+            ToggleSprintTracker.isSneakToggled = true
+            keys.toggleSprint.isEnabled = false
+            keys.toggleSneak.isEnabled = false
+            // Opening the config editor releases every key (1.8.9 Minecraft.setIngameNotInFocus calls KeyBinding.unPressAllKeys).
+            KeyBinding.unPressAllKeys()
+            MinecraftForge.EVENT_BUS.post(TickEvent.ClientTickEvent(TickEvent.Phase.START))
+            check(!minecraft.gameSettings.keyBindSprint.isKeyDown) { "Disabled toggle sprint still holds sprint" }
+            check(!minecraft.gameSettings.keyBindSneak.isKeyDown) { "Disabled toggle sneak still holds sneak" }
+            check(!ToggleSprintTracker.isSprintToggled && !ToggleSprintTracker.isSneakToggled)
+        } finally {
+            keys.toggleSprint.isEnabled = true
+            keys.toggleSneak.isEnabled = true
+            ToggleSprintTracker.isSprintToggled = false
+            ToggleSprintTracker.isSneakToggled = false
+            KeyBinding.unPressAllKeys()
         }
     }
 
