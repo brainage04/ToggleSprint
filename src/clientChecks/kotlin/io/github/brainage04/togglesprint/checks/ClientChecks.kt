@@ -42,6 +42,13 @@ class ClientChecks {
 
     @Mod.EventHandler
     fun init(event: FMLInitializationEvent) {
+        Thread({
+            Thread.sleep(200_000)
+            for ((thread, stack) in Thread.getAllStackTraces()) {
+                println("THREAD DUMP ${thread.name} ${thread.state}")
+                for (frame in stack) println("THREAD DUMP     at $frame")
+            }
+        }, "client-checks-watchdog").apply { isDaemon = true }.start()
         MinecraftForge.EVENT_BUS.register(this)
     }
 
