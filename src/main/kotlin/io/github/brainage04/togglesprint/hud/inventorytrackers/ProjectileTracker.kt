@@ -14,7 +14,11 @@ object ProjectileTracker {
         val slots = player.inventory.mainInventory
         val rows = ArrayList<String>(4)
 
-        fun add(shown: Boolean, label: String, item: Item) {
+        fun add(
+            shown: Boolean,
+            label: String,
+            item: Item,
+        ) {
             if (!shown) return
             val count = InventoryTrackerShared.count(slots) { it.item == item }
             if (count.total > 0) rows.add(InventoryTrackerShared.format(label, count, config.showSlotCounts))

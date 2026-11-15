@@ -19,19 +19,26 @@ object WaypointsCommand {
     private var openScreenNextTick = false
 
     fun register() {
-        ClientCommandHandler.instance.registerCommand(SimpleCommand(
-            "waypoints",
-            object : SimpleCommand.ProcessCommandRunnable() {
-                override fun processCommand(sender: ICommandSender?, args: Array<String>?) {
-                    execute(args.orEmpty().toList())
-                }
-            },
-            object : SimpleCommand.TabCompleteRunnable {
-                override fun tabComplete(sender: ICommandSender?, args: Array<String>?, pos: BlockPos?): List<String> {
-                    return tabComplete(args.orEmpty().toList())
-                }
-            },
-        ))
+        ClientCommandHandler.instance.registerCommand(
+            SimpleCommand(
+                "waypoints",
+                object : SimpleCommand.ProcessCommandRunnable() {
+                    override fun processCommand(
+                        sender: ICommandSender?,
+                        args: Array<String>?,
+                    ) {
+                        execute(args.orEmpty().toList())
+                    }
+                },
+                object : SimpleCommand.TabCompleteRunnable {
+                    override fun tabComplete(
+                        sender: ICommandSender?,
+                        args: Array<String>?,
+                        pos: BlockPos?,
+                    ): List<String> = tabComplete(args.orEmpty().toList())
+                },
+            ),
+        )
     }
 
     /** The chat screen closes once the command returns, so the waypoints screen opens on the next tick. */
@@ -102,7 +109,9 @@ object WaypointsCommand {
         // the name may span several words, but only the last word is replaced by a completion
         val typed = args.drop(1).joinToString(" ")
         val lastWord = args.last()
-        return WaypointStore.current().orEmpty()
+        return WaypointStore
+            .current()
+            .orEmpty()
             .map { quoteIfNeeded(it.name) }
             .filter { it.startsWith(typed, ignoreCase = true) }
             .map { lastWord + it.substring(typed.length) }

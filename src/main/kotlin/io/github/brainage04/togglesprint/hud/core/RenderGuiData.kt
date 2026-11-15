@@ -5,8 +5,8 @@ import io.github.brainage04.togglesprint.hud.EnchantInfoHud
 import io.github.brainage04.togglesprint.hud.EntityTracker
 import io.github.brainage04.togglesprint.hud.FishingHud
 import io.github.brainage04.togglesprint.hud.KeystrokesHud
-import io.github.brainage04.togglesprint.hud.PerformanceHud
 import io.github.brainage04.togglesprint.hud.NetworkTracker
+import io.github.brainage04.togglesprint.hud.PerformanceHud
 import io.github.brainage04.togglesprint.hud.PlayerMotionTracker
 import io.github.brainage04.togglesprint.hud.PlayerPositionTracker
 import io.github.brainage04.togglesprint.hud.ReachHud
@@ -43,15 +43,29 @@ class RenderGuiData {
     }
 
     /** The screen rectangle an element occupied on the last frame, backdrop and padding included. */
-    data class ElementBounds(val left: Int, val top: Int, val right: Int, val bottom: Int) {
+    data class ElementBounds(
+        val left: Int,
+        val top: Int,
+        val right: Int,
+        val bottom: Int,
+    ) {
         val width get() = right - left
         val height get() = bottom - top
 
-        fun contains(x: Int, y: Int) = x in left until right && y in top until bottom
+        fun contains(
+            x: Int,
+            y: Int,
+        ) = x in left until right && y in top until bottom
     }
 
     /** Where [RenderGuiData.renderElement] drew one (possibly wrapped) line of an element. */
-    data class PlacedLine(val text: String, val sourceIndex: Int, val width: Int, val x: Int, val y: Int)
+    data class PlacedLine(
+        val text: String,
+        val sourceIndex: Int,
+        val width: Int,
+        val x: Int,
+        val y: Int,
+    )
 
     companion object {
         /**
@@ -63,29 +77,39 @@ class RenderGuiData {
          * an empty list when there is nothing to show. Do not check `isEnabled`; disabled elements are skipped.
          * Elements that draw more than text subclass [HudElement] and override [HudElement.render].
          */
-        val elements: List<HudElement> = listOf(
-            HudElement("Toggle Sprint HUD", { ConfigUtils.guiElements.toggleSprintElement.coreSettings }) { ToggleSprintTracker.lines() },
-            HudElement("Position HUD", { ConfigUtils.guiElements.positionTracker.coreSettings }) { PlayerPositionTracker.lines() },
-            HudElement("Motion HUD", { ConfigUtils.guiElements.motionTracker.coreSettings }) { PlayerMotionTracker.lines() },
-            object : HudElement("Armour Info HUD", { ConfigUtils.inventoryTrackers.equipmentTracker.coreSettings }) {
-                override fun render(coreSettings: GUIElements.CoreSettings, editing: Boolean) = EquipmentTracker.render(coreSettings)
-            },
-            HudElement("Projectile HUD", { ConfigUtils.inventoryTrackers.projectileTracker.coreSettings }) { ProjectileTracker.lines() },
-            HudElement("Food HUD", { ConfigUtils.inventoryTrackers.foodTracker.coreSettings }) { FoodTracker.lines() },
-            HudElement("Date/Time HUD", { ConfigUtils.guiElements.realTimeTracker.coreSettings }) { RealTimeTracker.lines() },
-            HudElement("Network HUD", { ConfigUtils.guiElements.networkTracker.coreSettings }) { NetworkTracker.lines() },
-            HudElement("Entity HUD", { ConfigUtils.guiElements.entityTracker.coreSettings }) { EntityTracker.lines() },
-            HudElement("Fishing HUD", { ConfigUtils.brainageHudParity.fishing.coreSettings }) { FishingHud.lines() },
-            HudElement("Performance HUD", { ConfigUtils.brainageHudParity.performance.coreSettings }) { PerformanceHud.lines() },
-            HudElement("Reach HUD", { ConfigUtils.brainageHudParity.reach.coreSettings }) { ReachHud.lines() },
-            object : HudElement("Keystrokes HUD", { ConfigUtils.brainageHudParity.keystrokes.coreSettings }) {
-                override fun render(coreSettings: GUIElements.CoreSettings, editing: Boolean) = KeystrokesHud.render(coreSettings)
-            },
-            HudElement("Enchant Info HUD", { ConfigUtils.brainageHudParity.enchantInfoHud.coreSettings }) { EnchantInfoHud.lines() },
-            object : HudElement("Status Effect HUD", { ConfigUtils.brainageHudParity.statusEffectHud.coreSettings }) {
-                override fun render(coreSettings: GUIElements.CoreSettings, editing: Boolean) = StatusEffectHud.render(coreSettings)
-            },
-        )
+        val elements: List<HudElement> =
+            listOf(
+                HudElement("Toggle Sprint HUD", { ConfigUtils.guiElements.toggleSprintElement.coreSettings }) { ToggleSprintTracker.lines() },
+                HudElement("Position HUD", { ConfigUtils.guiElements.positionTracker.coreSettings }) { PlayerPositionTracker.lines() },
+                HudElement("Motion HUD", { ConfigUtils.guiElements.motionTracker.coreSettings }) { PlayerMotionTracker.lines() },
+                object : HudElement("Armour Info HUD", { ConfigUtils.inventoryTrackers.equipmentTracker.coreSettings }) {
+                    override fun render(
+                        coreSettings: GUIElements.CoreSettings,
+                        editing: Boolean,
+                    ) = EquipmentTracker.render(coreSettings)
+                },
+                HudElement("Projectile HUD", { ConfigUtils.inventoryTrackers.projectileTracker.coreSettings }) { ProjectileTracker.lines() },
+                HudElement("Food HUD", { ConfigUtils.inventoryTrackers.foodTracker.coreSettings }) { FoodTracker.lines() },
+                HudElement("Date/Time HUD", { ConfigUtils.guiElements.realTimeTracker.coreSettings }) { RealTimeTracker.lines() },
+                HudElement("Network HUD", { ConfigUtils.guiElements.networkTracker.coreSettings }) { NetworkTracker.lines() },
+                HudElement("Entity HUD", { ConfigUtils.guiElements.entityTracker.coreSettings }) { EntityTracker.lines() },
+                HudElement("Fishing HUD", { ConfigUtils.brainageHudParity.fishing.coreSettings }) { FishingHud.lines() },
+                HudElement("Performance HUD", { ConfigUtils.brainageHudParity.performance.coreSettings }) { PerformanceHud.lines() },
+                HudElement("Reach HUD", { ConfigUtils.brainageHudParity.reach.coreSettings }) { ReachHud.lines() },
+                object : HudElement("Keystrokes HUD", { ConfigUtils.brainageHudParity.keystrokes.coreSettings }) {
+                    override fun render(
+                        coreSettings: GUIElements.CoreSettings,
+                        editing: Boolean,
+                    ) = KeystrokesHud.render(coreSettings)
+                },
+                HudElement("Enchant Info HUD", { ConfigUtils.brainageHudParity.enchantInfoHud.coreSettings }) { EnchantInfoHud.lines() },
+                object : HudElement("Status Effect HUD", { ConfigUtils.brainageHudParity.statusEffectHud.coreSettings }) {
+                    override fun render(
+                        coreSettings: GUIElements.CoreSettings,
+                        editing: Boolean,
+                    ) = StatusEffectHud.render(coreSettings)
+                },
+            )
 
         private val placedBounds = IdentityHashMap<GUIElements.CoreSettings, ElementBounds>()
 
@@ -97,12 +121,18 @@ class RenderGuiData {
          * backdrop, in its text colour (lines without a § code) with or without shadows. Nothing is drawn for
          * an empty list.
          */
-        fun renderElement(coreSettings: GUIElements.CoreSettings, lines: List<String>) {
+        fun renderElement(
+            coreSettings: GUIElements.CoreSettings,
+            lines: List<String>,
+        ) {
             drawElement(coreSettings, lines)
         }
 
         /** [renderElement], returning where each line was drawn so callers can decorate lines (e.g. item icons). */
-        fun drawElement(coreSettings: GUIElements.CoreSettings, lines: List<String>): List<PlacedLine> {
+        fun drawElement(
+            coreSettings: GUIElements.CoreSettings,
+            lines: List<String>,
+        ): List<PlacedLine> {
             if (lines.isEmpty()) return emptyList()
             val font = Minecraft.getMinecraft().fontRendererObj ?: return emptyList()
 
@@ -139,11 +169,12 @@ class RenderGuiData {
             val placed = ArrayList<PlacedLine>(wrapped.size)
             for (i in wrapped.indices) {
                 // lines hug the anchored side of the element, like the element hugs that side of the screen
-                val x = when (axis) {
-                    ElementPlacement.Axis.START -> bounds.left + inset
-                    ElementPlacement.Axis.END -> bounds.right - inset - widths[i]
-                    ElementPlacement.Axis.CENTRE -> bounds.left + inset + (contentWidth - widths[i]) / 2
-                }
+                val x =
+                    when (axis) {
+                        ElementPlacement.Axis.START -> bounds.left + inset
+                        ElementPlacement.Axis.END -> bounds.right - inset - widths[i]
+                        ElementPlacement.Axis.CENTRE -> bounds.left + inset + (contentWidth - widths[i]) / 2
+                    }
                 val y = bounds.top + inset + lineHeight * i
                 font.drawString(wrapped[i], x.toFloat(), y.toFloat(), colour, shadows)
                 placed.add(PlacedLine(wrapped[i], sources[i], widths[i], x, y))
@@ -155,7 +186,11 @@ class RenderGuiData {
          * Positions an element of the given size by its anchor and offsets and records its bounds for the
          * element editor. Elements with their own layout call this and draw inside the returned bounds.
          */
-        fun placeElement(coreSettings: GUIElements.CoreSettings, width: Int, height: Int): ElementBounds {
+        fun placeElement(
+            coreSettings: GUIElements.CoreSettings,
+            width: Int,
+            height: Int,
+        ): ElementBounds {
             val resolution = ScaledResolution(Minecraft.getMinecraft())
             val left = ElementPlacement.position(ElementPlacement.horizontalAxis(coreSettings.anchorCorner), resolution.scaledWidth, width, coreSettings.x)
             val top = ElementPlacement.position(ElementPlacement.verticalAxis(coreSettings.anchorCorner), resolution.scaledHeight, height, coreSettings.y)

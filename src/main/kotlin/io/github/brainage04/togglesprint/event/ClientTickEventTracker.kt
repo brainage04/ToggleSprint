@@ -11,11 +11,19 @@ class ClientTickEventTracker {
     companion object {
         fun updateToggleSprintSneakStates(minecraft: Minecraft) {
             // sprint handling
-            if (isSprintToggled && !minecraft.gameSettings.keyBindSprint.isKeyDown && minecraft.currentScreen == null) KeyBinding.setKeyBindState(minecraft.gameSettings.keyBindSprint.keyCode, true)
+            if (isSprintToggled && !minecraft.gameSettings.keyBindSprint.isKeyDown &&
+                minecraft.currentScreen == null
+            ) {
+                KeyBinding.setKeyBindState(minecraft.gameSettings.keyBindSprint.keyCode, true)
+            }
 
             // sneak handling
             if (minecraft.currentScreen == null) {
-                if (isSneakToggled && !minecraft.gameSettings.keyBindSneak.isKeyDown) KeyBinding.setKeyBindState(minecraft.gameSettings.keyBindSneak.keyCode, true)
+                if (isSneakToggled &&
+                    !minecraft.gameSettings.keyBindSneak.isKeyDown
+                ) {
+                    KeyBinding.setKeyBindState(minecraft.gameSettings.keyBindSneak.keyCode, true)
+                }
             } else {
                 if (minecraft.gameSettings.keyBindSneak.isKeyDown) KeyBinding.setKeyBindState(minecraft.gameSettings.keyBindSneak.keyCode, false)
             }

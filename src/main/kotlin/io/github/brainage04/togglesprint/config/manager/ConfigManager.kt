@@ -1,15 +1,15 @@
 package io.github.brainage04.togglesprint.config.manager
 
-import io.github.brainage04.togglesprint.ToggleSprintMain
-import io.github.brainage04.togglesprint.config.ToggleSprintConfig
-import io.github.brainage04.togglesprint.config.ConfigEditorScreen
-import io.github.brainage04.togglesprint.errors.ConfigError
-import io.github.brainage04.togglesprint.hud.core.HudElementEditor
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonObject
 import com.google.gson.TypeAdapter
 import com.google.gson.stream.JsonReader
 import com.google.gson.stream.JsonWriter
+import io.github.brainage04.togglesprint.ToggleSprintMain
+import io.github.brainage04.togglesprint.config.ConfigEditorScreen
+import io.github.brainage04.togglesprint.config.ToggleSprintConfig
+import io.github.brainage04.togglesprint.errors.ConfigError
+import io.github.brainage04.togglesprint.hud.core.HudElementEditor
 import io.github.moulberry.moulconfig.gui.MoulConfigEditor
 import io.github.moulberry.moulconfig.observer.PropertyTypeAdapterFactory
 import io.github.moulberry.moulconfig.processor.BuiltinMoulConfigGuis
@@ -31,21 +31,26 @@ import java.util.UUID
 
 class ConfigManager {
     companion object {
-        val gson = GsonBuilder().setPrettyPrinting()
-            .excludeFieldsWithoutExposeAnnotation()
-            .serializeSpecialFloatingPointValues()
-            .registerTypeAdapterFactory(PropertyTypeAdapterFactory())
-            .registerTypeAdapter(UUID::class.java, object : TypeAdapter<UUID>() {
-                override fun write(out: JsonWriter, value: UUID) {
-                    out.value(value.toString())
-                }
+        val gson =
+            GsonBuilder()
+                .setPrettyPrinting()
+                .excludeFieldsWithoutExposeAnnotation()
+                .serializeSpecialFloatingPointValues()
+                .registerTypeAdapterFactory(PropertyTypeAdapterFactory())
+                .registerTypeAdapter(
+                    UUID::class.java,
+                    object : TypeAdapter<UUID>() {
+                        override fun write(
+                            out: JsonWriter,
+                            value: UUID,
+                        ) {
+                            out.value(value.toString())
+                        }
 
-                override fun read(reader: JsonReader): UUID {
-                    return UUID.fromString(reader.nextString())
-                }
-            }.nullSafe())
-            .enableComplexMapKeySerialization()
-            .create()
+                        override fun read(reader: JsonReader): UUID = UUID.fromString(reader.nextString())
+                    }.nullSafe(),
+                ).enableComplexMapKeySerialization()
+                .create()
     }
 
     private var configDirectory = File("config/togglesprint")
@@ -77,12 +82,14 @@ class ConfigManager {
         ConfigProcessorDriver.processConfig(
             config.javaClass,
             config,
-            processor
+            processor,
         )
 
-        Runtime.getRuntime().addShutdownHook(Thread {
-            save()
-        })
+        Runtime.getRuntime().addShutdownHook(
+            Thread {
+                save()
+            },
+        )
     }
 
     fun openConfigGui() {
@@ -98,9 +105,10 @@ class ConfigManager {
 
     private fun tryReadConfig() {
         try {
-            val jsonObject = Files.newBufferedReader(configFile.toPath(), StandardCharsets.UTF_8).use { reader ->
-                gson.fromJson(reader, JsonObject::class.java)
-            }
+            val jsonObject =
+                Files.newBufferedReader(configFile.toPath(), StandardCharsets.UTF_8).use { reader ->
+                    gson.fromJson(reader, JsonObject::class.java)
+                }
             val newJsonObject = ConfigUpdaterMigrator.fixConfig(jsonObject)
             config = gson.fromJson(newJsonObject, ToggleSprintConfig::class.java)
 
@@ -127,7 +135,7 @@ class ConfigManager {
                 unit.toPath(),
                 configFile.toPath(),
                 StandardCopyOption.REPLACE_EXISTING,
-                StandardCopyOption.ATOMIC_MOVE
+                StandardCopyOption.ATOMIC_MOVE,
             )
         } catch (e: IOException) {
             throw ConfigError("Could not save config", e)

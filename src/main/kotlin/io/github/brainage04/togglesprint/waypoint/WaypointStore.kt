@@ -1,11 +1,11 @@
 package io.github.brainage04.togglesprint.waypoint
 
-import io.github.brainage04.togglesprint.ToggleSprintMain
-import io.github.brainage04.togglesprint.util.ChatFeedback
-import io.github.brainage04.togglesprint.util.ConfigUtils
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonParseException
 import com.google.gson.reflect.TypeToken
+import io.github.brainage04.togglesprint.ToggleSprintMain
+import io.github.brainage04.togglesprint.util.ChatFeedback
+import io.github.brainage04.togglesprint.util.ConfigUtils
 import net.minecraft.client.Minecraft
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.fml.common.gameevent.TickEvent
@@ -23,10 +23,21 @@ import kotlin.math.floor
  */
 object WaypointStore {
     private val gson = GsonBuilder().setPrettyPrinting().create()
-    private val colours = intArrayOf(
-        0xFF5555, 0x55FF55, 0x5555FF, 0xFFFF55, 0xFF55FF, 0x55FFFF,
-        0xFFAA00, 0xAA00AA, 0x00AAAA, 0xFFFFFF, 0xAAAAAA, 0x00AA00,
-    )
+    private val colours =
+        intArrayOf(
+            0xFF5555,
+            0x55FF55,
+            0x5555FF,
+            0xFFFF55,
+            0xFF55FF,
+            0x55FFFF,
+            0xFFAA00,
+            0xAA00AA,
+            0x00AAAA,
+            0xFFFFFF,
+            0xAAAAAA,
+            0x00AA00,
+        )
 
     private var worlds: MutableMap<String, MutableList<Waypoint>>? = null
 
@@ -42,7 +53,11 @@ object WaypointStore {
     @SubscribeEvent
     fun onTick(event: TickEvent.ClientTickEvent) {
         if (event.phase != TickEvent.Phase.END || Minecraft.getMinecraft().thePlayer == null) return
-        if (ConfigUtils.brainageHudParity.waypoints.entries.isNullOrEmpty()) return
+        if (ConfigUtils.brainageHudParity.waypoints.entries
+                .isNullOrEmpty()
+        ) {
+            return
+        }
         current()
     }
 
@@ -71,8 +86,10 @@ object WaypointStore {
     }
 
     /** The waypoint called [name], ignoring case. */
-    fun find(waypoints: List<Waypoint>, name: String): Waypoint? =
-        waypoints.firstOrNull { it.name.equals(name, ignoreCase = true) }
+    fun find(
+        waypoints: List<Waypoint>,
+        name: String,
+    ): Waypoint? = waypoints.firstOrNull { it.name.equals(name, ignoreCase = true) }
 
     /** The first of "Waypoint 1", "Waypoint 2", ... that no waypoint in the list is called. */
     fun nextQuickName(waypoints: List<Waypoint>): String {

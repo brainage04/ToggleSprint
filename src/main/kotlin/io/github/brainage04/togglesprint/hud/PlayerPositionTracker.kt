@@ -12,16 +12,17 @@ import net.minecraft.world.EnumSkyBlock
 
 object PlayerPositionTracker {
     // Minecraft yaw 0 faces south (+Z) and increases clockwise: 90 is west, 180/-180 north, -90 east
-    private val YAW_LABEL = arrayOf(
-        "S (+Z)",          // 0 : centred on 0
-        "SW (-X, +Z)",     // 1 : centred on 45
-        "W (-X)",          // 2 : centred on 90
-        "NW (-X, -Z)",     // 3 : centred on 135
-        "N (-Z)",          // 4 : centred on 180 / -180
-        "NE (+X, -Z)",     // 5 : centred on 225 / -135
-        "E (+X)",          // 6 : centred on 270 / -90
-        "SE (+X, +Z)",     // 7 : centred on 315 / -45
-    )
+    private val YAW_LABEL =
+        arrayOf(
+            "S (+Z)", // 0 : centred on 0
+            "SW (-X, +Z)", // 1 : centred on 45
+            "W (-X)", // 2 : centred on 90
+            "NW (-X, -Z)", // 3 : centred on 135
+            "N (-Z)", // 4 : centred on 180 / -180
+            "NE (+X, -Z)", // 5 : centred on 225 / -135
+            "E (+X)", // 6 : centred on 270 / -90
+            "SE (+X, +Z)", // 7 : centred on 315 / -45
+        )
 
     /** Words in the names of Hypixel SkyBlock's farming tools, which are not vanilla axes or hoes. */
     private val FARMING_TOOL_NAME = Regex("\\b(axe|hoe|chopper|dicer|cutter|knife)\\b", RegexOption.IGNORE_CASE)
@@ -67,7 +68,11 @@ object PlayerPositionTracker {
 
         if (config.cCounter) {
             // "C: rendered/total (s) D: ...": the C counter is the part before the D counter
-            lines.add(minecraft.renderGlobal.debugInfoRenders.substringBefore(" D:").trim())
+            lines.add(
+                minecraft.renderGlobal.debugInfoRenders
+                    .substringBefore(" D:")
+                    .trim(),
+            )
         }
 
         if (config.eCounter) {

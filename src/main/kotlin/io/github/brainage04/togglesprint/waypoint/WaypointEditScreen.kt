@@ -7,7 +7,10 @@ import net.minecraft.util.BlockPos
 import org.lwjgl.input.Keyboard
 
 /** Creates a waypoint, prefilled with the player's position, or edits an existing one. */
-class WaypointEditScreen(private val parent: GuiScreen, private val waypoint: Waypoint?) : GuiScreen() {
+class WaypointEditScreen(
+    private val parent: GuiScreen,
+    private val waypoint: Waypoint?,
+) : GuiScreen() {
     private lateinit var nameField: GuiTextField
     private lateinit var xField: GuiTextField
     private lateinit var yField: GuiTextField
@@ -52,7 +55,11 @@ class WaypointEditScreen(private val parent: GuiScreen, private val waypoint: Wa
 
     private fun setPosition(pos: BlockPos) = setPosition(pos.x, pos.y, pos.z)
 
-    private fun setPosition(x: Int, y: Int, z: Int) {
+    private fun setPosition(
+        x: Int,
+        y: Int,
+        z: Int,
+    ) {
         xField.text = x.toString()
         yField.text = y.toString()
         zField.text = z.toString()
@@ -66,7 +73,10 @@ class WaypointEditScreen(private val parent: GuiScreen, private val waypoint: Wa
         fields.forEach { it.updateCursorCounter() }
     }
 
-    override fun keyTyped(typedChar: Char, keyCode: Int) {
+    override fun keyTyped(
+        typedChar: Char,
+        keyCode: Int,
+    ) {
         when (keyCode) {
             Keyboard.KEY_ESCAPE -> mc.displayGuiScreen(parent)
             Keyboard.KEY_RETURN, Keyboard.KEY_NUMPADENTER -> save()
@@ -81,7 +91,11 @@ class WaypointEditScreen(private val parent: GuiScreen, private val waypoint: Wa
         }
     }
 
-    override fun mouseClicked(mouseX: Int, mouseY: Int, mouseButton: Int) {
+    override fun mouseClicked(
+        mouseX: Int,
+        mouseY: Int,
+        mouseButton: Int,
+    ) {
         super.mouseClicked(mouseX, mouseY, mouseButton)
         fields.forEach { it.mouseClicked(mouseX, mouseY, mouseButton) }
     }
@@ -93,7 +107,11 @@ class WaypointEditScreen(private val parent: GuiScreen, private val waypoint: Wa
         }
     }
 
-    override fun drawScreen(mouseX: Int, mouseY: Int, partialTicks: Float) {
+    override fun drawScreen(
+        mouseX: Int,
+        mouseY: Int,
+        partialTicks: Float,
+    ) {
         drawDefaultBackground()
         drawCenteredString(fontRendererObj, if (waypoint == null) "Create Waypoint" else "Edit Waypoint", width / 2, 20, WHITE)
         drawString(fontRendererObj, "Name", nameField.xPosition, nameField.yPosition - 11, GREY)

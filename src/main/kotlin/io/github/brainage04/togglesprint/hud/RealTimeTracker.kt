@@ -8,6 +8,7 @@ object RealTimeTracker {
     private val DATE = DateTimeFormatter.ofPattern("E dd MMM yyyy")
     private val TIME_12_HOUR = DateTimeFormatter.ofPattern("hh:mm:ss a")
     private val TIME_24_HOUR = DateTimeFormatter.ofPattern("HH:mm:ss")
+
     // "xxx" always prints an offset such as +00:00, whereas "XXX" prints "Z" for UTC
     private val TIMEZONE = DateTimeFormatter.ofPattern("z '(UTC 'xxx')'")
 
@@ -21,8 +22,11 @@ object RealTimeTracker {
 
         if (config.showTime) {
             textArray.add(
-                if (config.twelveHourFormat) TIME_12_HOUR.format(now).replace("am", "AM").replace("pm", "PM")
-                else TIME_24_HOUR.format(now)
+                if (config.twelveHourFormat) {
+                    TIME_12_HOUR.format(now).replace("am", "AM").replace("pm", "PM")
+                } else {
+                    TIME_24_HOUR.format(now)
+                },
             )
         }
 

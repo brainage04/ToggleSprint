@@ -16,13 +16,14 @@ object EquipmentTracker {
         val textArray = arrayListOf<String>()
         val iconStacks = arrayListOf<ItemStack?>()
 
-        val equipmentList = arrayListOf(
-            thePlayer.currentEquippedItem, // Hand
-            thePlayer.getCurrentArmor(3), // Helmet
-            thePlayer.getCurrentArmor(2), // Chestplate
-            thePlayer.getCurrentArmor(1), // Leggings
-            thePlayer.getCurrentArmor(0) // Boots
-        )
+        val equipmentList =
+            arrayListOf(
+                thePlayer.currentEquippedItem, // Hand
+                thePlayer.getCurrentArmor(3), // Helmet
+                thePlayer.getCurrentArmor(2), // Chestplate
+                thePlayer.getCurrentArmor(1), // Leggings
+                thePlayer.getCurrentArmor(0), // Boots
+            )
 
         for (i in ConfigUtils.inventoryTrackers.equipmentTracker.itemTypes) {
             var currentLine = ""
@@ -35,8 +36,12 @@ object EquipmentTracker {
                 }
 
                 else -> { // name (1)
-                    currentLine += if (equipmentList[i].hasDisplayName()) equipmentList[i].displayName.trim()
-                    else equipmentList[i].item.getItemStackDisplayName(equipmentList[i]).trim()
+                    currentLine +=
+                        if (equipmentList[i].hasDisplayName()) {
+                            equipmentList[i].displayName.trim()
+                        } else {
+                            equipmentList[i].item.getItemStackDisplayName(equipmentList[i]).trim()
+                        }
                 }
             }
 
@@ -45,11 +50,12 @@ object EquipmentTracker {
 
                 val durabilityPercentage = (equipmentList[i].maxDamage - equipmentList[i].itemDamage).toDouble() / equipmentList[i].maxDamage * 100.0
 
-                currentLine += when {
-                    durabilityPercentage <= 20.0 -> ChatUtils.RED_CHAR
-                    durabilityPercentage <= 50.0 -> ChatUtils.YELLOW_CHAR
-                    else -> ChatUtils.GREEN_CHAR
-                }
+                currentLine +=
+                    when {
+                        durabilityPercentage <= 20.0 -> ChatUtils.RED_CHAR
+                        durabilityPercentage <= 50.0 -> ChatUtils.YELLOW_CHAR
+                        else -> ChatUtils.GREEN_CHAR
+                    }
 
                 when (ConfigUtils.inventoryTrackers.equipmentTracker.durabilityFormat) {
                     0 -> currentLine += "${roundDecimalPlaces(durabilityPercentage, ConfigUtils.inventoryTrackers.equipmentTracker.durabilityDecimalPlaces)}%"
@@ -67,7 +73,10 @@ object EquipmentTracker {
     }
 
     /** Draws each item's icon over the blank prefix reserved at the start of its line. */
-    private fun renderIcons(iconStacks: List<ItemStack?>, placedLines: List<RenderGuiData.PlacedLine>) {
+    private fun renderIcons(
+        iconStacks: List<ItemStack?>,
+        placedLines: List<RenderGuiData.PlacedLine>,
+    ) {
         if (iconStacks.none { it != null }) return
         val minecraft = Minecraft.getMinecraft()
         val font = minecraft.fontRendererObj ?: return

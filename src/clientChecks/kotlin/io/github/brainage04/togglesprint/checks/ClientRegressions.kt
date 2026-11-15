@@ -110,29 +110,34 @@ object ClientRegressions {
             manager.config = originalConfig
         }
         val descriptors = File("/proc/self/fd").listFiles() ?: error("Cannot inspect config descriptors")
-        val openConfig = descriptors.filter {
-            try {
-                Files.readSymbolicLink(it.toPath()).toString() == file.path
-            } catch (_: java.io.IOException) {
-                false // An unrelated network descriptor may close while the directory is inspected.
+        val openConfig =
+            descriptors.filter {
+                try {
+                    Files.readSymbolicLink(it.toPath()).toString() == file.path
+                } catch (_: java.io.IOException) {
+                    false // An unrelated network descriptor may close while the directory is inspected.
+                }
             }
-        }
         check(openConfig.isEmpty()) { "Loading config leaked descriptors: $openConfig" }
     }
 
     private fun concurrentSaves() {
         val start = CountDownLatch(1)
         val failures = Collections.synchronizedList(ArrayList<Throwable>())
-        val workers = (1..4).map {
-            Thread {
-                try {
-                    check(start.await(5, TimeUnit.SECONDS))
-                    repeat(8) { ToggleSprintMain.configManager.save() }
-                } catch (failure: Throwable) {
-                    failures.add(failure)
+        val workers =
+            (1..4).map {
+                Thread {
+                    try {
+                        check(start.await(5, TimeUnit.SECONDS))
+                        repeat(8) { ToggleSprintMain.configManager.save() }
+                    } catch (failure: Throwable) {
+                        failures.add(failure)
+                    }
+                }.apply {
+                    name = "togglesprint-save-check-$it"
+                    start()
                 }
-            }.apply { name = "togglesprint-save-check-$it"; start() }
-        }
+            }
         try {
             start.countDown()
             workers.forEach { it.join(10_000) }

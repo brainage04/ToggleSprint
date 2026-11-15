@@ -23,7 +23,10 @@ open class HudElement(
     val coreSettings: GUIElements.CoreSettings get() = settings()
 
     /** Draws the element; [editing] is true while the element editor is open. */
-    open fun render(coreSettings: GUIElements.CoreSettings, editing: Boolean) {
+    open fun render(
+        coreSettings: GUIElements.CoreSettings,
+        editing: Boolean,
+    ) {
         val text = lines()
         RenderGuiData.renderElement(coreSettings, if (text.isEmpty() && editing) listOf(name) else text)
     }

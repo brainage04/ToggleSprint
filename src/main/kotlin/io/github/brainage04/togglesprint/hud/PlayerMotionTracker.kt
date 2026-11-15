@@ -33,7 +33,11 @@ object PlayerMotionTracker {
         return lines
     }
 
-    private fun speed(label: String, blocksPerTick: Double, config: GUIElements.MotionTracker): String {
+    private fun speed(
+        label: String,
+        blocksPerTick: Double,
+        config: GUIElements.MotionTracker,
+    ): String {
         var line = "$label: ${roundDecimalPlaces(blocksPerTick * TICKS_PER_SECOND, config.decimalPlaces)} m/s"
         if (config.showBlocksPerTick) line += " (${roundDecimalPlaces(blocksPerTick, config.decimalPlaces)} m/tick)"
         return line

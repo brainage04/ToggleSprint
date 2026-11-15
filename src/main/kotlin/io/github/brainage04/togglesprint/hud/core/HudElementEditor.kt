@@ -20,7 +20,11 @@ import java.util.IdentityHashMap
  * frame being drawn.
  */
 class HudElementEditor : GuiScreen() {
-    private class SavedPosition(val x: Double, val y: Double, val anchorCorner: Int)
+    private class SavedPosition(
+        val x: Double,
+        val y: Double,
+        val anchorCorner: Int,
+    )
 
     private val savedPositions = IdentityHashMap<GUIElements.CoreSettings, SavedPosition>()
     private var selected: HudElement? = null
@@ -65,7 +69,10 @@ class HudElementEditor : GuiScreen() {
         mc.displayGuiScreen(null)
     }
 
-    override fun keyTyped(typedChar: Char, keyCode: Int) {
+    override fun keyTyped(
+        typedChar: Char,
+        keyCode: Int,
+    ) {
         if (keyCode == Keyboard.KEY_ESCAPE) {
             closeWithoutSaving()
             return
@@ -89,7 +96,11 @@ class HudElementEditor : GuiScreen() {
         }
     }
 
-    override fun mouseClicked(mouseX: Int, mouseY: Int, mouseButton: Int) {
+    override fun mouseClicked(
+        mouseX: Int,
+        mouseY: Int,
+        mouseButton: Int,
+    ) {
         if (buttonList.any { it.mousePressed(mc, mouseX, mouseY) }) {
             super.mouseClicked(mouseX, mouseY, mouseButton)
             return
@@ -105,33 +116,47 @@ class HudElementEditor : GuiScreen() {
         dragTop = bounds.top
     }
 
-    override fun mouseClickMove(mouseX: Int, mouseY: Int, clickedMouseButton: Int, timeSinceLastClick: Long) {
+    override fun mouseClickMove(
+        mouseX: Int,
+        mouseY: Int,
+        clickedMouseButton: Int,
+        timeSinceLastClick: Long,
+    ) {
         if (!dragging) return
         val element = selected ?: return
         val bounds = RenderGuiData.boundsOf(element.coreSettings) ?: return
         moveTo(element.coreSettings, bounds, dragLeft + mouseX - dragMouseX, dragTop + mouseY - dragMouseY)
     }
 
-    override fun mouseReleased(mouseX: Int, mouseY: Int, state: Int) {
+    override fun mouseReleased(
+        mouseX: Int,
+        mouseY: Int,
+        state: Int,
+    ) {
         dragging = false
         super.mouseReleased(mouseX, mouseY, state)
     }
 
-    override fun drawScreen(mouseX: Int, mouseY: Int, partialTicks: Float) {
+    override fun drawScreen(
+        mouseX: Int,
+        mouseY: Int,
+        partialTicks: Float,
+    ) {
         val hovered = elementAt(mouseX, mouseY)
         for (element in listOfNotNull(hovered, selected?.takeIf { it !== hovered })) {
             val bounds = RenderGuiData.boundsOf(element.coreSettings) ?: continue
             Gui.drawRect(bounds.left, bounds.top, bounds.right, bounds.bottom, HIGHLIGHT_COLOUR)
         }
 
-        val lines = arrayListOf(
-            "${ChatUtils.BOLD_CHAR}HUD Element Editor",
-            "Click to select, hold click and drag to move",
-            "Arrow keys for precise movement, Ctrl = x5, Shift = x10",
-            "Space to cycle alignment",
-            "Escape to close without saving",
-            "",
-        )
+        val lines =
+            arrayListOf(
+                "${ChatUtils.BOLD_CHAR}HUD Element Editor",
+                "Click to select, hold click and drag to move",
+                "Arrow keys for precise movement, Ctrl = x5, Shift = x10",
+                "Space to cycle alignment",
+                "Escape to close without saving",
+                "",
+            )
         val shown = hovered ?: selected
         if (shown != null) {
             val coreSettings = shown.coreSettings
@@ -143,7 +168,7 @@ class HudElementEditor : GuiScreen() {
                     shown === hovered && shown === selected -> "Highlighted & Selected"
                     shown === hovered -> "Highlighted"
                     else -> "Selected"
-                }
+                },
             )
         }
 
@@ -160,11 +185,18 @@ class HudElementEditor : GuiScreen() {
     }
 
     /** The topmost element drawn at the given point; later elements are drawn over earlier ones. */
-    private fun elementAt(x: Int, y: Int): HudElement? =
-        RenderGuiData.elements.lastOrNull { RenderGuiData.boundsOf(it.coreSettings)?.contains(x, y) == true }
+    private fun elementAt(
+        x: Int,
+        y: Int,
+    ): HudElement? = RenderGuiData.elements.lastOrNull { RenderGuiData.boundsOf(it.coreSettings)?.contains(x, y) == true }
 
     /** Moves the element's top left corner to the given point, kept within the screen margin. */
-    private fun moveTo(coreSettings: GUIElements.CoreSettings, bounds: RenderGuiData.ElementBounds, left: Int, top: Int) {
+    private fun moveTo(
+        coreSettings: GUIElements.CoreSettings,
+        bounds: RenderGuiData.ElementBounds,
+        left: Int,
+        top: Int,
+    ) {
         val margin = ConfigUtils.globalGuiSettings.screenMargin.coerceAtLeast(0)
         val clampedLeft = left.coerceIn(margin, maxOf(margin, width - bounds.width - margin))
         val clampedTop = top.coerceIn(margin, maxOf(margin, height - bounds.height - margin))
@@ -173,7 +205,10 @@ class HudElementEditor : GuiScreen() {
     }
 
     /** Switches to the next anchor, adjusting the offsets so the element stays where it is. */
-    private fun cycleAnchor(coreSettings: GUIElements.CoreSettings, bounds: RenderGuiData.ElementBounds) {
+    private fun cycleAnchor(
+        coreSettings: GUIElements.CoreSettings,
+        bounds: RenderGuiData.ElementBounds,
+    ) {
         coreSettings.anchorCorner = ElementPlacement.nextAnchor(coreSettings.anchorCorner)
         coreSettings.x = ElementPlacement.offset(ElementPlacement.horizontalAxis(coreSettings.anchorCorner), width, bounds.width, bounds.left)
         coreSettings.y = ElementPlacement.offset(ElementPlacement.verticalAxis(coreSettings.anchorCorner), height, bounds.height, bounds.top)
@@ -184,16 +219,25 @@ class HudElementEditor : GuiScreen() {
         const val SAVE_BUTTON = 1
         const val HIGHLIGHT_COLOUR = 0x7FFFFFFF
 
-        val BUTTON_TOOLTIPS = mapOf(
-            UNDO_BUTTON to "Reverts the current positions to what they were before and closes the screen.",
-            SAVE_BUTTON to "Saves the current positions and closes the screen.",
-        )
+        val BUTTON_TOOLTIPS =
+            mapOf(
+                UNDO_BUTTON to "Reverts the current positions to what they were before and closes the screen.",
+                SAVE_BUTTON to "Saves the current positions and closes the screen.",
+            )
         const val OPAQUE = 0xFF000000.toInt()
 
         /** Names of the `CoreSettings.anchorCorner` dropdown values, by index. */
-        val ANCHOR_NAMES = arrayOf(
-            "Top Left", "Top Right", "Bottom Left", "Bottom Right",
-            "Centre Left", "Centre Right", "Centre Top", "Centre Bottom", "Centre",
-        )
+        val ANCHOR_NAMES =
+            arrayOf(
+                "Top Left",
+                "Top Right",
+                "Bottom Left",
+                "Bottom Right",
+                "Centre Left",
+                "Centre Right",
+                "Centre Top",
+                "Centre Bottom",
+                "Centre",
+            )
     }
 }

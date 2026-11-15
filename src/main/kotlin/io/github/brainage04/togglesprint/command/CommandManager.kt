@@ -7,7 +7,6 @@ import net.minecraft.command.ICommandSender
 import net.minecraftforge.client.ClientCommandHandler
 
 class CommandManager {
-
     init {
         registerCommand("togglesprint") { args ->
             if (args.isEmpty()) {
@@ -37,7 +36,10 @@ class CommandManager {
         ChatFeedback.success("Fullbright set to $amount.")
     }
 
-    private fun registerCommand(name: String, function: (Array<String>) -> Unit) {
+    private fun registerCommand(
+        name: String,
+        function: (Array<String>) -> Unit,
+    ) {
         ClientCommandHandler.instance.registerCommand(SimpleCommand(name, createCommand(function)))
     }
 
@@ -60,9 +62,13 @@ class CommandManager {
     }
  */
 
-    private fun createCommand(function: (Array<String>) -> Unit) = object : ProcessCommandRunnable() {
-        override fun processCommand(sender: ICommandSender?, args: Array<String>?) {
-            if (args != null) function(args.asList().toTypedArray())
+    private fun createCommand(function: (Array<String>) -> Unit) =
+        object : ProcessCommandRunnable() {
+            override fun processCommand(
+                sender: ICommandSender?,
+                args: Array<String>?,
+            ) {
+                if (args != null) function(args.asList().toTypedArray())
+            }
         }
-    }
 }

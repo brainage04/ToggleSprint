@@ -35,11 +35,14 @@ object WaypointRenderer {
      * keeps it inside the far plane and out of the distance fog.
      */
     private const val PROJECTION_SHARE = 0.5
+
     /** Past these distances the marker and label grow with distance, so they keep their size on screen. */
     private const val MARKER_GROWTH_START = 24.0
     private const val LABEL_GROWTH_START = 12.0
+
     /** Within this distance every label shows its name. */
     private const val NAME_DISTANCE = 16.0
+
     /** How close to the crosshair (in degrees) a waypoint must be to show its name from afar. */
     private const val FOCUS_ANGLE = 5.0
     private const val TEXT_SCALE = 0.025f
@@ -87,18 +90,23 @@ object WaypointRenderer {
         val feetZ = camera.lastTickPosZ + (camera.posZ - camera.lastTickPosZ) * partialTicks
         val eyeHeight = camera.eyeHeight.toDouble()
         val look = camera.getLook(partialTicks)
-        val frame = Frame(
-            config,
-            minecraft.fontRendererObj,
-            Math.floorMod(world.totalWorldTime, 24_000L) + partialTicks,
-            max(32.0, minecraft.gameSettings.renderDistanceChunks * 16.0 * PROJECTION_SHARE),
-            world.height,
-            feetX, feetY + eyeHeight, feetZ,
-            eyeHeight,
-            look.xCoord, look.yCoord, look.zCoord,
-            minecraft.renderManager.playerViewY,
-            minecraft.renderManager.playerViewX,
-        )
+        val frame =
+            Frame(
+                config,
+                minecraft.fontRendererObj,
+                Math.floorMod(world.totalWorldTime, 24_000L) + partialTicks,
+                max(32.0, minecraft.gameSettings.renderDistanceChunks * 16.0 * PROJECTION_SHARE),
+                world.height,
+                feetX,
+                feetY + eyeHeight,
+                feetZ,
+                eyeHeight,
+                look.xCoord,
+                look.yCoord,
+                look.zCoord,
+                minecraft.renderManager.playerViewY,
+                minecraft.renderManager.playerViewX,
+            )
 
         val state = SavedGlState()
         GlStateManager.disableLighting()
@@ -115,14 +123,20 @@ object WaypointRenderer {
         state.restore()
     }
 
-    private fun distanceSquared(frame: Frame, waypoint: Waypoint): Double {
+    private fun distanceSquared(
+        frame: Frame,
+        waypoint: Waypoint,
+    ): Double {
         val x = waypoint.x + 0.5 - frame.eyeX
         val y = waypoint.y - frame.eyeY
         val z = waypoint.z + 0.5 - frame.eyeZ
         return x * x + y * y + z * z
     }
 
-    private fun drawWaypoint(frame: Frame, waypoint: Waypoint) {
+    private fun drawWaypoint(
+        frame: Frame,
+        waypoint: Waypoint,
+    ) {
         // where a player standing on the waypoint's block has their feet, relative to the eye
         val offsetX = waypoint.x + 0.5 - frame.eyeX
         val offsetY = waypoint.y - frame.eyeY
@@ -165,7 +179,12 @@ object WaypointRenderer {
      * A slim beacon beam from the bottom of the world to the top; like vanilla's, the inner beam
      * spins and scrolls inside a faint glow. It widens with distance so it stays visible.
      */
-    private fun drawBeam(frame: Frame, waypointY: Int, rgb: Int, horizontalDistance: Double) {
+    private fun drawBeam(
+        frame: Frame,
+        waypointY: Int,
+        rgb: Int,
+        horizontalDistance: Double,
+    ) {
         val widen = max(1.0, horizontalDistance / 64.0)
         val bottom = (-waypointY).toDouble()
         val top = (frame.worldHeight - waypointY).toDouble()
@@ -203,8 +222,16 @@ object WaypointRenderer {
 
     /** The four textured sides of a square prism with corners [radius] from its axis. */
     private fun drawBeamPrism(
-        radius: Double, angle: Double, bottom: Double, top: Double, vBottom: Double, vTop: Double,
-        red: Float, green: Float, blue: Float, alpha: Float,
+        radius: Double,
+        angle: Double,
+        bottom: Double,
+        top: Double,
+        vBottom: Double,
+        vTop: Double,
+        red: Float,
+        green: Float,
+        blue: Float,
+        alpha: Float,
     ) {
         val tessellator = Tessellator.getInstance()
         val renderer = tessellator.worldRenderer
@@ -216,24 +243,46 @@ object WaypointRenderer {
             val z0 = sin(from) * radius
             val x1 = cos(to) * radius
             val z1 = sin(to) * radius
-            renderer.pos(x0, top, z0).tex(1.0, vTop).color(red, green, blue, alpha).endVertex()
-            renderer.pos(x0, bottom, z0).tex(1.0, vBottom).color(red, green, blue, alpha).endVertex()
-            renderer.pos(x1, bottom, z1).tex(0.0, vBottom).color(red, green, blue, alpha).endVertex()
-            renderer.pos(x1, top, z1).tex(0.0, vTop).color(red, green, blue, alpha).endVertex()
+            renderer
+                .pos(x0, top, z0)
+                .tex(1.0, vTop)
+                .color(red, green, blue, alpha)
+                .endVertex()
+            renderer
+                .pos(x0, bottom, z0)
+                .tex(1.0, vBottom)
+                .color(red, green, blue, alpha)
+                .endVertex()
+            renderer
+                .pos(x1, bottom, z1)
+                .tex(0.0, vBottom)
+                .color(red, green, blue, alpha)
+                .endVertex()
+            renderer
+                .pos(x1, top, z1)
+                .tex(0.0, vTop)
+                .color(red, green, blue, alpha)
+                .endVertex()
         }
         tessellator.draw()
     }
 
     /** An octahedron that spins and bobs, lit from above: bright top facets, dark lower ones. */
-    private fun drawGem(time: Float, rgb: Int, centre: Float, halfHeight: Float) {
+    private fun drawGem(
+        time: Float,
+        rgb: Int,
+        centre: Float,
+        halfHeight: Float,
+    ) {
         val radius = halfHeight * 0.7f
         val spin = Math.toRadians(time * 2.5).toFloat()
-        val shades = intArrayOf(
-            lerpRgb(rgb, 0xFFFFFF, 0.45f),
-            lerpRgb(rgb, 0xFFFFFF, 0.15f),
-            scaleRgb(rgb, 0.75f),
-            scaleRgb(rgb, 0.5f),
-        )
+        val shades =
+            intArrayOf(
+                lerpRgb(rgb, 0xFFFFFF, 0.45f),
+                lerpRgb(rgb, 0xFFFFFF, 0.15f),
+                scaleRgb(rgb, 0.75f),
+                scaleRgb(rgb, 0.5f),
+            )
         val xs = FloatArray(4)
         val zs = FloatArray(4)
         for (corner in 0 until 4) {
@@ -270,7 +319,10 @@ object WaypointRenderer {
     }
 
     /** Two rings spreading over the ground and fading, half a cycle apart, like a sonar ping. */
-    private fun drawPulse(time: Float, rgb: Int) {
+    private fun drawPulse(
+        time: Float,
+        rgb: Int,
+    ) {
         GlStateManager.disableTexture2D()
         GlStateManager.enableDepth()
         GlStateManager.depthMask(false)
@@ -307,7 +359,14 @@ object WaypointRenderer {
      * through walls and brightly where nothing is in front of it, like a vanilla name tag, and grows
      * with distance so that it keeps its size on screen.
      */
-    private fun drawLabel(frame: Frame, name: String, rgb: Int, distance: Double, height: Float, focused: Boolean) {
+    private fun drawLabel(
+        frame: Frame,
+        name: String,
+        rgb: Int,
+        distance: Double,
+        height: Float,
+        focused: Boolean,
+    ) {
         val showName = frame.config.alwaysShowNames || distance < NAME_DISTANCE || focused
         val scale = TEXT_SCALE * max(1.0, distance / LABEL_GROWTH_START).toFloat() * frame.config.labelScalePercent / 100.0f
         val font = frame.font
@@ -352,7 +411,12 @@ object WaypointRenderer {
         GlStateManager.popMatrix()
     }
 
-    private fun drawLines(font: FontRenderer, lines: List<Pair<String, Int>>, top: Int, alpha: Int) {
+    private fun drawLines(
+        font: FontRenderer,
+        lines: List<Pair<String, Int>>,
+        top: Int,
+        alpha: Int,
+    ) {
         var y = top
         for ((text, rgb) in lines) {
             font.drawString(text, -font.getStringWidth(text) / 2.0f, y.toFloat(), alpha or rgb, false)
@@ -360,7 +424,12 @@ object WaypointRenderer {
         }
     }
 
-    private fun isFocused(frame: Frame, x: Double, y: Double, z: Double): Boolean {
+    private fun isFocused(
+        frame: Frame,
+        x: Double,
+        y: Double,
+        z: Double,
+    ): Boolean {
         val length = sqrt(x * x + y * y + z * z)
         if (length == 0.0) return true
         val cosine = (x * frame.lookX + y * frame.lookY + z * frame.lookZ) / length
@@ -374,13 +443,25 @@ object WaypointRenderer {
         return String.format(Locale.ROOT, "%.1f km", distance / 1000.0)
     }
 
-    private fun vertex(renderer: net.minecraft.client.renderer.WorldRenderer, x: Float, y: Float, z: Float, rgb: Int, alpha: Int) {
-        renderer.pos(x.toDouble(), y.toDouble(), z.toDouble())
+    private fun vertex(
+        renderer: net.minecraft.client.renderer.WorldRenderer,
+        x: Float,
+        y: Float,
+        z: Float,
+        rgb: Int,
+        alpha: Int,
+    ) {
+        renderer
+            .pos(x.toDouble(), y.toDouble(), z.toDouble())
             .color(rgb shr 16 and 0xFF, rgb shr 8 and 0xFF, rgb and 0xFF, alpha)
             .endVertex()
     }
 
-    private fun lerpRgb(from: Int, to: Int, amount: Float): Int {
+    private fun lerpRgb(
+        from: Int,
+        to: Int,
+        amount: Float,
+    ): Int {
         fun channel(shift: Int): Int {
             val a = from shr shift and 0xFF
             val b = to shr shift and 0xFF
@@ -389,7 +470,10 @@ object WaypointRenderer {
         return channel(16) or channel(8) or channel(0)
     }
 
-    private fun scaleRgb(rgb: Int, factor: Float): Int = lerpRgb(rgb, 0, 1.0f - factor)
+    private fun scaleRgb(
+        rgb: Int,
+        factor: Float,
+    ): Int = lerpRgb(rgb, 0, 1.0f - factor)
 
     /**
      * The GL state this renderer changes, read before drawing and put back afterwards through

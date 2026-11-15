@@ -2,27 +2,27 @@ package io.github.brainage04.togglesprint
 
 import io.github.brainage04.togglesprint.command.CommandManager
 import io.github.brainage04.togglesprint.command.EnchantCommands
-import io.github.brainage04.togglesprint.waypoint.WaypointRenderer
-import io.github.brainage04.togglesprint.waypoint.WaypointsCommand
-import io.github.brainage04.togglesprint.waypoint.WaypointStore
-import io.github.brainage04.togglesprint.config.manager.ConfigManager
 import io.github.brainage04.togglesprint.config.ToggleSprintConfig
+import io.github.brainage04.togglesprint.config.manager.ConfigManager
 import io.github.brainage04.togglesprint.event.ClientTickEventTracker
-import io.github.brainage04.togglesprint.event.InputEventTracker
-import io.github.brainage04.togglesprint.event.FullbrightHandler
-import io.github.brainage04.togglesprint.event.NetworkPacketMonitor
 import io.github.brainage04.togglesprint.event.EnchantTooltipHandler
+import io.github.brainage04.togglesprint.event.FullbrightHandler
+import io.github.brainage04.togglesprint.event.InputEventTracker
+import io.github.brainage04.togglesprint.event.NetworkPacketMonitor
+import io.github.brainage04.togglesprint.hud.NetworkTracker
 import io.github.brainage04.togglesprint.hud.PerformanceHud
 import io.github.brainage04.togglesprint.hud.ReachHud
-import io.github.brainage04.togglesprint.hud.NetworkTracker
 import io.github.brainage04.togglesprint.hud.core.RenderGuiData
 import io.github.brainage04.togglesprint.keys.ConfigKeybind
-import io.github.brainage04.togglesprint.keys.ElementEditorKeybind
 import io.github.brainage04.togglesprint.keys.CreateWaypointKeybind
-import io.github.brainage04.togglesprint.keys.ManageWaypointsKeybind
+import io.github.brainage04.togglesprint.keys.ElementEditorKeybind
 import io.github.brainage04.togglesprint.keys.InventoryStatsKeybind
+import io.github.brainage04.togglesprint.keys.ManageWaypointsKeybind
 import io.github.brainage04.togglesprint.keys.ToggleSneakKeybind
 import io.github.brainage04.togglesprint.keys.ToggleSprintKeybind
+import io.github.brainage04.togglesprint.waypoint.WaypointRenderer
+import io.github.brainage04.togglesprint.waypoint.WaypointStore
+import io.github.brainage04.togglesprint.waypoint.WaypointsCommand
 import net.minecraft.client.settings.KeyBinding
 import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.fml.client.registry.ClientRegistry
@@ -80,7 +80,6 @@ class ToggleSprintMain {
             elementEditorKeybind,
             createWaypointKeybind,
             manageWaypointsKeybind,
-
             NetworkPacketMonitor,
             InputEventTracker(),
             ClientTickEventTracker(),

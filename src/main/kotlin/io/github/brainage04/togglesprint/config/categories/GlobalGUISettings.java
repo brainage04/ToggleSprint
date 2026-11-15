@@ -18,22 +18,31 @@ public class GlobalGUISettings {
     public boolean textShadows = true;
 
     @Expose
-    @ConfigOption(name = "Backdrop Opacity", desc = "The opacity of the dark backdrop behind each element (0 = no backdrop).")
+    @ConfigOption(
+            name = "Backdrop Opacity",
+            desc = "The opacity of the dark backdrop behind each element (0 = no backdrop).")
     @ConfigEditorSlider(minValue = 0, maxValue = 255, minStep = 1)
     public int backdropOpacity = 0;
 
     @Expose
-    @ConfigOption(name = "Padding", desc = "The number of pixels between lines and around each element.")
+    @ConfigOption(
+            name = "Padding",
+            desc = "The number of pixels between lines and around each element.")
     @ConfigEditorSlider(minValue = 0, maxValue = 16, minStep = 1)
     public int paddingInPixels = 2;
 
     @Expose
-    @ConfigOption(name = "Max Element Width", desc = "Lines wider than this many pixels wrap onto the next line (0 = no limit).")
+    @ConfigOption(
+            name = "Max Element Width",
+            desc = "Lines wider than this many pixels wrap onto the next line (0 = no limit).")
     @ConfigEditorSlider(minValue = 0, maxValue = 1_000, minStep = 1)
     public int maxElementWidth = 0;
 
     @Expose
-    @ConfigOption(name = "Screen Margin", desc = "The closest the element editor lets an element get to the edge of the screen, in pixels.")
+    @ConfigOption(
+            name = "Screen Margin",
+            desc =
+                    "The closest the element editor lets an element get to the edge of the screen, in pixels.")
     @ConfigEditorSlider(minValue = 0, maxValue = 50, minStep = 1)
     public int screenMargin = 5;
 }

@@ -9,17 +9,19 @@ object ToggleSprintTracker {
     var isSprintToggled = ConfigUtils.toggleMovementKeys.toggleSprint.defaultState
     var isSneakToggled = ConfigUtils.toggleMovementKeys.toggleSneak.defaultState
 
-    private fun getStatus(player: EntityPlayerSP): String {
-        return if (player.isSneaking) {
+    private fun getStatus(player: EntityPlayerSP): String =
+        if (player.isSneaking) {
             when (isSneakToggled) {
                 true -> "[Sneaking (Toggled)]"
                 false -> "[Sneaking (Vanilla)]"
             }
+        } else if (isSprintToggled) {
+            "[Sprinting (Toggled)]"
+        } else if (player.isSprinting) {
+            "[Sprinting (Vanilla)]"
+        } else {
+            "${ChatUtils.GRAY_CHAR}[Walking (Vanilla)]"
         }
-        else if (isSprintToggled) "[Sprinting (Toggled)]"
-        else if (player.isSprinting) "[Sprinting (Vanilla)]"
-        else "${ChatUtils.GRAY_CHAR}[Walking (Vanilla)]"
-    }
 
     fun lines(): List<String> {
         val minecraft = Minecraft.getMinecraft() ?: return emptyList()

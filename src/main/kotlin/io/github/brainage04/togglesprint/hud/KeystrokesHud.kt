@@ -10,7 +10,15 @@ import java.util.IdentityHashMap
 
 object KeystrokesHud {
     private const val KEY_SIZE = 20
-    private data class KeyItem(val key: KeyBinding?, val label: String, val x: Int, val y: Int, val width: Int, val height: Int)
+
+    private data class KeyItem(
+        val key: KeyBinding?,
+        val label: String,
+        val x: Int,
+        val y: Int,
+        val width: Int,
+        val height: Int,
+    )
 
     private val transitions = IdentityHashMap<KeyBinding, KeystrokesHudSupport.Transition>()
     private val leftClicks = ArrayList<Long>()
@@ -58,14 +66,32 @@ object KeystrokesHud {
                 backdrop = KeystrokesHudSupport.withAlpha(KeystrokesHudSupport.lerpRgb(0, textRgb, transition.progress), backdropAlpha)
                 textColour = KeystrokesHudSupport.withAlpha(KeystrokesHudSupport.lerpRgb(textRgb, 0, transition.progress), 255)
             }
-            Gui.drawRect(position.first + item.x, position.second + item.y, position.first + item.x + item.width, position.second + item.y + item.height, backdrop)
-            font.drawString(item.label, (position.first + item.x + (item.width - font.getStringWidth(item.label)) / 2).toFloat(), (position.second + item.y + (item.height - font.FONT_HEIGHT) / 2).toFloat(), textColour, shadows)
+            Gui.drawRect(
+                position.first + item.x,
+                position.second + item.y,
+                position.first + item.x + item.width,
+                position.second + item.y + item.height,
+                backdrop,
+            )
+            font.drawString(
+                item.label,
+                (position.first + item.x + (item.width - font.getStringWidth(item.label)) / 2).toFloat(),
+                (
+                    position.second + item.y +
+                        (item.height - font.FONT_HEIGHT) / 2
+                ).toFloat(),
+                textColour,
+                shadows,
+            )
         }
         val iterator = transitions.keys.iterator()
         while (iterator.hasNext()) if (!seen.containsKey(iterator.next())) iterator.remove()
     }
 
-    private fun updateClicks(minecraft: Minecraft, nowMillis: Long) {
+    private fun updateClicks(
+        minecraft: Minecraft,
+        nowMillis: Long,
+    ) {
         val config = ConfigUtils.brainageHudParity.keystrokes
         val format = config.clicksPerSecondFormat.coerceIn(0, 3)
         if (config.showMouseButtons && (format == 1 || format == 3)) {
@@ -82,7 +108,10 @@ object KeystrokesHud {
         }
     }
 
-    private fun buildItems(minecraft: Minecraft, gap: Int): List<KeyItem> {
+    private fun buildItems(
+        minecraft: Minecraft,
+        gap: Int,
+    ): List<KeyItem> {
         val config = ConfigUtils.brainageHudParity.keystrokes
         val items = ArrayList<KeyItem>()
         var y = 0
@@ -110,10 +139,15 @@ object KeystrokesHud {
         return items
     }
 
-    fun cpsLabel(format: Int, leftClicks: Int, rightClicks: Int): String? = when (format.coerceIn(0, 3)) {
-        1 -> "$leftClicks CPS"
-        2 -> "$rightClicks CPS (R)"
-        3 -> "$leftClicks | $rightClicks CPS"
-        else -> null
-    }
+    fun cpsLabel(
+        format: Int,
+        leftClicks: Int,
+        rightClicks: Int,
+    ): String? =
+        when (format.coerceIn(0, 3)) {
+            1 -> "$leftClicks CPS"
+            2 -> "$rightClicks CPS (R)"
+            3 -> "$leftClicks | $rightClicks CPS"
+            else -> null
+        }
 }

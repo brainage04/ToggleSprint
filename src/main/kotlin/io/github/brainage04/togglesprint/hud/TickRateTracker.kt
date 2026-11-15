@@ -11,7 +11,10 @@ import java.util.ArrayDeque
  * irregularly spaced reports correctly weighted. Not thread-safe: call it from one thread.
  */
 class TickRateTracker {
-    private class Interval(val ticks: Long, val nanos: Long)
+    private class Interval(
+        val ticks: Long,
+        val nanos: Long,
+    )
 
     private val intervals = ArrayDeque<Interval>()
     private var totalTicks = 0L
@@ -24,7 +27,11 @@ class TickRateTracker {
      * Records a game time report received at [nowNanos], keeping at most [maxIntervals] intervals.
      * A game time that goes backwards means a different world, so the history restarts.
      */
-    fun record(gameTime: Long, nowNanos: Long, maxIntervals: Int) {
+    fun record(
+        gameTime: Long,
+        nowNanos: Long,
+        maxIntervals: Int,
+    ) {
         if (hasPrevious) {
             val ticks = gameTime - previousGameTime
             val nanos = nowNanos - previousNanos

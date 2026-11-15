@@ -18,7 +18,10 @@ object InventoryTrackerShared {
     }
 
     /** Counts the items in [slots] (the hotbar from left to right, then the inventory rows) that [matches] accepts. */
-    fun count(slots: Array<ItemStack?>, matches: (ItemStack) -> Boolean): Count {
+    fun count(
+        slots: Array<ItemStack?>,
+        matches: (ItemStack) -> Boolean,
+    ): Count {
         val count = Count()
         for (stack in slots) {
             if (stack != null && matches(stack)) count.add(stack.stackSize)
@@ -27,7 +30,11 @@ object InventoryTrackerShared {
     }
 
     /** Counts every matching item grouped by [key], in the order each group is first found in the slots. */
-    fun <K> countBy(slots: Array<ItemStack?>, matches: (ItemStack) -> Boolean, key: (ItemStack) -> K): Map<K, Count> {
+    fun <K> countBy(
+        slots: Array<ItemStack?>,
+        matches: (ItemStack) -> Boolean,
+        key: (ItemStack) -> K,
+    ): Map<K, Count> {
         val counts = LinkedHashMap<K, Count>()
         for (stack in slots) {
             if (stack != null && matches(stack)) counts.getOrPut(key(stack)) { Count() }.add(stack.stackSize)
@@ -36,14 +43,24 @@ object InventoryTrackerShared {
     }
 
     /** "Arrows: 96", or "Arrows: 96 [64, 32]" when the items are split over several slots. */
-    fun format(label: String, count: Count, showSlots: Boolean): String {
+    fun format(
+        label: String,
+        count: Count,
+        showSlots: Boolean,
+    ): String {
         var line = "$label: ${count.total}"
         if (showSlots && count.perSlot.size > 1) line += " ${count.perSlot}"
         return line
     }
 
     /** The bold [title] header followed by [rows], or the header with a red N/A when there are none. */
-    fun withHeader(title: String, rows: List<String>): List<String> =
-        if (rows.isEmpty()) listOf("${ChatUtils.BOLD_CHAR}$title:${ChatUtils.RED_CHAR} N/A")
-        else listOf("${ChatUtils.BOLD_CHAR}$title:") + rows
+    fun withHeader(
+        title: String,
+        rows: List<String>,
+    ): List<String> =
+        if (rows.isEmpty()) {
+            listOf("${ChatUtils.BOLD_CHAR}$title:${ChatUtils.RED_CHAR} N/A")
+        } else {
+            listOf("${ChatUtils.BOLD_CHAR}$title:") + rows
+        }
 }

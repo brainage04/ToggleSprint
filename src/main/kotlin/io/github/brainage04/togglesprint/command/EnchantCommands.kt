@@ -1,8 +1,8 @@
 package io.github.brainage04.togglesprint.command
 
 import io.github.brainage04.togglesprint.ToggleSprintMain
-import io.github.brainage04.togglesprint.util.ChatUtils
 import io.github.brainage04.togglesprint.util.ChatFeedback
+import io.github.brainage04.togglesprint.util.ChatUtils
 import io.github.brainage04.togglesprint.util.EnchantmentUtils
 import net.minecraft.client.Minecraft
 import net.minecraft.command.CommandBase
@@ -26,51 +26,70 @@ object EnchantCommands {
         register("blacklistedenchants", ::blacklistedEnchants) { args ->
             when (args.size) {
                 1 -> CommandBase.getListOfStringsMatchingLastWord(args, "add", "remove", "query")
-                2 -> when (args[0].lowercase(Locale.ROOT)) {
-                    "add" -> {
-                        val blacklist = EnchantmentUtils.blacklist()
-                        CommandBase.getListOfStringsMatchingLastWord(args, EnchantmentUtils.all.map(EnchantmentUtils::id).filter { it !in blacklist })
+                2 ->
+                    when (args[0].lowercase(Locale.ROOT)) {
+                        "add" -> {
+                            val blacklist = EnchantmentUtils.blacklist()
+                            CommandBase.getListOfStringsMatchingLastWord(args, EnchantmentUtils.all.map(EnchantmentUtils::id).filter { it !in blacklist })
+                        }
+                        "remove" -> CommandBase.getListOfStringsMatchingLastWord(args, EnchantmentUtils.blacklist())
+                        else -> emptyList()
                     }
-                    "remove" -> CommandBase.getListOfStringsMatchingLastWord(args, EnchantmentUtils.blacklist())
-                    else -> emptyList()
-                }
                 else -> emptyList()
             }
         }
     }
 
-    private fun register(name: String, execute: (Array<String>) -> Unit, tabComplete: (Array<String>) -> List<String>) {
-        ClientCommandHandler.instance.registerCommand(SimpleCommand(
-            name,
-            object : SimpleCommand.ProcessCommandRunnable() {
-                override fun processCommand(sender: ICommandSender?, args: Array<String>?) = execute(args ?: emptyArray())
-            },
-            object : SimpleCommand.TabCompleteRunnable {
-                override fun tabComplete(sender: ICommandSender?, args: Array<String>?, pos: BlockPos?) = tabComplete(args ?: emptyArray())
-            },
-        ))
+    private fun register(
+        name: String,
+        execute: (Array<String>) -> Unit,
+        tabComplete: (Array<String>) -> List<String>,
+    ) {
+        ClientCommandHandler.instance.registerCommand(
+            SimpleCommand(
+                name,
+                object : SimpleCommand.ProcessCommandRunnable() {
+                    override fun processCommand(
+                        sender: ICommandSender?,
+                        args: Array<String>?,
+                    ) = execute(args ?: emptyArray())
+                },
+                object : SimpleCommand.TabCompleteRunnable {
+                    override fun tabComplete(
+                        sender: ICommandSender?,
+                        args: Array<String>?,
+                        pos: BlockPos?,
+                    ) = tabComplete(args ?: emptyArray())
+                },
+            ),
+        )
     }
 
     private fun getEnchants(args: Array<String>) {
-        val stack: ItemStack? = when (args.size) {
-            0 -> Minecraft.getMinecraft().thePlayer?.heldItem
-            1 -> {
-                val item = Item.getByNameOrId(args[0])
-                if (item == null) {
-                    ChatFeedback.error("Unknown item: ${args[0]}")
+        val stack: ItemStack? =
+            when (args.size) {
+                0 -> Minecraft.getMinecraft().thePlayer?.heldItem
+                1 -> {
+                    val item = Item.getByNameOrId(args[0])
+                    if (item == null) {
+                        ChatFeedback.error("Unknown item: ${args[0]}")
+                        return
+                    }
+                    ItemStack(item)
+                }
+                else -> {
+                    ChatFeedback.error("Usage: /getenchants [item]")
                     return
                 }
-                ItemStack(item)
             }
-            else -> {
-                ChatFeedback.error("Usage: /getenchants [item]")
-                return
-            }
-        }
 
         val blacklist = EnchantmentUtils.blacklist()
-        val acceptableEnchantments = if (stack == null) emptyList() else
-            EnchantmentUtils.all.filter { EnchantmentUtils.id(it) !in blacklist && it.canApply(stack) }
+        val acceptableEnchantments =
+            if (stack == null) {
+                emptyList()
+            } else {
+                EnchantmentUtils.all.filter { EnchantmentUtils.id(it) !in blacklist && it.canApply(stack) }
+            }
         if (stack == null || acceptableEnchantments.isEmpty()) {
             ChatFeedback.info("No acceptable enchantments found!")
             return
@@ -130,7 +149,11 @@ object EnchantCommands {
         val incompatible = EnchantmentUtils.all.filter { it != enchantment && !EnchantmentUtils.areCompatible(enchantment, it) }
         ChatFeedback.detail("Incompatible with: " + joinOrNotApplicable(incompatible.map(EnchantmentUtils::chatName)))
 
-        val appliedTo = Item.itemRegistry.filter { enchantment.canApply(ItemStack(it)) }.map { ItemStack(it).displayName }.distinct()
+        val appliedTo =
+            Item.itemRegistry
+                .filter { enchantment.canApply(ItemStack(it)) }
+                .map { ItemStack(it).displayName }
+                .distinct()
         ChatFeedback.detail("Applied to: " + joinOrNotApplicable(appliedTo))
     }
 
@@ -146,15 +169,19 @@ object EnchantCommands {
     }
 
     /** The enchantment named by an ID or an exact name after the subcommand. */
-    private fun resolveArgument(args: Array<String>, subcommand: String): Enchantment? {
+    private fun resolveArgument(
+        args: Array<String>,
+        subcommand: String,
+    ): Enchantment? {
         if (args.size < 2) {
             ChatFeedback.error("Usage: /blacklistedenchants $subcommand <enchantment>")
             return null
         }
 
         val query = args.drop(1).joinToString(" ").trim('"')
-        val enchantment = EnchantmentUtils.byId(query)
-            ?: EnchantmentUtils.all.firstOrNull { EnchantmentUtils.name(it).equals(query, ignoreCase = true) }
+        val enchantment =
+            EnchantmentUtils.byId(query)
+                ?: EnchantmentUtils.all.firstOrNull { EnchantmentUtils.name(it).equals(query, ignoreCase = true) }
         if (enchantment == null) ChatFeedback.error("Unknown enchantment: $query")
         return enchantment
     }

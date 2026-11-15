@@ -10,8 +10,12 @@ class WaypointStoreTest {
         val waypoints = listOf(waypoint("Waypoint 1"), waypoint("waypoint 3"), waypoint("Base"))
 
         assertEquals("Waypoint 2", WaypointStore.nextQuickName(waypoints))
-        assertEquals("Waypoint 4", WaypointStore.nextQuickName(listOf(
-            waypoint("Waypoint 1"), waypoint("Waypoint 2"), waypoint("WAYPOINT 3"))))
+        assertEquals(
+            "Waypoint 4",
+            WaypointStore.nextQuickName(
+                listOf(waypoint("Waypoint 1"), waypoint("Waypoint 2"), waypoint("WAYPOINT 3")),
+            ),
+        )
     }
 
     @Test

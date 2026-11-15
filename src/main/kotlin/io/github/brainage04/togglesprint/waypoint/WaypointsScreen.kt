@@ -8,8 +8,11 @@ import net.minecraft.client.gui.GuiSlot
  * Lists the World Centre and the current world's waypoints, with buttons to add, edit, show/hide
  * and delete them. The World Centre can only be shown or hidden.
  */
-class WaypointsScreen(private val parent: GuiScreen?) : GuiScreen() {
+class WaypointsScreen(
+    private val parent: GuiScreen?,
+) : GuiScreen() {
     private var waypoints: MutableList<Waypoint>? = null
+
     /** The World Centre, listed first while in a world. */
     private var worldCentre: Waypoint? = null
     private var selected = -1
@@ -51,21 +54,27 @@ class WaypointsScreen(private val parent: GuiScreen?) : GuiScreen() {
         when (button.id) {
             ADD -> mc.displayGuiScreen(WaypointEditScreen(this, null))
             EDIT -> selectedOwn()?.let { mc.displayGuiScreen(WaypointEditScreen(this, it)) }
-            TOGGLE -> selectedWaypoint()?.let {
-                it.visible = !it.visible
-                if (it === worldCentre) WorldCentre.setVisible(it.visible) else WaypointStore.save()
-                updateButtons()
-            }
-            DELETE -> selectedOwn()?.let {
-                WaypointActions.remove(it.name)
-                selected = -1
-                updateButtons()
-            }
+            TOGGLE ->
+                selectedWaypoint()?.let {
+                    it.visible = !it.visible
+                    if (it === worldCentre) WorldCentre.setVisible(it.visible) else WaypointStore.save()
+                    updateButtons()
+                }
+            DELETE ->
+                selectedOwn()?.let {
+                    WaypointActions.remove(it.name)
+                    selected = -1
+                    updateButtons()
+                }
             DONE -> mc.displayGuiScreen(parent)
         }
     }
 
-    override fun drawScreen(mouseX: Int, mouseY: Int, partialTicks: Float) {
+    override fun drawScreen(
+        mouseX: Int,
+        mouseY: Int,
+        partialTicks: Float,
+    ) {
         drawDefaultBackground()
         list.drawScreen(mouseX, mouseY, partialTicks)
         drawCenteredString(fontRendererObj, "Waypoints", width / 2, 12, WHITE)
@@ -74,7 +83,13 @@ class WaypointsScreen(private val parent: GuiScreen?) : GuiScreen() {
         if (waypoints == null) {
             drawCenteredString(fontRendererObj, "Waypoints are kept per world. Join a world to manage them.", width / 2, height / 2 - 20, GREY)
         } else if (waypoints.isEmpty()) {
-            drawCenteredString(fontRendererObj, "No waypoints of your own yet. Press Add, or the Create Waypoint key in game.", width / 2, height / 2 - 20, GREY)
+            drawCenteredString(
+                fontRendererObj,
+                "No waypoints of your own yet. Press Add, or the Create Waypoint key in game.",
+                width / 2,
+                height / 2 - 20,
+                GREY,
+            )
         }
         super.drawScreen(mouseX, mouseY, partialTicks)
     }
@@ -99,7 +114,12 @@ class WaypointsScreen(private val parent: GuiScreen?) : GuiScreen() {
     private inner class WaypointList : GuiSlot(mc, width, height, 32, height - 64, 24) {
         override fun getSize(): Int = entryCount()
 
-        override fun elementClicked(slotIndex: Int, isDoubleClick: Boolean, mouseX: Int, mouseY: Int) {
+        override fun elementClicked(
+            slotIndex: Int,
+            isDoubleClick: Boolean,
+            mouseX: Int,
+            mouseY: Int,
+        ) {
             selected = slotIndex
             updateButtons()
             if (isDoubleClick) selectedOwn()?.let { mc.displayGuiScreen(WaypointEditScreen(this@WaypointsScreen, it)) }
@@ -113,7 +133,14 @@ class WaypointsScreen(private val parent: GuiScreen?) : GuiScreen() {
 
         override fun getScrollBarX(): Int = width / 2 + 154
 
-        override fun drawSlot(entryID: Int, x: Int, y: Int, slotHeight: Int, mouseXIn: Int, mouseYIn: Int) {
+        override fun drawSlot(
+            entryID: Int,
+            x: Int,
+            y: Int,
+            slotHeight: Int,
+            mouseXIn: Int,
+            mouseYIn: Int,
+        ) {
             val waypoint = entry(entryID) ?: return
             val font = fontRendererObj
             font.drawString(waypoint.name, x + 2, y + 1, 0xFF000000.toInt() or waypoint.colour)

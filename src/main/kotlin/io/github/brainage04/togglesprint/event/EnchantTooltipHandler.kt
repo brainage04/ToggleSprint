@@ -15,9 +15,11 @@ class EnchantTooltipHandler {
         val stack = event.itemStack ?: return
 
         // covers enchanted books too, whose enchantments are stored separately
-        val maxedEnchantmentLines = EnchantmentUtils.present(stack)
-            .filter { (enchantment, level) -> level == enchantment.maxLevel }
-            .mapTo(HashSet()) { (enchantment, level) -> enchantment.getTranslatedName(level) }
+        val maxedEnchantmentLines =
+            EnchantmentUtils
+                .present(stack)
+                .filter { (enchantment, level) -> level == enchantment.maxLevel }
+                .mapTo(HashSet()) { (enchantment, level) -> enchantment.getTranslatedName(level) }
         if (maxedEnchantmentLines.isEmpty()) return
 
         // vanilla renders each enchantment as a line of exactly its translated name, so exact

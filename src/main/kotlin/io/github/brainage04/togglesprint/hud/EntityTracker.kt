@@ -7,21 +7,25 @@ import net.minecraft.entity.EnumCreatureType
 
 /** How many entities the client has loaded, grouped by kind of mob. */
 object EntityTracker {
-    private enum class Group(val label: String) {
+    private enum class Group(
+        val label: String,
+    ) {
         CREATURES("Creatures"),
         WATER_CREATURES("Water Creatures"),
         AMBIENT("Ambient"),
         MONSTERS("Monsters"),
-        OTHERS("Others");
+        OTHERS("Others"),
+        ;
 
         companion object {
-            fun of(entity: Entity): Group = when {
-                entity.isCreatureType(EnumCreatureType.CREATURE, false) -> CREATURES
-                entity.isCreatureType(EnumCreatureType.WATER_CREATURE, false) -> WATER_CREATURES
-                entity.isCreatureType(EnumCreatureType.AMBIENT, false) -> AMBIENT
-                entity.isCreatureType(EnumCreatureType.MONSTER, false) -> MONSTERS
-                else -> OTHERS
-            }
+            fun of(entity: Entity): Group =
+                when {
+                    entity.isCreatureType(EnumCreatureType.CREATURE, false) -> CREATURES
+                    entity.isCreatureType(EnumCreatureType.WATER_CREATURE, false) -> WATER_CREATURES
+                    entity.isCreatureType(EnumCreatureType.AMBIENT, false) -> AMBIENT
+                    entity.isCreatureType(EnumCreatureType.MONSTER, false) -> MONSTERS
+                    else -> OTHERS
+                }
         }
     }
 
@@ -41,5 +45,8 @@ object EntityTracker {
         return lines
     }
 
-    private fun group(group: Group, counts: IntArray) = "  ${group.label}: ${counts[group.ordinal]}"
+    private fun group(
+        group: Group,
+        counts: IntArray,
+    ) = "  ${group.label}: ${counts[group.ordinal]}"
 }

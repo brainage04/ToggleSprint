@@ -13,14 +13,16 @@ class ConfigUpdaterMigratorTest {
     @Test
     fun `version one parity controls migrate to amount and CPS format`() {
         val keystrokes = JsonObject().apply { addProperty("showCps", true) }
-        val parity = JsonObject().apply {
-            addProperty("fullbright", true)
-            add("keystrokes", keystrokes)
-        }
-        val config = JsonObject().apply {
-            addProperty("lastVersion", 1)
-            add("brainageHudParity", parity)
-        }
+        val parity =
+            JsonObject().apply {
+                addProperty("fullbright", true)
+                add("keystrokes", keystrokes)
+            }
+        val config =
+            JsonObject().apply {
+                addProperty("lastVersion", 1)
+                add("brainageHudParity", parity)
+            }
 
         val migrated = ConfigUpdaterMigrator.fixConfig(config)
         val migratedParity = migrated.getAsJsonObject("brainageHudParity")
@@ -37,10 +39,11 @@ class ConfigUpdaterMigratorTest {
     fun `version two chunk coordinate toggle migrates to chunk position`() {
         val position = JsonObject().apply { addProperty("showChunkCoordinates", true) }
         val guiElements = JsonObject().apply { add("positionTracker", position) }
-        val config = JsonObject().apply {
-            addProperty("lastVersion", 2)
-            add("guiElements", guiElements)
-        }
+        val config =
+            JsonObject().apply {
+                addProperty("lastVersion", 2)
+                add("guiElements", guiElements)
+            }
 
         val migrated = ConfigUpdaterMigrator.fixConfig(config)
         val migratedPosition = migrated.getAsJsonObject("guiElements").getAsJsonObject("positionTracker")
@@ -52,10 +55,11 @@ class ConfigUpdaterMigratorTest {
     @Test
     fun `version three primary colour dropdown migrates to the same RGB text colour`() {
         val globalGuiSettings = JsonObject().apply { addProperty("primaryColour", 6) } // Aqua, §b
-        val config = JsonObject().apply {
-            addProperty("lastVersion", 3)
-            add("globalGuiSettings", globalGuiSettings)
-        }
+        val config =
+            JsonObject().apply {
+                addProperty("lastVersion", 3)
+                add("globalGuiSettings", globalGuiSettings)
+            }
 
         val migrated = ConfigUpdaterMigrator.fixConfig(config)
 

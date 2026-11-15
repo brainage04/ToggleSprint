@@ -8,10 +8,25 @@ import net.minecraft.util.BlockPos
 /** Waypoint changes shared by the command, the keys and the screens; each reports in chat. */
 object WaypointActions {
     /** Minecraft's 16 chat colours, indexed by their § code (0-f). */
-    private val chatColours = intArrayOf(
-        0x000000, 0x0000AA, 0x00AA00, 0x00AAAA, 0xAA0000, 0xAA00AA, 0xFFAA00, 0xAAAAAA,
-        0x555555, 0x5555FF, 0x55FF55, 0x55FFFF, 0xFF5555, 0xFF55FF, 0xFFFF55, 0xFFFFFF,
-    )
+    private val chatColours =
+        intArrayOf(
+            0x000000,
+            0x0000AA,
+            0x00AA00,
+            0x00AAAA,
+            0xAA0000,
+            0xAA00AA,
+            0xFFAA00,
+            0xAAAAAA,
+            0x555555,
+            0x5555FF,
+            0x55FF55,
+            0x55FFFF,
+            0xFF5555,
+            0xFF55FF,
+            0xFFFF55,
+            0xFFFFFF,
+        )
 
     /** Creates a waypoint at the player's feet, named "Waypoint N" when [name] is null. */
     fun createAtPlayer(name: String?): Waypoint? {
@@ -20,7 +35,10 @@ object WaypointActions {
     }
 
     /** Creates a waypoint in the player's dimension, named "Waypoint N" when [name] is null. */
-    fun create(name: String?, pos: BlockPos): Waypoint? {
+    fun create(
+        name: String?,
+        pos: BlockPos,
+    ): Waypoint? {
         val player = Minecraft.getMinecraft().thePlayer
         val waypoints = WaypointStore.current()
         if (waypoints == null || player == null) {
@@ -66,12 +84,13 @@ object WaypointActions {
     }
 
     /** Why [name] cannot be a waypoint name, or null if it can. */
-    fun validateName(name: String): String? = when {
-        name.isEmpty() -> "A waypoint needs a name."
-        name.length > 64 -> "Waypoint names can be at most 64 characters long."
-        name.any { it == '§' || it == '"' || Character.isISOControl(it) } -> "Waypoint names cannot contain § or \"."
-        else -> null
-    }
+    fun validateName(name: String): String? =
+        when {
+            name.isEmpty() -> "A waypoint needs a name."
+            name.length > 64 -> "Waypoint names can be at most 64 characters long."
+            name.any { it == '§' || it == '"' || Character.isISOControl(it) } -> "Waypoint names cannot contain § or \"."
+            else -> null
+        }
 
     /** The waypoint's name for chat, in the chat colour nearest to its colour. */
     fun name(waypoint: Waypoint): String = "§${chatColourCode(waypoint.colour)}${waypoint.name}§r"
@@ -93,10 +112,11 @@ object WaypointActions {
         return Character.forDigit(best, 16)
     }
 
-    fun dimensionName(dimension: Int): String = when (dimension) {
-        0 -> "Overworld"
-        -1 -> "Nether"
-        1 -> "The End"
-        else -> "Dimension $dimension"
-    }
+    fun dimensionName(dimension: Int): String =
+        when (dimension) {
+            0 -> "Overworld"
+            -1 -> "Nether"
+            1 -> "The End"
+            else -> "Dimension $dimension"
+        }
 }

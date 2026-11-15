@@ -22,12 +22,13 @@ object StatusEffectHud {
         val entries = arrayListOf<Pair<Potion, List<String>>>()
         for (effect in player.activePotionEffects) {
             val potion = Potion.potionTypes.getOrNull(effect.potionID) ?: continue
-            val duration = when {
-                !settings.showDurations -> null
-                // effects applied for the longest duration the network allows never run out
-                effect.getIsPotionDurationMax() -> INFINITE
-                else -> formatDuration(effect.duration)
-            }
+            val duration =
+                when {
+                    !settings.showDurations -> null
+                    // effects applied for the longest duration the network allows never run out
+                    effect.getIsPotionDurationMax() -> INFINITE
+                    else -> formatDuration(effect.duration)
+                }
             val name = StatCollector.translateToLocal(potion.name)
             val level = levelName(effect.amplifier)
             if (settings.showIcons) {
@@ -42,7 +43,11 @@ object StatusEffectHud {
     }
 
     /** One effect in the icon layout: its text lines (wrapped to the width beside the icon) and their widths. */
-    private class Entry(val potion: Potion, val lines: List<String>, val widths: IntArray) {
+    private class Entry(
+        val potion: Potion,
+        val lines: List<String>,
+        val widths: IntArray,
+    ) {
         val width = ICON_SIZE + ICON_GAP + (widths.maxOrNull() ?: 0)
 
         /** Two unwrapped text lines are exactly the icon's height; more lines grow the entry below it. */
@@ -54,7 +59,10 @@ object StatusEffectHud {
      * first line, duration on the second, the pair exactly as tall as the icon. A single line is centred on
      * the icon. The element's padding separates effects, not the lines within one.
      */
-    private fun renderEntries(coreSettings: GUIElements.CoreSettings, effects: List<Pair<Potion, List<String>>>) {
+    private fun renderEntries(
+        coreSettings: GUIElements.CoreSettings,
+        effects: List<Pair<Potion, List<String>>>,
+    ) {
         if (effects.isEmpty()) return
         val minecraft = Minecraft.getMinecraft()
         val font = minecraft.fontRendererObj ?: return
@@ -62,10 +70,11 @@ object StatusEffectHud {
         val padding = RenderGuiData.padding(coreSettings)
         val maxWidth = RenderGuiData.maxWidth(coreSettings)
         val textWidth = if (maxWidth > 0) (maxWidth - ICON_SIZE - ICON_GAP).coerceAtLeast(1) else 0
-        val entries = effects.map { (potion, lines) ->
-            val wrapped = lines.flatMap { wrap(font, it, textWidth) }
-            Entry(potion, wrapped, IntArray(wrapped.size) { font.getStringWidth(wrapped[it]) })
-        }
+        val entries =
+            effects.map { (potion, lines) ->
+                val wrapped = lines.flatMap { wrap(font, it, textWidth) }
+                Entry(potion, wrapped, IntArray(wrapped.size) { font.getStringWidth(wrapped[it]) })
+            }
 
         val contentWidth = entries.maxOf { it.width }
         val contentHeight = entries.sumOf { it.height } + padding * (entries.size - 1)
@@ -83,11 +92,12 @@ object StatusEffectHud {
         var y = bounds.top + inset + topExtra
         for (entry in entries) {
             // entries hug the anchored side of the element; within one, the text sits beside the icon
-            val x = when (axis) {
-                ElementPlacement.Axis.START -> bounds.left + inset
-                ElementPlacement.Axis.END -> bounds.right - inset - entry.width
-                ElementPlacement.Axis.CENTRE -> bounds.left + inset + (contentWidth - entry.width) / 2
-            }
+            val x =
+                when (axis) {
+                    ElementPlacement.Axis.START -> bounds.left + inset
+                    ElementPlacement.Axis.END -> bounds.right - inset - entry.width
+                    ElementPlacement.Axis.CENTRE -> bounds.left + inset + (contentWidth - entry.width) / 2
+                }
             if (entry.potion.hasStatusIcon()) {
                 val index = entry.potion.statusIconIndex
                 GlStateManager.color(1f, 1f, 1f, 1f)
@@ -106,7 +116,11 @@ object StatusEffectHud {
     }
 
     /** [text] split to [width] like [RenderGuiData.drawElement] wraps lines; a [width] of 0 leaves it whole. */
-    private fun wrap(font: FontRenderer, text: String, width: Int): List<String> {
+    private fun wrap(
+        font: FontRenderer,
+        text: String,
+        width: Int,
+    ): List<String> {
         val parts = if (width > 0) font.listFormattedStringToWidth(text, width) else null
         return if (parts.isNullOrEmpty()) listOf(text) else parts
     }
@@ -118,7 +132,11 @@ object StatusEffectHud {
     }
 
     /** `<name>[ <level>][: <duration>]`; a blank [level] (level I) and a null [duration] are left out. */
-    fun line(name: String, level: String, duration: String?): String {
+    fun line(
+        name: String,
+        level: String,
+        duration: String?,
+    ): String {
         val levelPart = if (level.isBlank()) "" else " $level"
         val durationPart = if (duration == null) "" else ": $duration"
         return name + levelPart + durationPart

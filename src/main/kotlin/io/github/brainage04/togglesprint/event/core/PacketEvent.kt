@@ -15,18 +15,23 @@ abstract class PacketEvent : Event() {
     /**
      * Note: This event is async and may not be executed on the main minecraft thread.
      */
-    data class ReceiveEvent(override val packet: Packet<*>) : PacketEvent() {
+    data class ReceiveEvent(
+        override val packet: Packet<*>,
+    ) : PacketEvent() {
         override val direction = Direction.INBOUND
     }
 
     /**
      * Note: This event is async and may not be executed on the main minecraft thread.
      */
-    data class SendEvent(override val packet: Packet<*>) : PacketEvent() {
+    data class SendEvent(
+        override val packet: Packet<*>,
+    ) : PacketEvent() {
         override val direction = Direction.OUTBOUND
     }
 
     enum class Direction {
-        INBOUND, OUTBOUND
+        INBOUND,
+        OUTBOUND,
     }
 }

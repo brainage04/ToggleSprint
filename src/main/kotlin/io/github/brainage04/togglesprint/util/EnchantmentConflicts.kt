@@ -17,12 +17,13 @@ object EnchantmentConflicts {
         isApplicable: (E) -> Boolean,
         isBlacklisted: (E) -> Boolean,
         areCompatible: (E, E) -> Boolean,
-    ): List<E> = all.filter { enchantment ->
-        enchantment !in present &&
-            !isBlacklisted(enchantment) &&
-            isApplicable(enchantment) &&
-            present.all { areCompatible(it, enchantment) }
-    }
+    ): List<E> =
+        all.filter { enchantment ->
+            enchantment !in present &&
+                !isBlacklisted(enchantment) &&
+                isApplicable(enchantment) &&
+                present.all { areCompatible(it, enchantment) }
+        }
 
     /**
      * Groups enchantments that cannot coexist, so that each group can be shown as a single "choose
@@ -30,7 +31,10 @@ object EnchantmentConflicts {
      * conflicts with nothing is a group of one. Groups are ordered by their first member, and each
      * group keeps the input order.
      */
-    fun <E> group(enchantments: List<E>, areCompatible: (E, E) -> Boolean): List<List<E>> {
+    fun <E> group(
+        enchantments: List<E>,
+        areCompatible: (E, E) -> Boolean,
+    ): List<List<E>> {
         val groups = mutableListOf<List<E>>()
         val grouped = BooleanArray(enchantments.size)
 
@@ -64,7 +68,11 @@ object EnchantmentConflicts {
      * The enchantments whose name matches [query], ignoring case: the exact match alone if there is
      * one, otherwise every enchantment whose name contains the query, in [enchantments]' order.
      */
-    fun <E> findMatches(enchantments: List<E>, query: String, name: (E) -> String): List<E> {
+    fun <E> findMatches(
+        enchantments: List<E>,
+        query: String,
+        name: (E) -> String,
+    ): List<E> {
         val normalisedQuery = query.lowercase(Locale.ROOT)
         val potentialMatches = mutableListOf<E>()
 

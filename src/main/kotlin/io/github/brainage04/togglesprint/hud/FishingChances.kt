@@ -7,13 +7,19 @@ package io.github.brainage04.togglesprint.hud
  */
 object FishingChances {
     /** The `Chances: Fish f%, Treasure t%, Junk j%` line for Luck of the Sea [luck] and Lure [lure]. */
-    fun line(luck: Int, lure: Int): String {
+    fun line(
+        luck: Int,
+        lure: Int,
+    ): String {
         val (fish, treasure, junk) = percentages(luck, lure)
         return "Chances: Fish $fish%, Treasure $treasure%, Junk $junk%"
     }
 
     /** Whole fish, treasure and junk percentages, largest-remainder rounded so they always add up to 100. */
-    fun percentages(luck: Int, lure: Int): IntArray {
+    fun percentages(
+        luck: Int,
+        lure: Int,
+    ): IntArray {
         val junk = (100 - 25 * luck - 10 * lure).coerceIn(0, 1000)
         val treasure = (50 + 10 * luck - 10 * lure).coerceIn(0, 1000 - junk)
         val fish = 1000 - junk - treasure

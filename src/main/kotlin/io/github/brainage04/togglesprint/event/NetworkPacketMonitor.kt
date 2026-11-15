@@ -1,7 +1,7 @@
 package io.github.brainage04.togglesprint.event
 
-import io.github.brainage04.togglesprint.hud.NetworkTracker
 import io.github.brainage04.togglesprint.ToggleSprintMain
+import io.github.brainage04.togglesprint.hud.NetworkTracker
 import io.netty.channel.ChannelHandler
 import io.netty.channel.ChannelHandlerContext
 import io.netty.channel.ChannelInboundHandlerAdapter
@@ -23,7 +23,10 @@ object NetworkPacketMonitor : ChannelInboundHandlerAdapter() {
         }
     }
 
-    override fun channelRead(context: ChannelHandlerContext, message: Any) {
+    override fun channelRead(
+        context: ChannelHandlerContext,
+        message: Any,
+    ) {
         if (message is S03PacketTimeUpdate) NetworkTracker.onServerGameTime(message.totalWorldTime)
         context.fireChannelRead(message)
     }

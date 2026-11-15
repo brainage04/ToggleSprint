@@ -42,7 +42,10 @@ class FullbrightHandler {
         restore()
     }
 
-    private fun apply(table: FloatArray, ambientLight: Float) {
+    private fun apply(
+        table: FloatArray,
+        ambientLight: Float,
+    ) {
         if (activeTable !== table) {
             restore()
             activeTable = table
@@ -63,7 +66,10 @@ class FullbrightHandler {
 
     companion object {
         /** The vanilla light-table formula with DimensionType.ambientLight substituted. */
-        fun fillLightTable(table: FloatArray, ambientLight: Float) {
+        fun fillLightTable(
+            table: FloatArray,
+            ambientLight: Float,
+        ) {
             require(table.size >= 16) { "A Minecraft light table must contain 16 entries" }
             for (lightLevel in 0..15) {
                 val darkness = 1.0f - lightLevel.toFloat() / 15.0f

@@ -28,8 +28,10 @@ object ChatFeedback {
     /** A line below a header, without the prefix. */
     fun detail(message: String) = send(body(ChatUtils.WHITE_CHAR, message))
 
-    private fun body(colour: String, message: String): String =
-        colour + message.replace(ChatUtils.RESET_CHAR, ChatUtils.RESET_CHAR + colour)
+    private fun body(
+        colour: String,
+        message: String,
+    ): String = colour + message.replace(ChatUtils.RESET_CHAR, ChatUtils.RESET_CHAR + colour)
 
     private fun send(message: String) {
         Minecraft.getMinecraft().thePlayer?.addChatMessage(ChatComponentText(message))

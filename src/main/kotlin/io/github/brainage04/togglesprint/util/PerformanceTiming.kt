@@ -22,6 +22,7 @@ object PerformanceTiming {
     private val pairPending = BooleanArray(QUERY_PAIRS)
 
     private var queriesAllocated = false
+
     /** The pair whose start timestamp was submitted for the frame being rendered, or -1. */
     private var framePair = -1
     private var previousFrameStartNanos = -1L
@@ -96,13 +97,12 @@ object PerformanceTiming {
         latestGpuFrameMillis = Double.NaN
     }
 
-    private fun isTimerQuerySupported(): Boolean {
-        return try {
+    private fun isTimerQuerySupported(): Boolean =
+        try {
             GLContext.getCapabilities().GL_ARB_timer_query
         } catch (_: Throwable) {
             false
         }
-    }
 
     private fun allocateQueries(): Boolean {
         return try {

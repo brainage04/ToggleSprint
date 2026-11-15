@@ -5,10 +5,10 @@ import io.github.brainage04.togglesprint.config.ConfigEditorScreen
 import io.github.brainage04.togglesprint.config.ModGuiFactory
 import io.github.brainage04.togglesprint.config.ToggleSprintConfig
 import io.github.brainage04.togglesprint.config.manager.ConfigManager
-import io.github.brainage04.togglesprint.hud.core.HudElementEditor
-import io.github.brainage04.togglesprint.util.EnchantmentUtils
 import io.github.brainage04.togglesprint.hud.ToggleSprintTracker
+import io.github.brainage04.togglesprint.hud.core.HudElementEditor
 import io.github.brainage04.togglesprint.hud.core.RenderGuiData
+import io.github.brainage04.togglesprint.util.EnchantmentUtils
 import io.github.brainage04.togglesprint.waypoint.WaypointStore
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.ChatLine
@@ -30,8 +30,13 @@ import org.lwjgl.input.Keyboard
 import java.io.File
 
 /** A test-only Forge mod, never included in the shipped jar. */
-@Mod(modid = "togglesprint_client_checks", name = "Toggle Sprint client checks", version = "test",
-    clientSideOnly = true, dependencies = "required-after:togglesprint")
+@Mod(
+    modid = "togglesprint_client_checks",
+    name = "Toggle Sprint client checks",
+    version = "test",
+    clientSideOnly = true,
+    dependencies = "required-after:togglesprint",
+)
 class ClientChecks {
     private var stage = 0
     private var ticks = 0
@@ -53,92 +58,107 @@ class ClientChecks {
             check(++ticks < 2400) { "Timed out at stage $stage" }
             stageTicks++
             when (stage) {
-                0 -> if (minecraft.currentScreen is GuiMainMenu) {
-                    val parent = GuiModList(minecraft.currentScreen)
-                    minecraft.displayGuiScreen(ModGuiFactory.ConfigGuiScreen(parent))
-                    check(minecraft.currentScreen is ConfigEditorScreen)
-                    escapeEditor()
-                    check(minecraft.currentScreen === parent) { "Config editor did not return to Mods" }
-                    pass("Mods-list config returns to its parent")
-                    advance()
-                    minecraft.launchIntegratedServer("client-checks", "Client checks",
-                        WorldSettings(42L, WorldSettings.GameType.CREATIVE, false, false, WorldType.FLAT))
-                }
-                1 -> if (minecraft.thePlayer != null && stageTicks > 40) {
-                    minecraft.displayGuiScreen(null)
-                    inputChecks()
-                    commandChecks()
-                    enchantCommandChecks()
-                    for (name in ClientRegressions.inWorld()) pass(name)
-                    firstWorldLight = minecraft.theWorld.provider.lightBrightnessTable
-                    originalLight = firstWorldLight.clone()
-                    command("/fullbright 1")
-                    // Wait for the actual overlay subscriber to draw this element.
-                    ToggleSprintMain.config.guiElements.toggleSprintElement.coreSettings.isEnabled = true
-                    advance()
-                }
-                2 -> if (stageTicks > 10) {
-                    val bounds = RenderGuiData.boundsOf(ToggleSprintMain.config.guiElements.toggleSprintElement.coreSettings)
-                    check(bounds != null && bounds.width > 0 && bounds.height > 0) { "HUD was not drawn by the overlay subscriber" }
-                    pass("Forge overlay draws an enabled HUD element")
-                    check(firstWorldLight.all { it == 1.0f }) { "Fullbright did not change the live light table" }
-                    pass("Fullbright changes the active dimension light table")
-                    command("/fullbright 0")
-                    ToggleSprintMain.config.guiElements.toggleSprintElement.coreSettings.isEnabled = false
-                    advance()
-                }
-                3 -> if (stageTicks > 10) {
-                    check(firstWorldLight.contentEquals(originalLight)) { "Fullbright did not restore the original light table" }
-                    pass("Disabling fullbright restores the exact original light table")
-                    check(RenderGuiData.boundsOf(ToggleSprintMain.config.guiElements.toggleSprintElement.coreSettings) == null)
-                    pass("Disabling a HUD element stops its rendering")
-                    ToggleSprintMain.config.guiElements.toggleSprintElement.coreSettings.isEnabled = true
-                    command("/togglesprint")
-                    advance()
-                }
-                4 -> if (stageTicks > 2) {
-                    check(minecraft.currentScreen is ConfigEditorScreen) { "Config command did not open the editor" }
-                    escapeEditor()
-                    check(minecraft.currentScreen == null) { "In-world editor did not return to the game" }
-                    pass("Config command opens and closes in-world")
-                    editorUndoCheck()
-                    command("/waypoints add \"First World\" 1 64 2")
-                    command("/fullbright 1")
-                    advance()
-                }
-                5 -> if (stageTicks > 10) {
-                    check(firstWorldLight.all { it == 1.0f })
-                    ClientRegressions.prepareReachCache()
-                    minecraft.netHandler.networkManager.disableAutoRead()
-                    advance()
-                }
-                6 -> if (stageTicks > 2) {
-                    // Drain scheduled packets while the integrated server is still running.
-                    minecraft.theWorld.sendQuittingDisconnectingPacket()
-                    minecraft.loadWorld(null)
-                    check(firstWorldLight.contentEquals(originalLight)) { "World unload left the light override applied" }
-                    pass("World unload restores the old dimension light table")
-                    ToggleSprintMain.config.brainageHudParity.fullbright = 0f
-                    minecraft.displayGuiScreen(GuiMainMenu())
-                    advance()
-                }
+                0 ->
+                    if (minecraft.currentScreen is GuiMainMenu) {
+                        val parent = GuiModList(minecraft.currentScreen)
+                        minecraft.displayGuiScreen(ModGuiFactory.ConfigGuiScreen(parent))
+                        check(minecraft.currentScreen is ConfigEditorScreen)
+                        escapeEditor()
+                        check(minecraft.currentScreen === parent) { "Config editor did not return to Mods" }
+                        pass("Mods-list config returns to its parent")
+                        advance()
+                        minecraft.launchIntegratedServer(
+                            "client-checks",
+                            "Client checks",
+                            WorldSettings(42L, WorldSettings.GameType.CREATIVE, false, false, WorldType.FLAT),
+                        )
+                    }
+                1 ->
+                    if (minecraft.thePlayer != null && stageTicks > 40) {
+                        minecraft.displayGuiScreen(null)
+                        inputChecks()
+                        commandChecks()
+                        enchantCommandChecks()
+                        for (name in ClientRegressions.inWorld()) pass(name)
+                        firstWorldLight = minecraft.theWorld.provider.lightBrightnessTable
+                        originalLight = firstWorldLight.clone()
+                        command("/fullbright 1")
+                        // Wait for the actual overlay subscriber to draw this element.
+                        ToggleSprintMain.config.guiElements.toggleSprintElement.coreSettings.isEnabled = true
+                        advance()
+                    }
+                2 ->
+                    if (stageTicks > 10) {
+                        val bounds = RenderGuiData.boundsOf(ToggleSprintMain.config.guiElements.toggleSprintElement.coreSettings)
+                        check(bounds != null && bounds.width > 0 && bounds.height > 0) { "HUD was not drawn by the overlay subscriber" }
+                        pass("Forge overlay draws an enabled HUD element")
+                        check(firstWorldLight.all { it == 1.0f }) { "Fullbright did not change the live light table" }
+                        pass("Fullbright changes the active dimension light table")
+                        command("/fullbright 0")
+                        ToggleSprintMain.config.guiElements.toggleSprintElement.coreSettings.isEnabled = false
+                        advance()
+                    }
+                3 ->
+                    if (stageTicks > 10) {
+                        check(firstWorldLight.contentEquals(originalLight)) { "Fullbright did not restore the original light table" }
+                        pass("Disabling fullbright restores the exact original light table")
+                        check(RenderGuiData.boundsOf(ToggleSprintMain.config.guiElements.toggleSprintElement.coreSettings) == null)
+                        pass("Disabling a HUD element stops its rendering")
+                        ToggleSprintMain.config.guiElements.toggleSprintElement.coreSettings.isEnabled = true
+                        command("/togglesprint")
+                        advance()
+                    }
+                4 ->
+                    if (stageTicks > 2) {
+                        check(minecraft.currentScreen is ConfigEditorScreen) { "Config command did not open the editor" }
+                        escapeEditor()
+                        check(minecraft.currentScreen == null) { "In-world editor did not return to the game" }
+                        pass("Config command opens and closes in-world")
+                        editorUndoCheck()
+                        command("/waypoints add \"First World\" 1 64 2")
+                        command("/fullbright 1")
+                        advance()
+                    }
+                5 ->
+                    if (stageTicks > 10) {
+                        check(firstWorldLight.all { it == 1.0f })
+                        ClientRegressions.prepareReachCache()
+                        minecraft.netHandler.networkManager.disableAutoRead()
+                        advance()
+                    }
+                6 ->
+                    if (stageTicks > 2) {
+                        // Drain scheduled packets while the integrated server is still running.
+                        minecraft.theWorld.sendQuittingDisconnectingPacket()
+                        minecraft.loadWorld(null)
+                        check(firstWorldLight.contentEquals(originalLight)) { "World unload left the light override applied" }
+                        pass("World unload restores the old dimension light table")
+                        ToggleSprintMain.config.brainageHudParity.fullbright = 0f
+                        minecraft.displayGuiScreen(GuiMainMenu())
+                        advance()
+                    }
                 7 -> {
-                    minecraft.launchIntegratedServer("client-checks-second", "Client checks second",
-                        WorldSettings(43L, WorldSettings.GameType.CREATIVE, false, false, WorldType.FLAT))
+                    minecraft.launchIntegratedServer(
+                        "client-checks-second",
+                        "Client checks second",
+                        WorldSettings(43L, WorldSettings.GameType.CREATIVE, false, false, WorldType.FLAT),
+                    )
                     advance()
                 }
-                8 -> if (minecraft.thePlayer != null && stageTicks > 40) {
-                    val secondWorldWaypoints = checkNotNull(WaypointStore.current())
-                    check(WaypointStore.find(secondWorldWaypoints, "First World") == null)
-                    pass("Joining another world does not expose the first world's waypoints")
-                    ClientRegressions.reachAfterWorldChange()
-                    pass("Reach click mode drops its cached target when changing worlds")
-                    minecraft.netHandler.networkManager.disableAutoRead()
-                    advance()
-                }
-                9 -> if (stageTicks > 2) {
-                    finish(null)
-                }
+                8 ->
+                    if (minecraft.thePlayer != null && stageTicks > 40) {
+                        val secondWorldWaypoints = checkNotNull(WaypointStore.current())
+                        check(WaypointStore.find(secondWorldWaypoints, "First World") == null)
+                        pass("Joining another world does not expose the first world's waypoints")
+                        ClientRegressions.reachAfterWorldChange()
+                        pass("Reach click mode drops its cached target when changing worlds")
+                        minecraft.netHandler.networkManager.disableAutoRead()
+                        advance()
+                    }
+                9 ->
+                    if (stageTicks > 2) {
+                        finish(null)
+                    }
             }
         } catch (failure: Throwable) {
             finish(failure)
@@ -201,7 +221,10 @@ class ClientChecks {
         pass("Blacklist commands update and query real enchantment config")
     }
 
-    private fun commandWithChat(text: String, vararg expected: String) {
+    private fun commandWithChat(
+        text: String,
+        vararg expected: String,
+    ) {
         val chat = Minecraft.getMinecraft().ingameGUI.chatGUI
         chat.clearChatMessages()
         command(text)
@@ -241,7 +264,10 @@ class ClientChecks {
         key(Minecraft.getMinecraft().currentScreen, Keyboard.KEY_ESCAPE)
     }
 
-    private fun key(screen: GuiScreen, keyCode: Int) {
+    private fun key(
+        screen: GuiScreen,
+        keyCode: Int,
+    ) {
         val method = screen.javaClass.getDeclaredMethod("keyTyped", Char::class.javaPrimitiveType, Int::class.javaPrimitiveType)
         method.isAccessible = true
         method.invoke(screen, '\u001b', keyCode)
@@ -258,7 +284,14 @@ class ClientChecks {
     }
 
     private fun finish(failure: Throwable?) {
-        val result = if (failure == null) "PASS (${passed.size} scenarios)\n${passed.joinToString("\n")}" else "FAIL at stage $stage\n${failure.stackTraceToString()}"
+        val result =
+            if (failure ==
+                null
+            ) {
+                "PASS (${passed.size} scenarios)\n${passed.joinToString("\n")}"
+            } else {
+                "FAIL at stage $stage\n${failure.stackTraceToString()}"
+            }
         stage = -1
         File(Minecraft.getMinecraft().mcDataDir, "result.txt").writeText(result)
         failure?.printStackTrace()

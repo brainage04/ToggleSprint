@@ -29,9 +29,16 @@ object NetworkTracker {
     @JvmStatic
     fun onServerGameTime(totalWorldTime: Long) {
         val receivedNanos = System.nanoTime()
-        Minecraft.getMinecraft().addScheduledTask(Runnable {
-            tickRate.record(totalWorldTime, receivedNanos, ConfigUtils.guiElements.networkTracker.tpsIntervalsTracked.coerceIn(1, 30))
-        })
+        Minecraft.getMinecraft().addScheduledTask(
+            Runnable {
+                tickRate.record(
+                    totalWorldTime,
+                    receivedNanos,
+                    ConfigUtils.guiElements.networkTracker.tpsIntervalsTracked
+                        .coerceIn(1, 30),
+                )
+            },
+        )
     }
 
     @SubscribeEvent
@@ -81,19 +88,21 @@ object NetworkTracker {
         return lines
     }
 
-    private fun pingColour(ping: Long): String = when {
-        ping < 50L -> ChatUtils.DARK_GREEN_CHAR
-        ping < 100L -> ChatUtils.GREEN_CHAR
-        ping < 200L -> ChatUtils.YELLOW_CHAR
-        ping < 300L -> ChatUtils.RED_CHAR
-        else -> ChatUtils.DARK_RED_CHAR
-    }
+    private fun pingColour(ping: Long): String =
+        when {
+            ping < 50L -> ChatUtils.DARK_GREEN_CHAR
+            ping < 100L -> ChatUtils.GREEN_CHAR
+            ping < 200L -> ChatUtils.YELLOW_CHAR
+            ping < 300L -> ChatUtils.RED_CHAR
+            else -> ChatUtils.DARK_RED_CHAR
+        }
 
-    private fun tpsColour(tps: Double): String = when {
-        tps > 19.0 -> ChatUtils.DARK_GREEN_CHAR
-        tps > 18.0 -> ChatUtils.GREEN_CHAR
-        tps > 15.0 -> ChatUtils.GOLD_CHAR
-        tps > 10.0 -> ChatUtils.RED_CHAR
-        else -> ChatUtils.DARK_RED_CHAR
-    }
+    private fun tpsColour(tps: Double): String =
+        when {
+            tps > 19.0 -> ChatUtils.DARK_GREEN_CHAR
+            tps > 18.0 -> ChatUtils.GREEN_CHAR
+            tps > 15.0 -> ChatUtils.GOLD_CHAR
+            tps > 10.0 -> ChatUtils.RED_CHAR
+            else -> ChatUtils.DARK_RED_CHAR
+        }
 }

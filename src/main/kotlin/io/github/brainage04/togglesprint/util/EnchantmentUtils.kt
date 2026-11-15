@@ -10,7 +10,8 @@ import java.util.Locale
 object EnchantmentUtils {
     // enchantments are registered during class and mod initialisation, before any of these are used
     private val idsByEnchantment: Map<Enchantment, String> by lazy {
-        Enchantment.func_181077_c()
+        Enchantment
+            .func_181077_c()
             .mapNotNull { location -> Enchantment.getEnchantmentByLocation(location.toString())?.let { it to location.toString() } }
             .toMap()
     }
@@ -24,17 +25,23 @@ object EnchantmentUtils {
     fun name(enchantment: Enchantment): String = StatCollector.translateToLocal(enchantment.name)
 
     /** The name with its level, leaving out the level of an enchantment that only has one. */
-    fun fullName(enchantment: Enchantment, level: Int): String =
-        if (level == 1 && enchantment.maxLevel == 1) name(enchantment) else enchantment.getTranslatedName(level)
+    fun fullName(
+        enchantment: Enchantment,
+        level: Int,
+    ): String = if (level == 1 && enchantment.maxLevel == 1) name(enchantment) else enchantment.getTranslatedName(level)
 
     /** The name as shown in chat: grey, then reset so that following text is unaffected. */
     fun chatName(enchantment: Enchantment): String = "${ChatUtils.GRAY_CHAR}${name(enchantment)}${ChatUtils.RESET_CHAR}"
 
-    fun chatName(enchantment: Enchantment, level: Int): String =
-        "${ChatUtils.GRAY_CHAR}${fullName(enchantment, level)}${ChatUtils.RESET_CHAR}"
+    fun chatName(
+        enchantment: Enchantment,
+        level: Int,
+    ): String = "${ChatUtils.GRAY_CHAR}${fullName(enchantment, level)}${ChatUtils.RESET_CHAR}"
 
-    fun areCompatible(first: Enchantment, second: Enchantment): Boolean =
-        first.canApplyTogether(second) && second.canApplyTogether(first)
+    fun areCompatible(
+        first: Enchantment,
+        second: Enchantment,
+    ): Boolean = first.canApplyTogether(second) && second.canApplyTogether(first)
 
     /** The blacklisted enchantment IDs, from the config's comma-separated text. */
     fun blacklist(): List<String> = parseIds(ConfigUtils.brainageHudParity.enchantInfo.blacklistedEnchantmentIds)
@@ -46,27 +53,38 @@ object EnchantmentUtils {
 
     /** Splits comma-separated IDs, trimmed and lower-cased, dropping blanks and duplicates. */
     fun parseIds(text: String?): List<String> =
-        text.orEmpty().split(',').map { it.trim().lowercase(Locale.ROOT) }.filter { it.isNotEmpty() }.distinct()
-
+        text
+            .orEmpty()
+            .split(',')
+            .map { it.trim().lowercase(Locale.ROOT) }
+            .filter { it.isNotEmpty() }
+            .distinct()
 
     /** The enchantments on [stack] (stored enchantments for enchanted books) in ID order, with their levels. */
     fun present(stack: ItemStack): Map<Enchantment, Int> =
-        EnchantmentHelper.getEnchantments(stack).entries
+        EnchantmentHelper
+            .getEnchantments(stack)
+            .entries
             .mapNotNull { (id, level) -> Enchantment.getEnchantmentById(id)?.let { it to level } }
             .sortedBy { it.first.effectId }
             .toMap(LinkedHashMap())
 
     /** The enchantments that could still be added to [stack]; see [EnchantmentConflicts.missing]. */
-    fun missing(stack: ItemStack, present: Collection<Enchantment>): List<Enchantment> {
+    fun missing(
+        stack: ItemStack,
+        present: Collection<Enchantment>,
+    ): List<Enchantment> {
         val blacklist = blacklist()
         return EnchantmentConflicts.missing(all, present, { it.canApply(stack) }, { id(it) in blacklist }, ::areCompatible)
     }
 
-    fun groupConflicting(enchantments: List<Enchantment>): List<List<Enchantment>> =
-        EnchantmentConflicts.group(enchantments, ::areCompatible)
+    fun groupConflicting(enchantments: List<Enchantment>): List<List<Enchantment>> = EnchantmentConflicts.group(enchantments, ::areCompatible)
 
     /** The enchantment at its maximum level, followed by the level already on [stack]. */
-    fun describeFor(enchantment: Enchantment, stack: ItemStack): String {
+    fun describeFor(
+        enchantment: Enchantment,
+        stack: ItemStack,
+    ): String {
         val maxName = chatName(enchantment, enchantment.maxLevel)
         val currentLevel = EnchantmentHelper.getEnchantmentLevel(enchantment.effectId, stack)
 

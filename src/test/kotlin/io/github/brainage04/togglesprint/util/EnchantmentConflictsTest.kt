@@ -9,7 +9,11 @@ import kotlin.test.assertEquals
  * and names that matter to the logic.
  */
 class EnchantmentConflictsTest {
-    private data class TestEnchantment(val name: String, val items: Set<String>, val exclusiveGroup: String? = null)
+    private data class TestEnchantment(
+        val name: String,
+        val items: Set<String>,
+        val exclusiveGroup: String? = null,
+    )
 
     private val sharpness = TestEnchantment("Sharpness", setOf("sword", "axe"), "damage")
     private val smite = TestEnchantment("Smite", setOf("sword", "axe"), "damage")
@@ -22,11 +26,16 @@ class EnchantmentConflictsTest {
     private val looting = TestEnchantment("Looting", setOf("sword"), "loot-sword")
     private val all = listOf(sharpness, smite, baneOfArthropods, efficiency, silkTouch, unbreaking, fortune, fireAspect, looting)
 
-    private fun areCompatible(first: TestEnchantment, second: TestEnchantment) =
-        first != second && (first.exclusiveGroup == null || first.exclusiveGroup != second.exclusiveGroup)
+    private fun areCompatible(
+        first: TestEnchantment,
+        second: TestEnchantment,
+    ) = first != second && (first.exclusiveGroup == null || first.exclusiveGroup != second.exclusiveGroup)
 
-    private fun missing(item: String, present: List<TestEnchantment>, blacklist: Set<TestEnchantment> = emptySet()) =
-        EnchantmentConflicts.missing(all, present, { item in it.items }, { it in blacklist }, ::areCompatible)
+    private fun missing(
+        item: String,
+        present: List<TestEnchantment>,
+        blacklist: Set<TestEnchantment> = emptySet(),
+    ) = EnchantmentConflicts.missing(all, present, { item in it.items }, { it in blacklist }, ::areCompatible)
 
     @Test
     fun `enchantments conflicting with present ones and blacklisted ones are not missing`() {

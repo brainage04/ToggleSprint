@@ -36,7 +36,9 @@ object EnchantInfoHud {
             translationTime == cachedTranslationTime &&
             ItemStack.areItemStacksEqual(stack, cachedStack) &&
             blacklist == cachedBlacklist
-        ) return lines
+        ) {
+            return lines
+        }
 
         return calculateLines(stack, config).also {
             cachedLines = it
@@ -54,7 +56,10 @@ object EnchantInfoHud {
             (if (config.showMissingEnchantments) 8 else 0) or
             (if (config.showMissingHeader) 16 else 0)
 
-    private fun calculateLines(stack: ItemStack?, config: BrainageHudParity.EnchantInfoHud): List<String> {
+    private fun calculateLines(
+        stack: ItemStack?,
+        config: BrainageHudParity.EnchantInfoHud,
+    ): List<String> {
         if (stack == null) return emptyList()
 
         val present = EnchantmentUtils.present(stack)

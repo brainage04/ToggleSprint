@@ -10,13 +10,18 @@ object MathUtils {
     private val formats = arrayOfNulls<DecimalFormat>(MAX_DECIMAL_PLACES + 1)
 
     /** Formats [input] with exactly [decimalPlaces] fractional digits, clamped to 0..[MAX_DECIMAL_PLACES]. */
-    fun roundDecimalPlaces(input: Double, decimalPlaces: Int): String {
+    fun roundDecimalPlaces(
+        input: Double,
+        decimalPlaces: Int,
+    ): String {
         val places = decimalPlaces.coerceIn(0, MAX_DECIMAL_PLACES)
-        val format = formats[places] ?: DecimalFormat().apply {
-            isGroupingUsed = false
-            minimumFractionDigits = places
-            maximumFractionDigits = places
-        }.also { formats[places] = it }
+        val format =
+            formats[places] ?: DecimalFormat()
+                .apply {
+                    isGroupingUsed = false
+                    minimumFractionDigits = places
+                    maximumFractionDigits = places
+                }.also { formats[places] = it }
 
         return format.format(input)
     }
