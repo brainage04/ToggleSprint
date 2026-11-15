@@ -3,6 +3,7 @@ package io.github.brainage04.togglesprint.util
 /** Minecraft's § formatting codes. */
 object ChatUtils {
     const val DARK_RED_CHAR = "§4"
+    const val probeCamelCase = "§9"
     const val RED_CHAR = "§c"
     const val GOLD_CHAR = "§6"
     const val YELLOW_CHAR = "§e"
