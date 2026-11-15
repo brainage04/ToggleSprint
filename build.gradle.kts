@@ -9,6 +9,52 @@ plugins {
     id("dev.architectury.architectury-pack200") version "0.1.3"
     id("com.gradleup.shadow") version "9.6.1"
     kotlin("jvm") version "2.3.10"
+    id("com.diffplug.spotless") version "8.9.0"
+    checkstyle
+}
+
+// The shared java-quality-conventions plugin reproduces these rules, but its own bytecode is Java 25, so it
+// cannot run in this build: Forge 1.8.9 compiles with a Java 8 toolchain and CI runs Gradle on 21. The same
+// Spotless, Checkstyle and javac settings are configured here instead, behind the same -PstrictQuality switch.
+val strictQuality = providers.gradleProperty("strictQuality").map(String::toBoolean).orElse(false)
+
+spotless {
+    java {
+        target("src/**/*.java")
+        googleJavaFormat("1.36.1").aosp()
+        removeUnusedImports()
+        trimTrailingWhitespace()
+        endWithNewline()
+    }
+    kotlin {
+        target("src/**/*.kt")
+        ktlint("1.7.1")
+        trimTrailingWhitespace()
+        endWithNewline()
+    }
+}
+
+checkstyle {
+    toolVersion = "13.9.0"
+    config = resources.text.fromFile("config/checkstyle/checkstyle.xml")
+    maxWarnings = 0
+    isIgnoreFailures = false
+}
+
+// Off unless the gate is asked for, so an ordinary build keeps its current behaviour.
+tasks.withType<Checkstyle>().configureEach { onlyIf { strictQuality.get() } }
+// Checkstyle 13 is a Java 21 tool, while the mod's own toolchain is Java 8: only the analysis runs on 21.
+val checkstyleLauncher = javaToolchains.launcherFor {
+    languageVersion.set(JavaLanguageVersion.of(21))
+}
+tasks.withType<Checkstyle>().configureEach { javaLauncher.set(checkstyleLauncher) }
+tasks.matching { it.name.startsWith("spotless") && it.name.endsWith("Check") }
+    .configureEach { onlyIf { strictQuality.get() } }
+tasks.withType<JavaCompile>().configureEach {
+    options.compilerArgs.addAll(listOf("-Xlint:deprecation", "-Xlint:unchecked", "-Xlint:rawtypes"))
+    if (strictQuality.get()) {
+        options.compilerArgs.add("-Werror")
+    }
 }
 
 //Constants:
