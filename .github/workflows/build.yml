@@ -17,6 +17,8 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install --no-install-recommends -y x11-xserver-utils
+      - name: Strict quality gate
+        run: ./gradlew --no-daemon -PstrictQuality=true check -x test
       - name: Build and run Forge client checks
         run: ALSOFT_DRIVERS=null xvfb-run -a ./gradlew --no-daemon build runClientChecks
       - uses: actions/upload-artifact@v7
