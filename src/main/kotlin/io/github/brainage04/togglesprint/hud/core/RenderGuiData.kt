@@ -13,9 +13,9 @@ import io.github.brainage04.togglesprint.hud.ReachHud
 import io.github.brainage04.togglesprint.hud.RealTimeTracker
 import io.github.brainage04.togglesprint.hud.StatusEffectHud
 import io.github.brainage04.togglesprint.hud.ToggleSprintTracker
-import io.github.brainage04.togglesprint.hud.inventory_trackers.EquipmentTracker
-import io.github.brainage04.togglesprint.hud.inventory_trackers.FoodTracker
-import io.github.brainage04.togglesprint.hud.inventory_trackers.ProjectileTracker
+import io.github.brainage04.togglesprint.hud.inventorytrackers.EquipmentTracker
+import io.github.brainage04.togglesprint.hud.inventorytrackers.FoodTracker
+import io.github.brainage04.togglesprint.hud.inventorytrackers.ProjectileTracker
 import io.github.brainage04.togglesprint.util.ConfigUtils
 import io.github.moulberry.moulconfig.ChromaColour
 import net.minecraft.client.Minecraft

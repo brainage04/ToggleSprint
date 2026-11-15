@@ -34,6 +34,6 @@ class EnchantTooltipHandler {
     private fun bold(line: String): String {
         var textStart = 0
         while (textStart + 1 < line.length && line[textStart] == '§') textStart += 2
-        return line.substring(0, textStart) + ChatUtils.boldChar + line.substring(textStart)
+        return line.substring(0, textStart) + ChatUtils.BOLD_CHAR + line.substring(textStart)
     }
 }

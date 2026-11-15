@@ -1,4 +1,4 @@
-package io.github.brainage04.togglesprint.hud.inventory_trackers
+package io.github.brainage04.togglesprint.hud.inventorytrackers
 
 import io.github.brainage04.togglesprint.config.categories.GUIElements
 import io.github.brainage04.togglesprint.hud.core.RenderGuiData
@@ -46,9 +46,9 @@ object EquipmentTracker {
                 val durabilityPercentage = (equipmentList[i].maxDamage - equipmentList[i].itemDamage).toDouble() / equipmentList[i].maxDamage * 100.0
 
                 currentLine += when {
-                    durabilityPercentage <= 20.0 -> ChatUtils.redChar
-                    durabilityPercentage <= 50.0 -> ChatUtils.yellowChar
-                    else -> ChatUtils.greenChar
+                    durabilityPercentage <= 20.0 -> ChatUtils.RED_CHAR
+                    durabilityPercentage <= 50.0 -> ChatUtils.YELLOW_CHAR
+                    else -> ChatUtils.GREEN_CHAR
                 }
 
                 when (ConfigUtils.inventoryTrackers.equipmentTracker.durabilityFormat) {

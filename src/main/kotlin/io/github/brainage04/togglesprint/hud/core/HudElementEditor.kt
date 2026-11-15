@@ -125,7 +125,7 @@ class HudElementEditor : GuiScreen() {
         }
 
         val lines = arrayListOf(
-            "${ChatUtils.boldChar}HUD Element Editor",
+            "${ChatUtils.BOLD_CHAR}HUD Element Editor",
             "Click to select, hold click and drag to move",
             "Arrow keys for precise movement, Ctrl = x5, Shift = x10",
             "Space to cycle alignment",

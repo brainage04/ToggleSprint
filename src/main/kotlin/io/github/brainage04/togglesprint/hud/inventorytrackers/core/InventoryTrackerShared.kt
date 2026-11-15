@@ -1,4 +1,4 @@
-package io.github.brainage04.togglesprint.hud.inventory_trackers.core
+package io.github.brainage04.togglesprint.hud.inventorytrackers.core
 
 import io.github.brainage04.togglesprint.util.ChatUtils
 import net.minecraft.item.ItemStack
@@ -44,6 +44,6 @@ object InventoryTrackerShared {
 
     /** The bold [title] header followed by [rows], or the header with a red N/A when there are none. */
     fun withHeader(title: String, rows: List<String>): List<String> =
-        if (rows.isEmpty()) listOf("${ChatUtils.boldChar}$title:${ChatUtils.redChar} N/A")
-        else listOf("${ChatUtils.boldChar}$title:") + rows
+        if (rows.isEmpty()) listOf("${ChatUtils.BOLD_CHAR}$title:${ChatUtils.RED_CHAR} N/A")
+        else listOf("${ChatUtils.BOLD_CHAR}$title:") + rows
 }

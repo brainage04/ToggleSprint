@@ -63,7 +63,7 @@ object EnchantInfoHud {
 
         val lines = mutableListOf<String>()
 
-        if (config.showItemName) lines.add("${ChatUtils.boldChar}${stack.displayName}")
+        if (config.showItemName) lines.add("${ChatUtils.BOLD_CHAR}${stack.displayName}")
 
         if (config.showEnchantments) {
             for ((enchantment, level) in present) {
@@ -77,7 +77,7 @@ object EnchantInfoHud {
         if (config.showMissingEnchantments) {
             val missing = EnchantmentUtils.missing(stack, present.keys)
 
-            if (missing.isNotEmpty() && config.showMissingHeader) lines.add("${ChatUtils.boldChar}Missing:")
+            if (missing.isNotEmpty() && config.showMissingHeader) lines.add("${ChatUtils.BOLD_CHAR}Missing:")
 
             for (group in EnchantmentUtils.groupConflicting(missing)) {
                 lines.add(group.joinToString(" / ") { EnchantmentUtils.fullName(it, it.maxLevel) })

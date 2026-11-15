@@ -18,7 +18,7 @@ object ToggleSprintTracker {
         }
         else if (isSprintToggled) "[Sprinting (Toggled)]"
         else if (player.isSprinting) "[Sprinting (Vanilla)]"
-        else "${ChatUtils.grayChar}[Walking (Vanilla)]"
+        else "${ChatUtils.GRAY_CHAR}[Walking (Vanilla)]"
     }
 
     fun lines(): List<String> {

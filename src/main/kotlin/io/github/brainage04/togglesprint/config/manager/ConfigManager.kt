@@ -53,7 +53,7 @@ class ConfigManager {
     var config: ToggleSprintConfig? = null
     private var lastSaveTime = 0L
 
-    private lateinit var processor: MoulConfigProcessor<ToggleSprintConfig>
+    private var processor: MoulConfigProcessor<ToggleSprintConfig>
     private val editor by lazy { MoulConfigEditor(processor) }
 
     init {

@@ -11,25 +11,25 @@ import net.minecraft.util.ChatComponentText
  * the kind's colour. A list is sent as one prefixed header followed by unprefixed [detail] lines.
  */
 object ChatFeedback {
-    private const val PREFIX = "${ChatUtils.grayChar}[${ToggleSprintMain.MOD_NAME}] "
+    private const val PREFIX = "${ChatUtils.GRAY_CHAR}[${ToggleSprintMain.MOD_NAME}] "
 
     /** A query's result, or the header of a listed result. */
-    fun info(message: String) = send(PREFIX + body(ChatUtils.whiteChar, message))
+    fun info(message: String) = send(PREFIX + body(ChatUtils.WHITE_CHAR, message))
 
     /** A completed action. */
-    fun success(message: String) = send(PREFIX + body(ChatUtils.greenChar, message))
+    fun success(message: String) = send(PREFIX + body(ChatUtils.GREEN_CHAR, message))
 
     /** Nothing to do, or advice. */
-    fun warning(message: String) = send(PREFIX + body(ChatUtils.yellowChar, message))
+    fun warning(message: String) = send(PREFIX + body(ChatUtils.YELLOW_CHAR, message))
 
     /** Wrong input or usage. */
-    fun error(message: String) = send(PREFIX + body(ChatUtils.redChar, message))
+    fun error(message: String) = send(PREFIX + body(ChatUtils.RED_CHAR, message))
 
     /** A line below a header, without the prefix. */
-    fun detail(message: String) = send(body(ChatUtils.whiteChar, message))
+    fun detail(message: String) = send(body(ChatUtils.WHITE_CHAR, message))
 
     private fun body(colour: String, message: String): String =
-        colour + message.replace(ChatUtils.resetChar, ChatUtils.resetChar + colour)
+        colour + message.replace(ChatUtils.RESET_CHAR, ChatUtils.RESET_CHAR + colour)
 
     private fun send(message: String) {
         Minecraft.getMinecraft().thePlayer?.addChatMessage(ChatComponentText(message))

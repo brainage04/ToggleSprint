@@ -28,10 +28,10 @@ object EnchantmentUtils {
         if (level == 1 && enchantment.maxLevel == 1) name(enchantment) else enchantment.getTranslatedName(level)
 
     /** The name as shown in chat: grey, then reset so that following text is unaffected. */
-    fun chatName(enchantment: Enchantment): String = "${ChatUtils.grayChar}${name(enchantment)}${ChatUtils.resetChar}"
+    fun chatName(enchantment: Enchantment): String = "${ChatUtils.GRAY_CHAR}${name(enchantment)}${ChatUtils.RESET_CHAR}"
 
     fun chatName(enchantment: Enchantment, level: Int): String =
-        "${ChatUtils.grayChar}${fullName(enchantment, level)}${ChatUtils.resetChar}"
+        "${ChatUtils.GRAY_CHAR}${fullName(enchantment, level)}${ChatUtils.RESET_CHAR}"
 
     fun areCompatible(first: Enchantment, second: Enchantment): Boolean =
         first.canApplyTogether(second) && second.canApplyTogether(first)

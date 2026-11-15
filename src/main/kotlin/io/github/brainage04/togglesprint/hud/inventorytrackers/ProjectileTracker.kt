@@ -1,6 +1,6 @@
-package io.github.brainage04.togglesprint.hud.inventory_trackers
+package io.github.brainage04.togglesprint.hud.inventorytrackers
 
-import io.github.brainage04.togglesprint.hud.inventory_trackers.core.InventoryTrackerShared
+import io.github.brainage04.togglesprint.hud.inventorytrackers.core.InventoryTrackerShared
 import io.github.brainage04.togglesprint.util.ConfigUtils
 import net.minecraft.client.Minecraft
 import net.minecraft.init.Items

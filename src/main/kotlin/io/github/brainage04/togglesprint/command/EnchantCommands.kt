@@ -78,7 +78,7 @@ object EnchantCommands {
 
         val (unconflicted, conflictGroups) = EnchantmentUtils.groupConflicting(acceptableEnchantments).partition { it.size == 1 }
 
-        ChatFeedback.info("${ChatUtils.boldChar}Acceptable enchants for ${stack.displayName}${ChatUtils.resetChar + ChatUtils.boldChar}:")
+        ChatFeedback.info("${ChatUtils.BOLD_CHAR}Acceptable enchants for ${stack.displayName}${ChatUtils.RESET_CHAR + ChatUtils.BOLD_CHAR}:")
 
         if (conflictGroups.isNotEmpty()) {
             // groups are linked by conflicts, not necessarily all mutually exclusive: fortune
@@ -122,8 +122,8 @@ object EnchantCommands {
     }
 
     private fun sendEnchantmentInfo(enchantment: Enchantment) {
-        val bold = ChatUtils.boldChar
-        ChatFeedback.info("${bold}Enchant info for ${ChatUtils.grayChar}$bold${EnchantmentUtils.name(enchantment)}${ChatUtils.resetChar}$bold:")
+        val bold = ChatUtils.BOLD_CHAR
+        ChatFeedback.info("${bold}Enchant info for ${ChatUtils.GRAY_CHAR}$bold${EnchantmentUtils.name(enchantment)}${ChatUtils.RESET_CHAR}$bold:")
         ChatFeedback.detail("ID: ${EnchantmentUtils.id(enchantment)}")
         ChatFeedback.detail("Max level: ${enchantment.maxLevel}")
 
