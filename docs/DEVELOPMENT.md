@@ -10,6 +10,18 @@ heavy --quick -- env JAVA_TOOL_OPTIONS=-XX:MaxRAMPercentage=60.0 ./gradlew --no-
 
 Java 8 requires a decimal value for `MaxRAMPercentage`; the explicit option overrides `heavy`'s integer default.
 
+## Strict quality gate
+
+`-PstrictQuality=true check` runs Spotless (google-java-format AOSP for Java, ktlint for Kotlin), Checkstyle
+with the shared rule set, and javac `-Xlint:deprecation,unchecked,rawtypes` with `-Werror`. Without the flag
+those checks are skipped, so an ordinary build behaves as before. MinecraftModConventions' `java-quality-conventions`
+plugin configures the same rules but is compiled for Java 25, which this Java 8 build cannot load, so the rules
+are configured in `build.gradle.kts` directly.
+
+```sh
+heavy --quick -- env JAVA_TOOL_OPTIONS=-XX:MaxRAMPercentage=60.0 ./gradlew --no-daemon -PstrictQuality=true check
+```
+
 ## Real client checks
 
 Minecraft 1.8.9 has no GameTest framework. `runClientChecks` instead loads a separate test-only Forge mod in a real client, creates two flat singleplayer worlds, and exits after assertions on config navigation, input, commands, HUD rendering and world changes. The test mod is not included in the distribution jar. Its worlds, config and muted options stay under `build/client-checks/`; results are written to `build/client-checks/result.txt`. A failed or missing result fails Gradle; the client task times out after five minutes.
